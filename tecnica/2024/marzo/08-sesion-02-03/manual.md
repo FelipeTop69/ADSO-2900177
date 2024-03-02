@@ -153,7 +153,7 @@ Para agregar una alerta, debe usarse una línea blockquote especial que especifi
 > [!CAUTION]
 > Advises about risks or negative outcomes of certain actions.
 
-# 13. Comenarios
+# 13. Comentarios
 Puedes decirle a GitHub que oculte el contenido del lenguaje de marcado interpretado colocando el contenido en un comentario de HTML.
 
 <!-- This content will not appear in the rendered Markdown -->
