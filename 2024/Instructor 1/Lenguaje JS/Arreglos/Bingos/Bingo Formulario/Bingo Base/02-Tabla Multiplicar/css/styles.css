@@ -1,0 +1,19 @@
+/*
+Saludo -> "Hola Universo"
+Autor: Ruben Felipe Tovar Aviles
+Fecha: 17 de junio del 2024
+*/
+
+.mousqueherramienta{
+    border: 1px solid black !important;
+}
+
+.container{
+    margin-top: 20px;
+}
+
+.accordion-item-container {
+    margin-bottom: 10px; /* Ajusta este valor según tus necesidades */
+}
+
+

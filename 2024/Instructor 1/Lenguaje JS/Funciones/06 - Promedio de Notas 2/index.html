@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Porcentaje Notas</title>
+    <script src="js/promedio.js"></script>
+</head>
+<body>
+    
+    <script>
+
+        //Como Parametro
+        let porcentajeNota1 = sumarPorcentaje(3.5, 0.3)
+        let porcentajeNota2 = parseFloat((sumarPorcentaje(4.5, 0.3)).toFixed(2))
+        let porcentajeNota3 = sumarPorcentaje(5.0, 0.4)
+        let sumaPorcentaje = porcentajeNota1 + porcentajeNota2 + porcentajeNota3
+
+        console.log("Como Parametro")
+        console.log("El porcentaje de la nota 1 es: " + porcentajeNota1)
+        console.log("El porcentaje de la nota 2 es: " + porcentajeNota2)
+        console.log("El porcentaje de la nota 3 es: " + porcentajeNota3)
+        console.log("El la suma de los porcentajes es: " + sumaPorcentaje)
+        console.log("\n") 
+
+        //Como Expresion
+        let porcentajeNota1Expresion = sumarPorcentajeExpresion(4.5, 0.3)
+        let porcentajeNota2Expresion = parseFloat((sumarPorcentajeExpresion(3.5, 0.3)).toFixed(2))
+        let porcentajeNota3Expresion = sumarPorcentajeExpresion(4.0, 0.4)
+        let sumaPorcentajeExpresion = porcentajeNota1Expresion + porcentajeNota2Expresion + porcentajeNota3Expresion
+
+        console.log("Como Expresion")
+        console.log("El porcentaje de la nota 1 es: " + porcentajeNota1Expresion)
+        console.log("El porcentaje de la nota 2 es: " + porcentajeNota2Expresion)
+        console.log("El porcentaje de la nota 3 es: " + porcentajeNota3Expresion)
+        console.log("El la suma de los porcentajes es: " + sumaPorcentajeExpresion)
+
+    </script>
+
+</body>
+</html>

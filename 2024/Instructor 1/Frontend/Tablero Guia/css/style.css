@@ -1,0 +1,55 @@
+.container{
+    display: flex;
+    justify-content: center;
+}
+
+#principal{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 590px;
+    border: 1px solid black;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding: 10px 0 0 20px;
+}
+
+.row{
+    display: flex;
+    flex-wrap: nowrap;
+    height: 200px;
+    /* border: 1px solid black; */
+    margin-bottom: 5px;
+}
+
+.celda{
+    border: 1px solid rgb(241, 6, 6);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: end; /* Alinear el contenido a la derecha */
+    align-items: end;
+}
+
+.titulo{
+    transform: rotate(-90deg);
+    margin: 0;
+    white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
+}
+
+.espacio-deiz{
+    margin: 0 4px 0 4px;
+}
+
+.espacio-iz{
+    margin-left: 4px;
+}
+
+.letra-blanca{
+    color: #fff;
+}
+
+.fondo-azul-oscuro{
+    background-color: blue;
+}
+

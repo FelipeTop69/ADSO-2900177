@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="../Bibliotecas/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Bibliotecas/fontawesome/css/all.css">
+    <script src="../Bibliotecas/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <title>Operacion</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="col-4 forma">
+            <div class="col-12 formulario">
+                <!-- Formulario -->
+                <form class="row g-3 needs-validation" action="index.html" onsubmit="return operaciones()"
+                    novalidate>
+                    <div class="col-md-12">
+                        <label for="txtNumeroUno" class="form-label">Numero Uno</label>
+                        <input type="number" class="form-control" id="txtNumeroUno" pattern="[0-9]+([,\.][0-9]+)?" required>
+                        <div class="invalid-feedback">
+                            ¡CAMPO VACIO!
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="txtNumeroDos" class="form-label">Numero Dos</label>
+                        <input type="number" class="form-control" id="txtNumeroDos" pattern="[0-9]+([,\.][0-9]+)?" required>
+                        <div class="invalid-feedback">
+                            ¡CAMPO VACIO!
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="operacionSelecionada" class="form-label">Operacion a Realizar</label>
+                        <select class="form-select" id="operacionSelecionada" required>
+                            <option selected disabled value="">Opreaciones</option>
+                            <option value="selecSuma">Suma</option>
+                            <option value="selecResta">Resta</option>
+                            <option value="selecMultiplicacion">Multiplicacion</option>
+                            <option value="selecDivision">Division</option>
+                            <option value="selecTodas">Todas las anteriores</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            ¡SIN SELECCION!
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-primary" type="submit">Enviar</button>
+                    </div>
+                </form>
+                <!-- Fin Formulario -->
+            </div>
+            <div class="col-12 respuesta">
+                <div id="calculadora" class="calculadora">
+                    <div id="resultado" class="celda"></div>
+                    <div id="error" class="alert alert-danger" style="display: none;">Sin resultados</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/validacion.js"></script>
+    <script src="js/funcionamiento.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="../Bibliotecas/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>

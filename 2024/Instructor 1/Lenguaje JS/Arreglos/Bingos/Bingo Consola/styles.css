@@ -1,0 +1,26 @@
+.mousqueherramienta{
+    border: 1px solid black !important;
+}
+
+.cont-bingo{
+    width: 400px;
+    /* height: 400px; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.tabla-guia{
+    width: 400px;
+    /* height: 400px; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.table td, .table th {
+    width: 50px !important;
+    height: 50px;
+    text-align: center;
+    vertical-align: middle;
+}

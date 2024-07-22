@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sueldo Persona</title>
+</head>
+<body>
+
+    <script>
+
+        let valorD;
+        let diasT;
+        let sueldo;
+        let pen;
+        let salud;
+        let arl;
+        let desc;
+        let sueldoT;
+
+        valorD = 45216
+        diasT = 22
+
+        sueldo = valorD * diasT;
+        
+        pen = sueldo * 0.16;
+        salud = sueldo * 0.12;
+        arl = sueldo * 0.052;
+
+        desc = pen + salud + arl
+        sueldoT = sueldo - desc
+
+        console.log("Al valor del siguiente sueldo: " + sueldo + " se le descuenta: \n")
+        console.log("Pensión: " + pen + "\n")
+        console.log("Salud: " + salud + "\n")
+        console.log("ARL: " + arl + "\n")
+        console.log("El sueldo total del trabajador es: " + sueldoT);
+        
+    </script>
+
+</body>
+</html>

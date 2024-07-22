@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablas del 1 al 5</title>
+</head>
+<body>
+
+    <script>
+
+        let cont, mul, par, impar, resul;
+        let tabla;
+
+        tabla = 5;
+        par = 0;
+        impar = 0;
+
+        for(cont = 1; cont <= tabla; cont++){
+            mul = 0;
+            console.log("Tabla del " + cont)
+            for(mul = 1; mul <= 5; mul++){
+                resul = cont * mul;
+                if(resul % 2 == 0){
+                    console.log(cont + " x " + mul + " = " + resul + " Buzz")
+                    par = par + 1
+                }else{
+                    console.log(cont + " x " + mul + " = " + resul + " Bass")
+                    impar = impar + 1
+                }
+            }
+            console.log("\n")
+        }
+
+        console.log("La cantidad de pares es: " + par)
+        console.log("La cantidad de impares es: " + impar)
+
+    </script>
+
+</body>
+</html>

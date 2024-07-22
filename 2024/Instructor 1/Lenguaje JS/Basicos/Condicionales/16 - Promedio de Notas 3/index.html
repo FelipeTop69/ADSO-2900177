@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promedio de Notas 3</title>
+</head>
+<body>
+
+    <script>
+
+        let nota1, nota2, nota3;
+        let porc1, porc2, porc3;
+        let sumPorc
+
+        nota1 = 5.0;
+        nota2 = 4.0;
+        nota3 = 3.0;
+
+        porc1 = nota1 * 0.21;
+        porc2 = nota2 * 0.35;
+        porc3 = nota3 * 0.45;
+
+        sumPorc = parseFloat((porc1 + porc2 + porc3).toFixed(1));
+
+
+        if(sumPorc > 4.5){
+            console.log("La suma del porcentaje de notas es: " + sumPorc + "\n");
+            console.log("El porcentaje de notas es superior" + "\n");
+        }else if (sumPorc <= 4.5 && sumPorc > 3.5){
+            console.log("La suma del porcentaje de notas es: " + sumPorc + "\n");
+            console.log("El porcentaje de nota es buena" + "\n");
+        }else if (sumPorc <= 3.5 && sumPorc >= 3.0){
+            console.log("La suma del porcentaje de notas es: " + sumPorc + "\n");
+            console.log("El porcentaje de nota es media" + "\n");
+        }else{
+            console.log("La suma del porcentaje de notas es: " + sumPorc + "\n");
+            console.log("El porcentaje de nota es mala" + "\n");
+        }
+
+    </script>
+
+</body>
+</html>
+
+/*
+Calcular tres notas e imprimir lo siguiente:
+a. El 20% de la nota 1
+b. El 35% de la nota 2
+c. El 45% de la nota 3
+d. Sumar los pcrcentajes de las tres notas e imprimir lo siguiente:
+d.1 Si la suma del porcentaje es mayor a 4.5 es una nota superior
+d.2 Si la suma del porcentaje está entre menor igual a 4.5 y es mayor 3.5 la nota es buena
+d.3 Si la suma del porcentaje esta entre menor igual a 3.5 y es mayor igual 3.0 la nota es media
+d.4 Si la suma del porcenaje es menor de 3 es una nota mala
+*/

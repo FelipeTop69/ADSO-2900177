@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sueldo Persona 2</title>
+</head>
+<body>
+
+    <script>
+
+        let valorD, diasT;
+        let sueldoP, sueldoT, salarioM ;
+        let  subsidioT, salud, pen, arl;
+        let retencion, deducibles;
+
+        valorD = 43333;
+        diasT = 30;
+        salarioM = 1300000;
+
+        sueldoP = valorD * diasT;
+
+        if(sueldoP < salarioM * 2){
+            subsidioT = 114000;
+        }else{
+            subsidioT = 0;
+        }
+
+        salud = parseFloat((sueldoP * 0.12).toFixed(0));
+        pen = parseFloat((sueldoP * 0.16).toFixed(0));
+        arl = parseFloat((sueldoP * 0.052).toFixed(0));
+
+        if(sueldoP < salarioM * 4){
+            retencion = 0;
+        }else{
+            retencion = sueldoP * 0.04;
+        }
+
+        deducibles = (salud + pen + arl).toFixed(0);
+        sueldoT = ((sueldoP + subsidioT) - (retencion + deducibles)).toFixed(0);
+
+        console.log("El sueldo de la persona antes de procesos era de: $" + sueldoP + "\n");
+        console.log("Al subsidio de transporte se le dio un valor de: $" + subsidioT + "\n");
+        console.log("A la salud se le dio un valor de: $" + salud + "\n");
+        console.log("A la pension se le dio un valor de: $" + pen + "\n");
+        console.log("A la arl se le dio un valor de: $" + arl + "\n");
+        console.log("Los deducibles (salud + pension + arl) tiene un valor de: $" + deducibles + "\n");
+        console.log("La retención tiene un valor de: $" + retencion + "\n");
+        console.log("El sueldo total de la persona es: $" + sueldoT + "\n");
+
+    </script>
+
+</body>
+</html>
+
+Realizar un diagrama de flujo que calcule el pago total del sueldo de una persona, debe calcular e imprimir lo
+siguiente:
+a. Salario de la persona
+b. Si la persona gana más de dos salarios mínimos se suma a su sueldo el subsidio de transporte de 10 contrario I
+sumará O
+c. Calcular la salud, pensión y arl sabiendo que
+salud = salario * 0.12
+pensión = salario * 0.16
+arl = salario * 0.052
+d. Si la persona gana más de 4 salarios mínimos, debe hacer una retención del 0.04 de su salario
+e. Sumar los deducibles que son salud, pensión y arl; y restar el deducible al salario de la persona
+f. Calcular e imprimir el total de pagar

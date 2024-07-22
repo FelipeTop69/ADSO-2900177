@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area de Tres Cuadrados</title>
+</head>
+<body>
+
+    <script>
+
+        let cu1, cu2, cu3;
+        let l1, l2, l3;
+
+        l1 = 9;
+        l2 = 6;
+        l3 = 3;
+
+        cu1 = Math.pow(l1,2);
+        cu2 = Math.pow(l2,2);
+        cu3 = Math.pow(l3,2);
+
+        if(cu1 == cu2 || cu1 == cu2 || cu2 == cu3){
+            console.log("El área de los cuadrados son iguales");
+        }
+        else if(cu1 > cu2 && cu1 > cu3){
+            console.log("El área mayor es la del cuadrado uno: " + cu1 + "cm\u00B2");
+        }
+        else if(cu2 > cu1 && cu2 > cu3){
+            console.log("El area mayor es la del cuadrado dos: " + cu2 + "cm\u00B2");
+        }
+        else{
+            console.log("El área mayor es la del cuadrado tres : " + cu3 + "cm\u00B2");
+        }
+
+    </script>
+
+</body>
+</html>

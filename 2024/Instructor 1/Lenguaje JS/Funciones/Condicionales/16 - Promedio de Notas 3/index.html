@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promedio de Notas</title>
+    <script src="js/promedio.js"></script>
+</head>
+<body>
+
+    <script>
+
+        //Como Parametro
+        let nota1 = 4.0
+        let nota2 = 5.0
+        let nota3 = 5.0
+        let sumPorce = calcularSumaPorcentaje(nota1, nota2, nota3,).toFixed(1)
+
+        console.log("Como Parametro")
+        console.log("La suma del porcentaje de notas es: " + sumPorce)
+        console.log(validarNota(nota1, nota2, nota3))
+        console.log("\n")
+
+        //Como Expresion
+        console.log("Como Expresión")
+        let expresionNota1 = 4.0
+        let expresionNota2 = 3.0
+        let expresionNota3 = 2.0
+        let expresionSumPorce = calcularSumaPorcentaje(expresionNota1, expresionNota2, expresionNota3,).toFixed(1)
+
+        console.log("La suma del porcentaje de notas es: " + expresionSumPorce)
+        console.log(validarNota(expresionNota1, expresionNota2, expresionNota3))
+
+    </script>
+
+</body>
+</html>

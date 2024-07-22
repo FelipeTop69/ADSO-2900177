@@ -1,0 +1,389 @@
+<div id="terceario">
+        <div class="lantanidos">
+            <div class="lantano  elemento lantanidos-color">
+                <div class="numero">
+                    57
+                </div>
+                <div class="simbolo">
+                    La
+                </div>
+                <div class="nombre">
+                    Lantano 
+                </div>
+            </div>
+    
+            <div class="cerio  elemento lantanidos-color">
+                <div class="numero">
+                    58
+                </div>
+                <div class="simbolo">
+                    Ce
+                </div>
+                <div class="nombre">
+                    Cerio 
+                </div>
+            </div>
+    
+            <div class="Praseodimio  elemento lantanidos-color">
+                <div class="numero">
+                    59
+                </div>
+                <div class="simbolo">
+                    Pr
+                </div>
+                <div class="nombre">
+                    Praseodimio 
+                </div>
+            </div>
+    
+            <div class="Neodimio  elemento lantanidos-color">
+                <div class="numero">
+                    60
+                </div>
+                <div class="simbolo">
+                    Nd
+                </div>
+                <div class="nombre">
+                    Neodimio 
+                </div>
+            </div>
+    
+            <div class="Prometio  elemento lantanidos-color">
+                <div class="numero">
+                    61
+                </div>
+                <div class="simbolo">
+                    Pm
+                </div>
+                <div class="nombre">
+                    Prometio 
+                </div>
+            </div>
+    
+            <div class="Samario  elemento lantanidos-color">
+                <div class="numero">
+                    62
+                </div>
+                <div class="simbolo">
+                    Sm
+                </div>
+                <div class="nombre">
+                    Samario 
+                </div>
+            </div>
+    
+            <div class="Europio  elemento lantanidos-color">
+                <div class="numero">
+                    63
+                </div>
+                <div class="simbolo">
+                    Eu
+                </div>
+                <div class="nombre">
+                    Europio 
+                </div>
+            </div>
+    
+            <div class="Gadolinio  elemento lantanidos-color">
+                <div class="numero">
+                    64
+                </div>
+                <div class="simbolo">
+                    Gd
+                </div>
+                <div class="nombre">
+                    Gadolinio 
+                </div>
+            </div>
+    
+            <div class="Terbio  elemento lantanidos-color">
+                <div class="numero">
+                    65
+                </div>
+                <div class="simbolo">
+                    Tb
+                </div>
+                <div class="nombre">
+                    Terbio 
+                </div>
+            </div>
+    
+            <div class="Disprosio  elemento lantanidos-color">
+                <div class="numero">
+                    66
+                </div>
+                <div class="simbolo">
+                    Dy
+                </div>
+                <div class="nombre">
+                    Disprosio 
+                </div>
+            </div>
+    
+            <div class="Holmio  elemento lantanidos-color">
+                <div class="numero">
+                    67
+                </div>
+                <div class="simbolo">
+                    Ho
+                </div>
+                <div class="nombre">
+                    Holmio 
+                </div>
+            </div>
+    
+            <div class="Erbio  elemento lantanidos-color">
+                <div class="numero">
+                    68
+                </div>
+                <div class="simbolo">
+                    He
+                </div>
+                <div class="nombre">
+                    Erbio 
+                </div>
+            </div>
+    
+            <div class="tulio elemento lantanidos-color">
+                <div class="numero">
+                    69
+                </div>
+                <div class="simbolo">
+                    Tm
+                </div>
+                <div class="nombre">
+                    Tulio
+                </div>
+            </div>
+    
+            <div class="iterbio elemento lantanidos-color">
+                <div class="numero">
+                    70
+                </div>
+                <div class="simbolo">
+                    Yb
+                </div>
+                <div class="nombre">
+                    Iterbio
+                </div>
+            </div>
+        </div>
+
+        <div class="actinidos">
+            <div class="Actinio elemento actinidos-color">
+                <div class="numero">
+                    89
+                </div>
+                <div class="simbolo">
+                    Ac
+                </div>
+                <div class="nombre">
+                    Actinio 
+                </div>
+            </div>
+    
+            <div class="Torio elemento actinidos-color">
+                <div class="numero">
+                    90
+                </div>
+                <div class="simbolo">
+                    Th
+                </div>
+                <div class="nombre">
+                    Torio 
+                </div>
+            </div>
+    
+            <div class="Protactinio elemento actinidos-color">
+                <div class="numero">
+                    91
+                </div>
+                <div class="simbolo">
+                    Pa
+                </div>
+                <div class="nombre">
+                    Protactinio 
+                </div>
+            </div>
+    
+            <div class="Uranio elemento actinidos-color">
+                <div class="numero">
+                    92
+                </div>
+                <div class="simbolo">
+                    U
+                </div>
+                <div class="nombre">
+                    Uranio 
+                </div>
+            </div>
+    
+            <div class="Neptunio elemento actinidos-color">
+                <div class="numero">
+                    93
+                </div>
+                <div class="simbolo">
+                    Np
+                </div>
+                <div class="nombre">
+                    Neptunio 
+                </div>
+            </div>
+    
+            <div class="Plutonio elemento actinidos-color">
+                <div class="numero">
+                    94
+                </div>
+                <div class="simbolo">
+                    Pu
+                </div>
+                <div class="nombre">
+                    Plutonio 
+                </div>
+            </div>
+    
+            <div class="Americio elemento actinidos-color">
+                <div class="numero">
+                    95
+                </div>
+                <div class="simbolo">
+                    Am
+                </div>
+                <div class="nombre">
+                    Americio 
+                </div>
+            </div>
+    
+            <div class="Curio elemento actinidos-color">
+                <div class="numero">
+                    96
+                </div>
+                <div class="simbolo">
+                    Cm
+                </div>
+                <div class="nombre">
+                    Curio 
+                </div>
+            </div>
+    
+            <div class="Berkelio elemento actinidos-color">
+                <div class="numero">
+                    97
+                </div>
+                <div class="simbolo">
+                    Bk
+                </div>
+                <div class="nombre">
+                    Berkelio 
+                </div>
+            </div>
+    
+            <div class="Californio elemento actinidos-color">
+                <div class="numero">
+                    98
+                </div>
+                <div class="simbolo">
+                    Cf
+                </div>
+                <div class="nombre">
+                    Californio 
+                </div>
+            </div>
+    
+            <div class="Einstenio elemento actinidos-color">
+                <div class="numero">
+                    99
+                </div>
+                <div class="simbolo">
+                    Es
+                </div>
+                <div class="nombre">
+                    Einstenio 
+                </div>
+            </div>
+    
+            <div class="Fermio  elemento actinidos-color">
+                <div class="numero">
+                    100
+                </div>
+                <div class="simbolo">
+                    Fm
+                </div>
+                <div class="nombre">
+                    Fermio  
+                </div>
+            </div>
+    
+            <div class="Mendelevio elemento actinidos-color">
+                <div class="numero">
+                    101
+                </div>
+                <div class="simbolo">
+                    Md 
+                </div>
+                <div class="nombre name-small">
+                    Mendelevio 
+                </div>
+            </div>
+    
+            <div class="Nobelio elemento actinidos-color">
+                <div class="numero">
+                    102
+                </div>
+                <div class="simbolo">
+                    No
+                </div>
+                <div class="nombre">
+                    Nobelio 
+                </div>
+            </div>
+        </div>
+
+
+CSS Responsive:
+#terceario{
+    display: block;
+    float: left;
+    /* border: 1px solid black; */
+    width: 98%;
+    height: 52px;
+    margin: 2%;
+    margin-left: 70px;
+}
+
+.lantanidos{
+    display: block;
+    float: left;
+    width: 98%;
+}
+
+.actinidos{
+    display: block;
+    float: left;
+    width: 98%;
+}
+}
+
+
+CSS:
+#terceario{
+        display: block;
+        float: left;
+        /* border: 1px solid black;  */
+        width: 98%;
+        height: 150px;
+        margin: 2%;
+        margin-left: 238px;
+}
+
+.lantanidos{
+        display: block;
+        float: left;
+        width: 98%;
+}
+
+.actinidos{
+        display: block;
+        float: left;
+        width: 98%;
+}
