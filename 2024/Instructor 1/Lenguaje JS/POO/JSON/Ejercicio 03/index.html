@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nomina</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Nomina</h1>
+        <form class="formulario" id="pagosFormulario">
+            <div class="caja-figura">
+                <label for="txtDiasTrabajados">Ingresa los dias trabajados:</label>
+                <input type="number" id="txtDiasTrabajados" name="diasTrabajados" required>
+            </div>
+
+            <div class="caja-figura">
+                <label for="txtValorDia">Ingresa el valor del dia:</label>
+                <input type="number" id="txtValorDia" name="valorDia" required>
+            </div>
+
+            <div class="caja-figura">
+                <label for="txtEdadPersona">Ingresa su edad:</label>
+                <input type="number" id="txtEdadPersona" name="edadPersona" required>
+            </div>
+
+            <button type="submit">Enviar</button>
+        </form>
+
+        <div class="resultados">
+            <div class="pagos">
+                Sueldo: <h4 id="resultadoSueldo" class="resultado"></h4>
+            </div>
+
+            <div class="pagos">
+                Subsidio de Transporte: <h4 id="resultadoSubTransporte" class="resultado"></h4>
+            </div>
+
+            <div class="pagos">
+                Pension: <h4 id="resultadoPension" class="resultado"></h4>
+            </div>
+
+            <div class="pagos">
+                Salud: <h4 id="resultadoSalud" class="resultado"></h4>
+            </div>
+
+            <div class="pagos">
+                ARL: <h4 id="resultadoARL" class="resultado"></h4>
+            </div>
+
+            <div class="pagos">
+                Retencion: <h4 id="resultadoRetencion" class="resultado"></h4>
+            </div>
+
+            <div class="pagos">
+                Extras: <h4 id="resultadoExtras" class="resultado"></h4>
+            </div>
+
+            <div class="pagos">
+                Deducibles: <h4 id="resultadoDeducibles" class="resultado"></h4>
+            </div>
+
+            <div class="pagos">
+                Sueldo Total: <h4 id="resultadoSueldoTotal" class="resultado"></h4>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/nomina.js"></script>
+</body>
+</html>

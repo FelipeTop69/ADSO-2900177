@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operaciones</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+</head>
+<body id="body">
+    <div class="container">
+        <div class="col-4 forma">
+            <div class="col-12 formulario">
+                <div class="heading">Calculadora</div>
+                <form id="operacionFormulario" class="form row g-3 needs-validation" novalidate>
+                    <div class="col-md-12">
+                        <input placeholder="Numero Uno" type="number" class="input form-control" id="txtNumeroUno" name="txtNumeroUno"
+                            pattern="[0-9]+([,\.][0-9]+)?" required>
+                        <div class="invalid-feedback">
+                            ¡CAMPO VACIO!
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <input placeholder="Numero Dos" type="number" class="input form-control" id="txtNumeroDos" name="txtNumeroDos"
+                            pattern="[0-9]+([,\.][0-9]+)?" required>
+                        <div class="invalid-feedback">
+                            ¡CAMPO VACIO!
+                        </div>
+                    </div>
+                    <div class="col-md-12 ">
+                        <select class="selector" id="operacionSelecionada" required>
+                            <option selected disabled value="">Operación a Realizar</option>
+                            <option value="selecSuma">Suma</option>
+                            <option value="selecResta">Resta</option>
+                            <option value="selecMultiplicacion">Multiplicación</option>
+                            <option value="selecDivision">División</option>
+                            <option value="selecTodas">Todas las anteriores</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            ¡SIN SELECCIÓN!
+                        </div>
+                    </div>
+
+                    <div class="col-12 celda-boton">
+                        <!-- <button class="login-button" type="submit">Enviar</button> -->
+                        <button class="boton" type="submit">
+                            <div class="svg-wrapper-1">
+                                <div class="svg-wrapper">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                        <path fill="none" d="M0 0h24v24H0z"></path>
+                                        <path fill="currentColor"
+                                            d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z">
+                                        </path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <span>Calcular</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-12 respuesta">
+                <div id="contenedor-respuesta" class="contenedor-respuesta">
+                    <div id="resultado" class="celda"></div>
+                    <div id="error" class="alert alert-danger" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="js/validacion.js"></script>
+    <script src="js/operacioness.js"></script>
+</body>
+</html>
