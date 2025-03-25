@@ -11,6 +11,8 @@ namespace Entity.DTOs
         public int Id { get; set; }
         public string Name { get; set; }
         public string Location { get; set; }
-        public OrganizationDTO Organization { get; set; }
+
+        public int BranchId { get; set; }
+        public int BranchName { get; set; }
     }
 }

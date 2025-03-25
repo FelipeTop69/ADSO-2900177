@@ -11,6 +11,8 @@ namespace Entity.DTOs
         public int Id { get; set; }
         public string Name { get; set; }
         public string Ubication { get; set; } 
-        public EventDTO Event { get; set; }
+
+        public int EventId { get; set; }
+        public string EventName { get; set; }
     }
 }

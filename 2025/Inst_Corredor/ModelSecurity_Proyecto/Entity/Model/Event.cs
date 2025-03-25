@@ -18,7 +18,7 @@ namespace Entity.Model
         public EventType EventType { get; set; } /// PN
 
         ///Relaciones
-        public ICollection<EventSession> Sessions { get; set; } = new List<EventSession>(); /// PNI - Relacion uno a muchos
-        public ICollection<AccessPoint> AccessPoints { get; set; } = new List<AccessPoint>(); /// PNI - Relacion uno a muhcos
+        public List<EventSession> Sessions { get; set; } = new List<EventSession>(); /// PNI - Relacion uno a muchos
+        public List<AccessPoint> AccessPoints { get; set; } = new List<AccessPoint>(); /// PNI - Relacion uno a muhcos
     }
 }

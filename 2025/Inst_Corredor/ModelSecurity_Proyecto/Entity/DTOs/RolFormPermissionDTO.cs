@@ -9,8 +9,14 @@ namespace Entity.DTOs
     public class RolFormPermissionDTO
     {
         public int Id { get; set; }
-        public RolDTO Role { get; set; }
-        public PermissionDTO Permission { get; set; }
-        public FormDTO Form { get; set; }
+
+        public int RoleId { get; set; }
+        public string RoleName { get; set; }
+
+        public int PermissionId { get; set; }
+        public string PermissionName { get; set; }
+
+        public int FormId { get; set; }
+        public string FormName { get; set; }
     }
 }

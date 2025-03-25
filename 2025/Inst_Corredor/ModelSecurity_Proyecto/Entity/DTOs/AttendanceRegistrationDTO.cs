@@ -11,7 +11,11 @@ namespace Entity.DTOs
         public int Id { get; set; }
         public DateTime Hour { get; set; }
         public bool TypeAccess { get; set; }
-        public AttendanceDTO Attendance { get; set; } 
-        public AccessPointDTO AccessPoints { get; set; } 
+
+        public int AttendanceId { get; set; }
+        public string AttendanceName { get; set; }
+
+        public int AccessPointId { get; set; }
+        public string AccessPoinName { get; set; }
     }
 }

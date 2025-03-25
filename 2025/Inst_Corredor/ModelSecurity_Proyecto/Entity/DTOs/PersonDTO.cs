@@ -18,7 +18,11 @@ namespace Entity.DTOs
         public string Address { get; set; }
         public string BlodType { get; set; }
         public string? Photo { get; set; }
-        public CityDTO City { get; set; }
-        public AssignmentDTO Assignment { get; set; }
+
+        public int CityInt { get; set; }
+        public string CityName { get; set; }
+
+        public int AssignmentInt { get; set; }
+        public string AssignmentName { get; set; }
     }
 }

@@ -14,8 +14,8 @@ namespace Entity.Model
         public string Description { get; set; }
 
         /// Relaciones
-        public ICollection<RolFormPermission> RolFormPermissions { get; set; } = new List<RolFormPermission>(); /// PNI - Relacion uno a muchos
-        public ICollection<FormModule> FormModules { get; set; } = new List<FormModule>(); /// PNI -  Relacion uno a muchos
+        public List<RolFormPermission> RolFormPermissions { get; set; } = new List<RolFormPermission>(); /// PNI - Relacion uno a muchos
+        public List<FormModule> FormModules { get; set; } = new List<FormModule>(); /// PNI -  Relacion uno a muchos
        
 
     }

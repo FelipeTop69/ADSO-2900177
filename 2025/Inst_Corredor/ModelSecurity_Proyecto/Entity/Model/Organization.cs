@@ -14,6 +14,6 @@ namespace Entity.Model
         public string Address { get; set; }
 
         //Relaciones
-        public ICollection<Branch> Branches { get; set; } = new List<Branch>(); /// PNI - Relacion uno a muchos
+        public List<Branch> Branches { get; set; } = new List<Branch>(); /// PNI - Relacion uno a muchos
     }
 }

@@ -13,5 +13,8 @@ namespace Entity.DTOs
         public bool Status { get; set; }
         public DateOnly CreationDate { get; set; }
         public DateOnly ExpirationDate { get; set; }
+
+        public int PersonId { get; set; }
+        public string PersonName { get; set; }
     }
 }

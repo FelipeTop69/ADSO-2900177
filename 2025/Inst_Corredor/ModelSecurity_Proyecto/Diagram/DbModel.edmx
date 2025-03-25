@@ -179,6 +179,9 @@
           <NavigationProperty Name="FormModule" Relationship="DbModel.FormModuleModule" FromRole="Module" ToRole="FormModule" />
         </EntityType>
         <EntityType Name="AuditLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TableName" Type="String" Nullable="false" />
           <Property Name="AffectedId" Type="Int32" Nullable="false" />

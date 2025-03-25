@@ -14,7 +14,11 @@ namespace Entity.Model
         public DateOnly CreationDate { get; set; }
         public DateOnly ExpirationDate { get; set; }
 
+        /// Clave foranea con Person
+        public int PersonId { get; set; }
+        public Person Person { get; set; }
+
         ///Relaciones
-        public ICollection<Attendance> Attendances { get; set; } = new List<Attendance>(); /// PNI - Relacion uno a muchos
+        public List<Attendance> Attendances { get; set; } = new List<Attendance>(); /// PNI - Relacion uno a muchos
     }
 }

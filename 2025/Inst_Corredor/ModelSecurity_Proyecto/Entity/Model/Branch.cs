@@ -17,6 +17,6 @@ namespace Entity.Model
         public Organization Organization { get; set; }
 
         //Relaciones
-        public ICollection<DivisionBranch> DivisionBranches { get; set; } = new List<DivisionBranch>(); /// PNI - Relacion de uno a muchos
+        public List<DivisionBranch> DivisionBranches { get; set; } = new List<DivisionBranch>(); /// PNI - Relacion de uno a muchos
     }
 }

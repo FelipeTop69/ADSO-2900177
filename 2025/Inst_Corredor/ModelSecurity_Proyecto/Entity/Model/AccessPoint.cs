@@ -19,6 +19,6 @@ namespace Entity.Model
         public Event Event { get; set; } // PN
 
         /// Relaciones
-        public ICollection<AttendanceRegistration> AttendanceRegistrations { get; set; } = new List<AttendanceRegistration>(); /// PNI - Relacion uno a muchos
+        public List<AttendanceRegistration> AttendanceRegistrations { get; set; } = new List<AttendanceRegistration>(); /// PNI - Relacion uno a muchos
     }
 }

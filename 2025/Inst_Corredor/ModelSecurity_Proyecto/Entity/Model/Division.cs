@@ -12,7 +12,7 @@ namespace Entity.Model
         public string Name { get; set; }
 
         //Relaciones
-        public ICollection<Assignment> Assignments { get; set; } = new List<Assignment>(); /// PNI - Relacion de uno a muchos
-        public ICollection<DivisionBranch> DivisionBranches { get; set; } = new List<DivisionBranch>(); /// PNI - Relacion de uno a muchos
+        public List<Assignment> Assignments { get; set; } = new List<Assignment>(); /// PNI - Relacion de uno a muchos
+        public List<DivisionBranch> DivisionBranches { get; set; } = new List<DivisionBranch>(); /// PNI - Relacion de uno a muchos
     }
 }

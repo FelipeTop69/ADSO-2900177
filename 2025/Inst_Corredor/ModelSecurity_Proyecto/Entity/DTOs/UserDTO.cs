@@ -11,6 +11,8 @@ namespace Entity.DTOs
         public int Id { get; set; }
         public string Username { get; set; }
         public bool State { get; set; }
-      
+
+        public int PersonId { get; set; }
+        public string PersonName { get; set; }
     }
 }

@@ -14,4 +14,5 @@ namespace Entity.Model
 
         /// Relaciones
         public ICollection<FormModule> FormModules { get; set; } /// PNI - Relacion uno a muchos
+    }
 }

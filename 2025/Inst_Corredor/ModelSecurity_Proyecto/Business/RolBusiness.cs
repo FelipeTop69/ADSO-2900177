@@ -161,8 +161,8 @@ namespace Business
             {
                 Id = rol.Id,
                 Name = rol.Name,
-                Status = rol.Active,
-                Description = rol.Description // Si existe en la entidad
+                Status = rol.Active,// Si existe en la entidad
+                Description = rol.Description 
             };
         }
 

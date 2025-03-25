@@ -13,7 +13,7 @@ namespace Entity.Model
         public string Name { get; set; }
 
         /// Relaciones
-        public ICollection<City> Cities { get; set; } = new List<City>(); /// PNI - Relacion uno a muchos
+        public List<City> Cities { get; set; } = new List<City>(); /// PNI - Relacion uno a muchos
     }
 
 }

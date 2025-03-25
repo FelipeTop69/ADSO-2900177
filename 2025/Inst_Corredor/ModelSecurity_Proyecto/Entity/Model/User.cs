@@ -18,6 +18,6 @@ namespace Entity.Model
         public Person Person { get; set; } /// PN
 
         // Relaciones
-        public ICollection<RolUser> RolUsers { get; set; } /// PNI - Relacion uno a muchos 
+        public List<RolUser> RolUsers { get; set; } /// PNI - Relacion uno a muchos 
     }
 }

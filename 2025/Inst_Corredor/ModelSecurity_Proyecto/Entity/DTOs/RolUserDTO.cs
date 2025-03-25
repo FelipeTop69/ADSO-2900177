@@ -9,7 +9,11 @@ namespace Entity.DTOs
     public class RolUserDTO
     {
         public int Id { get; set; }
-        public RolDTO Role { get; set; }
-        public UserDTO User { get; set; }
+
+        public int RoleId { get; set; }
+        public string RoleName { get; set; }
+
+        public int UserId { get; set; }
+        public string UserName { get; set; }
     }
 }

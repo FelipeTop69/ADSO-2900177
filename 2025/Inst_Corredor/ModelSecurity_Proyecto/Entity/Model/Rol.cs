@@ -14,7 +14,7 @@ namespace Entity.Model
         public string? Description { get; set; }
 
         /// Relaciones
-        public ICollection<RolUser> RolUsers { get; set; } /// PNI - Relacion uno a muchos
-        public ICollection<RolFormPermission> RolFormPermissions { get; set; } /// PNI - Relacion uno a muchos
+        public List<RolUser> RolUsers { get; set; } /// PNI - Relacion uno a muchos
+        public List<RolFormPermission> RolFormPermissions { get; set; } /// PNI - Relacion uno a muchos
     }
 }
