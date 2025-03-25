@@ -8,5 +8,8 @@ namespace Entity.DTOs
 {
     public class AttendanceDTO
     {
+        public int Id { get; set; }
+        public CardDTO Card { get; set; } 
+        public EventSessionDTO EventSession { get; set; } 
     }
 }

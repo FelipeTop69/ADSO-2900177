@@ -2866,11 +2866,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pipea\\OneDrive\\Escritorio\\Temporal\\ADSO\\Tecnica\\TuCarnet\\Anexos\\MER\\ModelSecurity_Proyecto\\Data\\Data.csproj",
+      "projectUniqueName": "C:\\Users\\pipea\\OneDrive\\Escritorio\\Temporal\\ADSO\\Tecnica\\ADSO-2900177\\2025\\Inst_Corredor\\ModelSecurity_Proyecto\\Data\\Data.csproj",
       "projectName": "Data",
-      "projectPath": "C:\\Users\\pipea\\OneDrive\\Escritorio\\Temporal\\ADSO\\Tecnica\\TuCarnet\\Anexos\\MER\\ModelSecurity_Proyecto\\Data\\Data.csproj",
+      "projectPath": "C:\\Users\\pipea\\OneDrive\\Escritorio\\Temporal\\ADSO\\Tecnica\\ADSO-2900177\\2025\\Inst_Corredor\\ModelSecurity_Proyecto\\Data\\Data.csproj",
       "packagesPath": "C:\\Users\\pipea\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pipea\\OneDrive\\Escritorio\\Temporal\\ADSO\\Tecnica\\TuCarnet\\Anexos\\MER\\ModelSecurity_Proyecto\\Data\\obj\\",
+      "outputPath": "C:\\Users\\pipea\\OneDrive\\Escritorio\\Temporal\\ADSO\\Tecnica\\ADSO-2900177\\2025\\Inst_Corredor\\ModelSecurity_Proyecto\\Data\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -2891,8 +2891,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\pipea\\OneDrive\\Escritorio\\Temporal\\ADSO\\Tecnica\\TuCarnet\\Anexos\\MER\\ModelSecurity_Proyecto\\Entity\\Entity.csproj": {
-              "projectPath": "C:\\Users\\pipea\\OneDrive\\Escritorio\\Temporal\\ADSO\\Tecnica\\TuCarnet\\Anexos\\MER\\ModelSecurity_Proyecto\\Entity\\Entity.csproj"
+            "C:\\Users\\pipea\\OneDrive\\Escritorio\\Temporal\\ADSO\\Tecnica\\ADSO-2900177\\2025\\Inst_Corredor\\ModelSecurity_Proyecto\\Entity\\Entity.csproj": {
+              "projectPath": "C:\\Users\\pipea\\OneDrive\\Escritorio\\Temporal\\ADSO\\Tecnica\\ADSO-2900177\\2025\\Inst_Corredor\\ModelSecurity_Proyecto\\Entity\\Entity.csproj"
             }
           }
         }

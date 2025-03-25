@@ -8,5 +8,12 @@ namespace Entity.Model
 {
     public class Organization
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Phone { get; set; }
+        public string Address { get; set; }
+
+        //Relaciones
+        public ICollection<Branch> Branches { get; set; } = new List<Branch>(); /// PNI - Relacion uno a muchos
     }
 }

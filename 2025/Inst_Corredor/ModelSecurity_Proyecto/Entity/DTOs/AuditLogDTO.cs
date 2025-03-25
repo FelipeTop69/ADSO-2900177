@@ -16,6 +16,6 @@ namespace Entity.DTOs
         public string NewValue { get; set; }
         public string Action { get; set; } 
         public DateTime Timestamp { get; set; }
-        public int UserId { get; set; }
+        public UserDTO User { get; set; }
     }
 }

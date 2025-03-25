@@ -8,5 +8,10 @@ namespace Entity.DTOs
 {
     public class AttendanceRegistrationDTO
     {
+        public int Id { get; set; }
+        public DateTime Hour { get; set; }
+        public bool TypeAccess { get; set; }
+        public AttendanceDTO Attendance { get; set; } 
+        public AccessPointDTO AccessPoints { get; set; } 
     }
 }
