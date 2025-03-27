@@ -52,8 +52,6 @@ namespace Data
             //return await _context.Set<Person>().ToListAsync();
         }
 
-
-
         /// <summary>
         /// Obtiene todos los Person almacenados en la base de datos LINQ
         /// </summary>
@@ -105,7 +103,7 @@ namespace Data
         /// <summary>
         /// Obtiene un Person especifico por su identificacion LINQ
         /// </summary
-        public async Task<Person?> GetBydIdAsync(int id)
+        public async Task<Person?> GetByIdAsync(int id)
         {
             try
             {

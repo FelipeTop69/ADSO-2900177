@@ -10,6 +10,7 @@ namespace Entity.Model
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
 
         ///  Relaciones
         public List<RolFormPermission> RolFormPermissions { get; set; } = new List<RolFormPermission>(); /// PNI - Relacion uno muchos
