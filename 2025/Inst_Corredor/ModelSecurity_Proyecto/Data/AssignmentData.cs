@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entity.Contexts;
+using Entity.Context;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,14 +23,37 @@ namespace Data
 
         public async Task<IEnumerable<Assignment>> GetAllAsync()
         {
-            return await _context.Set<Assignment>().ToListAsync();
+            string query = @"
+                SELECT 
+                    asg.Id, 
+                    asg.Name, 
+                    asg.DivisionId as DivisionId, 
+                    di.Name as DivisionName
+                FROM AccessPoint asg
+                INNER JOIN Division di
+                ON as.DivisionId = di.Id";
+
+            return (IEnumerable<Assignment>)await _context.QueryAsync<IEnumerable<Assignment>>(query);
         }
+
+
 
         public async Task<Assignment?> GetByIdAsync(int id)
         {
             try
             {
-                return await _context.Set<Assignment>().FindAsync(id);
+                string query = @"
+                     SELECT 
+                        asg.Id, 
+                        asg.Name 
+                        asg.DivisionId as DivisionId, 
+                        di.Name as DivisionName
+                     FROM AccessPoint asg
+                     INNER JOIN Division di
+                     ON as.DivisionId = di.Id
+                     WHERE as.Id = @Id";
+
+                return await _context.QueryFirstOrDefaultAsync<Assignment>(query, new { Id = id })
             }
             catch(Exception ex)   
             {

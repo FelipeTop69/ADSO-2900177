@@ -12,7 +12,7 @@ namespace Entity.DTOs
         public string Name { get; set; }
         public string Location { get; set; }
 
-        public int BranchId { get; set; }
-        public int BranchName { get; set; }
+        public int OrganizationId { get; set; }
+        public int OrganizationName { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entity.Contexts;
+using Entity.Context;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,14 +23,42 @@ namespace Data
 
         public async Task<IEnumerable<EventSession>> GetAllAsync()
         {
-            return await _context.Set<EventSession>().ToListAsync();
+            String Query = @"
+                SELECT 
+                    evs.Id,
+                    evs.Name,
+                    evs.StartDate,
+                    evs.EndDate,
+                    evs.EventId,
+                    ev.Name
+                FROM EventSession as evs
+                INNER JOIN Event as ev
+                ON evs.EventId = ev.Id
+                ";
+
+            return (IEnumerable<EventSession>) await _context.QueryAsync<IEnumerable<EventSession>>(Query);
+            //return await _context.Set<EventSession>().ToListAsync();
         }
 
         public async Task<EventSession?> GetByIdAsync(int id)
         {
             try
             {
-                return await _context.Set<EventSession>().FindAsync(id);
+                String Query = @"
+                SELECT 
+                    evs.Id,
+                    evs.Name,
+                    evs.StartDate,
+                    evs.EndDate,
+                    evs.EventId,
+                    ev.Name
+                FROM EventSession as evs
+                INNER JOIN Event as ev
+                ON evs.EventId = ev.Id
+                WHERE ev.id = @Id";
+
+                return await _context.QueryFirstOrDefaultAsync<EventSession>(Query, new { Id = id });
+                //return await _context.Set<EventSession>().FindAsync(id);
             }
             catch (Exception ex)
             {

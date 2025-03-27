@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entity.Contexts;
+using Entity.Context;
+using Entity.DTOs;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,14 +24,38 @@ namespace Data
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _context.Set<User>().ToListAsync();
+            string query = @"
+                SELECT 
+                    u.Id, 
+                    u.Username, 
+                    u.State, 
+                    u.PersonId, 
+                    p.FirstName + ' ' + p.LastName as PersonName
+                FROM [User] u
+                INNER JOIN Person p ON u.PersonId = p.Id";
+
+            return (IEnumerable<User>) await _context.QueryAsync<IEnumerable<User>>(query);
+            //return await _context.Set<User>().ToListAsync();
         }
 
         public async Task<User?> GetByIdAsync(int id)
         {
             try
             {
-                return await _context.Set<User>().FindAsync(id);
+                string query = @"
+                    SELECT 
+                        u.Id, 
+                        u.Username, 
+                        u.State, 
+                        u.PersonId, 
+                        p.FirstName + ' ' + p.LastName as PersonName
+                    FROM [User] u
+                    INNER JOIN Person p 
+                    ON u.PersonId = p.Id
+                    WHERE u.Id = @Id";
+
+                return await _context.QueryFirstOrDefaultAsync<User>(query, new { Id = id });
+                //return await _context.Set<User>().FindAsync(id);
             }
             catch (Exception ex)
             {

@@ -10,7 +10,7 @@ namespace Entity.Model
     {
         public int Id { get; set; }
 
-        // Claves foráneas
+        // Claves foraneas
         public int RoleId { get; set; } /// FK 
         public Rol Rol { get; set; } /// PN  
 

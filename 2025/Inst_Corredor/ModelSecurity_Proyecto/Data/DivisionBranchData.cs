@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entity.Contexts;
+using Entity.Context;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,14 +23,44 @@ namespace Data
 
         public async Task<IEnumerable<DivisionBranch>> GetAllAsync()
         {
-            return await _context.Set<DivisionBranch>().ToListAsync();
+
+            string Query = @"
+                SELECT 
+                    db.Id,
+                    db.DivisionId as DivisionId,
+                    d.Name as DivisionName,
+                    db.BranchId as BranchId,
+                    b.Name as BranchName
+                FROM DivisionBranch as db
+                INNER JOIN Division as d
+                ON db.DivisionId = d.Id
+                INNER JOIN Branch as b
+                ON db.BranchId  = b.id";
+
+            return (IEnumerable<DivisionBranch>) await _context.QueryAsync<IEnumerable<DivisionBranch>>(Query);
+            //return await _context.Set<DivisionBranch>().ToListAsync();
         }
 
         public async Task<DivisionBranch?> GetByIdAsync(int id)
         {
             try
             {
-                return await _context.Set<DivisionBranch>().FindAsync(id);
+                string Query = @"
+                SELECT 
+                    db.Id,
+                    db.DivisionId as DivisionId,
+                    d.Name as DivisionName,
+                    db.BranchId as BranchId,
+                    b.Name as BranchName
+                FROM DivisionBranch as db
+                INNER JOIN Division as d
+                ON db.DivisionId = d.Id
+                INNER JOIN Branch as b
+                ON db.BranchId  = b.id
+                WHERE db.Id = @Id";
+
+                return await _context.QueryFirstOrDefaultAsync<DivisionBranch>(Query, new {Id = id});
+                //return await _context.Set<DivisionBranch>().FindAsync(id)
             }
             catch (Exception ex)
             {

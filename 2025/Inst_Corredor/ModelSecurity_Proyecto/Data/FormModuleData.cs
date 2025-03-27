@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entity.Contexts;
+using Entity.Context;
+using Entity.DTOs;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,14 +24,43 @@ namespace Data
 
         public async Task<IEnumerable<FormModule>> GetAllAsync()
         {
-            return await _context.Set<FormModule>().ToListAsync();
+            string query = @"
+                SELECT 
+                    fm.Id, 
+                    fm.FormId, 
+                    f.Name as FormName, 
+                    fm.ModuleId, 
+                    m.Name as ModuleName
+                FROM FormModule fm
+                INNER JOIN Form f 
+                ON fm.FormId = f.Id
+                INNER JOIN Module m 
+                ON fm.ModuleId = m.Id";
+
+            return (IEnumerable<FormModule>) await _context.QueryAsync<IEnumerable<FormModule>>(query);
+            //return await _context.Set<FormModule>().ToListAsync();
         }
 
         public async Task<FormModule?> GetByIdAsync(int id)
         {
             try
             {
-                return await _context.Set<FormModule>().FindAsync(id);
+                string query = @"
+                    SELECT 
+                        fm.Id, 
+                        fm.FormId, 
+                        f.Name as FormName, 
+                        fm.ModuleId, 
+                        m.Name as ModuleName
+                    FROM FormModule fm
+                    INNER JOIN Form f 
+                    ON fm.FormId = f.Id
+                    INNER JOIN Module m 
+                    ON fm.ModuleId = m.Id
+                    WHERE fm.Id = @Id";
+
+                return await _context.QueryFirstOrDefaultAsync<FormModule>(query, new { Id = id });
+                //return await _context.Set<FormModule>().FindAsync(id);
             }
             catch (Exception ex)
             {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entity.Contexts;
+using Entity.Context;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
@@ -24,14 +24,41 @@ namespace Data
 
         public async Task<IEnumerable<Attendance>> GetAllAsync()
         {
-            return await _context.Set<Attendance>().ToListAsync();
+            string query = @"
+                SELECT 
+                    SELECT 
+                        at.Id, 
+                        at.CardId, 
+                        ca.Name as CardName, 
+                        at.EventSessionId, 
+                        es.Name as EventSessionName
+                    FROM Attendance at
+                    INNER JOIN Card ca 
+                    ON at.CardId = ca.Id
+                    INNER JOIN EventSession es 
+                    ON at.EventSessionId = es.Id";
+
+            return (IEnumerable<Attendance>)await _context.QueryAsync<IEnumerable<Attendance>>(query);
         }
 
         public async Task<Attendance?> GetByIdAsync(int id)
         {
             try
             {
-                return await _context.Set<Attendance>().FindAsync(id);
+                string query = @"
+                    SELECT 
+                        at.Id, 
+                        at.CardId, 
+                        ca.Name AS CardName, 
+                        at.EventSessionId, 
+                        es.Name AS EventSessionName
+                    FROM Attendance at
+                    INNER JOIN Card ca 
+                    ON at.CardId = ca.Id
+                    INNER JOIN EventSession es 
+                    ON at.EventSessionId = es.Id
+                    WHERE at.Id = @Id";
+                    return await _context.QueryFirstOrDefaultAsync<Attendance>(query, new { Id = id });
             }
             catch (Exception ex)
             {

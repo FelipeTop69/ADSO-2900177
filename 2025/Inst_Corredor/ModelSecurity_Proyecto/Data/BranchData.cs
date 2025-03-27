@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entity.Contexts;
+using Entity.Context;
+using Entity.DTOs;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,14 +24,39 @@ namespace Data
 
         public async Task<IEnumerable<Branch>> GetAllAsync()
         {
-            return await _context.Set<Branch>().ToListAsync();
+            string query = @"
+                SELECT 
+                    b.Id, 
+                    b.Name, 
+                    b.Location, 
+                    b.OrganizationId, 
+                    o.Name as OrganizationName
+                FROM Branch b
+                INNER JOIN Organization o 
+                ON b.OrganizationId = o.Id";
+
+            return (IEnumerable<Branch>)await _context.QueryAsync<IEnumerable<Branch>>(query);
+            //return await _context.Set<Branch>().ToListAsync();
         }
 
         public async Task<Branch?> GetByIdAsync(int id)
         {
             try
             {
-                return await _context.Set<Branch>().FindAsync(id);
+                string query = @"
+                    SELECT 
+                        b.Id, 
+                        b.Name, 
+                        b.Location, 
+                        b.OrganizationId, 
+                        o.Name as OrganizationName
+                    FROM Branch b
+                    INNER JOIN Organization o 
+                    ON b.OrganizationId = o.Id
+                    WHERE b.Id = @Id";
+
+                return await _context.QueryFirstOrDefaultAsync<Branch>(query, new { Id = id });
+                //return await _context.Set<Branch>().FindAsync(id);
             }
             catch (Exception ex)
             {

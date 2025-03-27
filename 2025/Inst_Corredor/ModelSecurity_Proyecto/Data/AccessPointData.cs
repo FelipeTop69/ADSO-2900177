@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entity.Contexts;
+using Entity.Context;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -21,16 +21,48 @@ namespace Data
             _logger = logger;
         }
 
+        /// <summary>
+        /// Obtiene todos los AccessPoint almacenados en la base de datos
+        /// </summary>
         public async Task<IEnumerable<AccessPoint>> GetAllAsync()
         {
-            return await _context.Set<AccessPoint>().ToListAsync();
+
+            string query = @"
+                SELECT 
+                    ap.Id, 
+                    ap.Name, 
+                    ap.Ubication, 
+                    ap.EventId as EventId, 
+                    ev.Name as EventName
+                FROM AccessPoint ap
+                INNER JOIN Event ev
+                ON ap.EventId = ev.Id";
+
+            return (IEnumerable<AccessPoint>) await _context.QueryAsync<IEnumerable<AccessPoint>>(query);
+
         }
 
+        /// <summary>
+        /// Obtiene un AccessPoint especifico por su identificacion
+        /// </summary>
         public async Task<AccessPoint?> GetByIdAsync(int id)
         {
             try
             {
-                return await _context.Set<AccessPoint>().FindAsync(id);
+                string query = @"
+                SELECT
+                    ap.Id, 
+                    ap.Name, 
+                    ap.Ubication, 
+                    ap.EventId as EventId, 
+                    ev.Name as EventName
+                FROM AccessPoint ap
+                INNER JOIN Event ev
+                ON ap.EventId = ev.Id
+                WHERE ap.Id = @Id";
+
+                return await _context.QueryFirstOrDefaultAsync<AccessPoint>(query, new {Id = id});
+ 
             }
             catch (Exception ex)
             {
@@ -38,7 +70,9 @@ namespace Data
                 throw;
             }
         }
-
+        /// <summary>
+        /// Crear un nuevo AccessPoint en la base de datos
+        /// </summary>
         public async Task<AccessPoint> CreateAsync(AccessPoint accessPoint)
         {
             try
@@ -54,6 +88,9 @@ namespace Data
             }
         }
 
+        /// <summary>
+        /// Actualiza un rol existente en la base de datos.
+        /// </summary>
         public async Task<bool> UpdateAsync(AccessPoint accessPoint)
         {
             try
@@ -69,6 +106,9 @@ namespace Data
             }
         }
 
+        /// <summary>
+        /// Elimina un AccessPoint de la base de datos.
+        /// </summary>
         public async Task<bool> DeleteAsync(int id)
         {
             try

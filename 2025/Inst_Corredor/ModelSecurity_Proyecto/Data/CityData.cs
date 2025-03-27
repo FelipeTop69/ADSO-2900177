@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entity.Contexts;
+using Entity.Context;
+using Entity.DTOs;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,14 +24,36 @@ namespace Data
 
         public async Task<IEnumerable<City>> GetAllAsync()
         {
-            return await _context.Set<City>().ToListAsync();
+            string query = @"
+                SELECT 
+                    c.Id, 
+                    c.Name, 
+                    c.DepartmentId, 
+                    d.Name as DepartmentName
+                FROM City c
+                INNER JOIN Department d 
+                ON c.DepartmentId = d.Id";
+
+            return (IEnumerable<City>) await _context.QueryAsync<IEnumerable<City>>(query);
+            //return await _context.Set<City>().ToListAsync();
         }
 
         public async Task<City?> GetByIdAsync(int id)
         {
             try
             {
-                return await _context.Set<City>().FindAsync(id);
+                string query = @"
+                    SELECT 
+                        c.Id, 
+                        c.Name, 
+                        c.DepartmentId, 
+                        d.Name AS DepartmentName
+                    FROM City c
+                    INNER JOIN Department d ON c.DepartmentId = d.Id
+                    WHERE c.Id = @Id";
+
+                return await _context.QueryFirstOrDefaultAsync<City>(query, new { Id = id });
+                //return await _context.Set<City>().FindAsync(id);
             }
             catch (Exception ex)
             {

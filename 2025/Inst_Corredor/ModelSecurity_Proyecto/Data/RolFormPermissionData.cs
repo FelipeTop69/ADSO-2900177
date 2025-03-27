@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entity.Contexts;
+using Entity.Context;
+using Entity.DTOs;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,14 +24,48 @@ namespace Data
 
         public async Task<IEnumerable<RolFormPermission>> GetAllAsync()
         {
-            return await _context.Set<RolFormPermission>().ToListAsync();
+            string query = @"
+                SELECT 
+                    rfp.Id, 
+                    rfp.RoleId, 
+                    r.Name as RoleName, 
+                    rfp.PermissionId, 
+                    p.Name as PermissionName, 
+                    rfp.FormId, 
+                    f.Name as FormName
+                FROM RolFormPermission rfp
+                INNER JOIN Rol r 
+                ON rfp.RoleId = r.Id
+                INNER JOIN Permission p 
+                ON rfp.PermissionId = p.Id
+                INNER JOIN Form f 
+                ON rfp.FormId = f.Id";
+
+            return (IEnumerable<RolFormPermission>) await _context.QueryAsync<IEnumerable<RolFormPermission>>(query);
+            //return await _context.Set<RolFormPermission>().ToListAsync();
         }
 
         public async Task<RolFormPermission?> GetByIdAsync(int id)
         {
             try
             {
-                return await _context.Set<RolFormPermission>().FindAsync(id);
+                string query = @"
+                    SELECT 
+                        rfp.Id, 
+                        rfp.RoleId, 
+                        r.Name AS RoleName, 
+                        rfp.PermissionId, 
+                        p.Name AS PermissionName, 
+                        rfp.FormId, 
+                        f.Name AS FormName
+                    FROM RolFormPermission rfp
+                    INNER JOIN Rol r ON rfp.RoleId = r.Id
+                    INNER JOIN Permission p ON rfp.PermissionId = p.Id
+                    INNER JOIN Form f ON rfp.FormId = f.Id
+                    WHERE rfp.Id = @Id";
+
+                return await _context.QueryFirstOrDefaultAsync<RolFormPermission>(query, new { Id = id });
+                //return await _context.Set<RolFormPermission>().FindAsync(id);
             }
             catch (Exception ex)
             {

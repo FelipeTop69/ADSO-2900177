@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entity.Contexts;
+using Entity.Context;
+using Entity.DTOs;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,14 +24,43 @@ namespace Data
 
         public async Task<IEnumerable<Card>> GetAllAsync()
         {
-            return await _context.Set<Card>().ToListAsync();
+            string query = @"
+                SELECT 
+                    c.Id, 
+                    c.QR, 
+                    c.Active AS Status, 
+                    c.CreationDate, 
+                    c.ExpirationDate, 
+                    c.PersonId, 
+                    p.Name as PersonName
+                FROM Card c
+                INNER JOIN Person p 
+                ON c.PersonId = p.Id";
+
+            return (IEnumerable<Card>) await _context.QueryAsync<IEnumerable<Card>>(query);
+            //return await _context.Set<Card>().ToListAsync();
         }
 
         public async Task<Card?> GetByIdAsync(int id)
         {
             try
             {
-                return await _context.Set<Card>().FindAsync(id);
+                string query = @"
+                    SELECT 
+                        c.Id, 
+                        c.QR, 
+                        c.Active AS Status, 
+                        c.CreationDate, 
+                        c.ExpirationDate, 
+                        c.PersonId, 
+                        p.Name as PersonName
+                    FROM Card c
+                    INNER JOIN Person p 
+                    ON c.PersonId = p.Id
+                    WHERE c.Id = @Id";
+
+                return await _context.QueryFirstOrDefaultAsync<Card>(query, new { Id = id });
+                //return await _context.Set<Card>().FindAsync(id);
             }
             catch (Exception ex)
             {

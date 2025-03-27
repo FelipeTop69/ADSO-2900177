@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entity.Contexts;
+using Entity.Context;
 using Entity.DTOs;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
@@ -24,14 +24,41 @@ namespace Data
 
         public async Task<IEnumerable<Event>> GetAllAsync()
         {
-            return await _context.Set<Event>().ToListAsync();
+            String Query = @"
+                SELECT 
+                    ev.Id,
+                    ev.Name,
+                    ev.Description,
+                    ev.Date,
+                    ev.EventType,
+                    evt.Name
+                FROM Event as ev
+                INNER JOIN EventType as evt
+                ON ev.EventType = evt.Id";
+
+            return (IEnumerable<Event>) await _context.QueryAsync<IEnumerable<Event>>(Query);
+            //return await _context.Set<Event>().ToListAsync();
         }
 
         public async Task<Event?> GetByIdAsync(int id)
         {
             try
             {
-                return await _context.Set<Event>().FindAsync(id);
+                String Query = @"
+                        SELECT 
+                        ev.Id,
+                        ev.Name,
+                        ev.Description,
+                        ev.Date,
+                        ev.EventType,
+                        evt.Name
+                    FROM Event as ev
+                    INNER JOIN EventType as evt
+                    ON ev.EventType = evt.Id
+                    WHERE ev.Id = @Id";
+
+                return await _context.QueryFirstOrDefaultAsync<Event>(Query, new {Id = id});
+                //return await _context.Set<Event>().FindAsync(id);
             }
             catch (Exception ex)
             {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entity.Contexts;
+using Entity.Context;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
@@ -24,14 +24,45 @@ namespace Data
 
         public async Task<IEnumerable<AttendanceRegistration>> GetAllAsync()
         {
-            return await _context.Set<AttendanceRegistration>().ToListAsync();
+            string query = @"
+                SELECT 
+                    atr.Id, 
+                    atr.Hour, 
+                    atr.IsEntrance, 
+                    atr.AttendanceId, 
+                    at.Name as AttendanceName, 
+                    atr.AccessPointId, 
+                    ap.Name as AccessPoint
+                FROM AttendanceRegistration atr
+                INNER JOIN Attendance at
+                ON atr.AttendanceId = at.Id
+                INNER JOIN AccessPoint ap
+                ON atr.AccessPoint = ap.Id";
+
+            return (IEnumerable<AttendanceRegistration>) await _context.QueryAsync<IEnumerable<AttendanceRegistration>>(query);
         }
 
         public async Task<AttendanceRegistration?> GetByIdAsync(int id)
         {
             try
             {
-                return await _context.Set<AttendanceRegistration>().FindAsync(id);
+                string query = @"
+                    SELECT 
+                        atr.Id, 
+                        atr.Hour, 
+                        atr.IsEntrance, 
+                        atr.AttendanceId, 
+                        at.Name as AttendanceName, 
+                        atr.AccessPointId, 
+                        ap.Name as AccessPoint
+                    FROM AttendanceRegistration atr
+                    INNER JOIN Attendance at
+                    ON atr.AttendanceId = at.Id
+                    INNER JOIN AccessPoint ap
+                    ON atr.AccessPointId = ap.Id
+                    WHERE at.Id = @Id";
+
+                return await _context.QueryFirstOrDefaultAsync<AttendanceRegistration>(query, new { Id = id });
             }
             catch (Exception ex)
             {

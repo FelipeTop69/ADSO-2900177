@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entity.Contexts;
+using Entity.Context;
+using Entity.DTOs;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,7 +24,19 @@ namespace Data
 
         public async Task<IEnumerable<RolUser>> GetAllAsync()
         {
-            return await _context.Set<RolUser>().ToListAsync();
+            string query = @"
+                SELECT 
+                    ru.Id, 
+                    ru.RoleId, 
+                    r.Name AS RoleName, 
+                    ru.UserId, 
+                    u.UserName AS UserName
+                FROM RolUser ru
+                INNER JOIN Rol r ON ru.RoleId = r.Id
+                INNER JOIN [User] u ON ru.UserId = u.Id";
+
+            return (IEnumerable<RolUser>) await _context.QueryAsync<IEnumerable<User>>(query);
+            //return await _context.Set<RolUser>().ToListAsync(); 
         }
 
         public async Task<RolUser?> GetByIdAsync(int id)
