@@ -123,6 +123,26 @@ namespace Entity.Context
             return await connection.QueryFirstOrDefaultAsync<T>(command.Definition);
         }
 
+        /// <summary>
+        /// Ejecuta una consulta SQL utilizando Dapper y devuelve un solo resultado o el valor predeterminado si no hay resultados.
+        /// </summary>
+        /// <typeparam name="T">Tipo de los datos de retorno.</typeparam>
+        /// <param name="text">Consulta SQL a ejecutar.</param>
+        /// <param name="parameters">Parámetros opcionales de la consulta.</param>
+        /// <param name="timeout">Tiempo de espera opcional para la consulta (en segundos).</param>
+        /// <param name="type">Tipo opcional de comando SQL (por defecto, CommandType.Text).</param>
+        /// <returns>Un objeto del tipo especificado o su valor predeterminado.</returns>
+        public async Task<T> QuerySingleAsync<T>(
+            string text,
+            object? parameters = null,
+            int? timeout = null,
+            CommandType type = CommandType.Text)
+        {
+            await using var connection = Database.GetDbConnection();
+            return await connection.QuerySingleOrDefaultAsync<T>(
+                text, parameters, commandTimeout: timeout, commandType: type);
+        }
+
         // <summary>
         // Método interno para garantizar la auditoría de los cambios en las entidades.
         // </summary>

@@ -17,8 +17,6 @@ namespace Entity.Model
         public string Action { get; set; }
         public DateTime Timestamp { get; set; }
 
-        // Clave foranea con User
-        public int UserId { get; set; }
-        public User User { get; set; } //Propiedad de navegacion
+
     }
 }

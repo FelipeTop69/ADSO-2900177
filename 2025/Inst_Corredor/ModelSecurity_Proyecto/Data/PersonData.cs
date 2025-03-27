@@ -22,9 +22,12 @@ namespace Data
             _looger = logger;
         }
 
-        public async Task<IEnumerable<Person>> GetAllAsync()
+        /// <summary>
+        /// Obtiene todos los Person almacenados en la base de datos SQL
+        /// </summary>
+        public async Task<IEnumerable<Person>> GetAllAsyncSQL()
         {
-            string query = @"
+            String query = @"
                 SELECT 
                     p.Id, 
                     CONCAT(p.FirstName, ' ', COALESCE(p.MiddleName, ''), ' ', p.LastName, ' ', COALESCE(p.SecondLastName, '')) AS Name,
@@ -49,11 +52,26 @@ namespace Data
             //return await _context.Set<Person>().ToListAsync();
         }
 
-        public async Task<Person?> GetBydIdAsync(int id)
+
+
+        /// <summary>
+        /// Obtiene todos los Person almacenados en la base de datos LINQ
+        /// </summary>
+        public async Task<IEnumerable<Person>> GetAllAsync()
+        {
+            return await _context.Set<Person>().ToListAsync();
+        }
+
+
+
+        /// <summary>
+        /// Obtiene un Person especifico por su identificacion SQL
+        /// </summary
+        public async Task<Person?> GetBydIdAsyncSQL(int id)
         {
             try
             {
-                string query = @"
+                String query = @"
                     SELECT 
                         p.Id, 
                         CONCAT(p.FirstName, ' ', COALESCE(p.MiddleName, ''), ' ', p.LastName, ' ', COALESCE(p.SecondLastName, '')) AS Name,
@@ -83,7 +101,76 @@ namespace Data
                 throw;
             }
         }
+        
+        /// <summary>
+        /// Obtiene un Person especifico por su identificacion LINQ
+        /// </summary
+        public async Task<Person?> GetBydIdAsync(int id)
+        {
+            try
+            {
 
+                return await _context.Set<Person>().FindAsync(id);
+            }
+            catch(Exception ex) {
+                _looger.LogError(ex, $"Error al obtener la persona con id {id}");
+                throw;
+            }
+        }
+
+
+
+        /// <summary>
+        /// Crear un nuevo Person en la base de datos SQL
+        /// </summary>
+        public async Task<Person> CreateAsyncSQL(Person person)
+        {
+            try
+            {
+                string query = @"
+                    INSERT INTO Person 
+                    (FirstName, MiddleName, LastName, SecondLastName, Email, DocumentNumber, Phone, 
+                     Address, DocumentType, BlodType, Photo, CityId, AssignamentId) 
+                    VALUES 
+                    (@FirstName, @MiddleName, @LastName, @SecondLastName, @Email, @DocumentNumber, @Phone, 
+                     @Address, @DocumentType, @BlodType, @Photo, @CityId, @AssignamentId);
+                    SELECT CAST(SCOPE_IDENTITY() AS int);";
+
+                int newId = await _context.QuerySingleAsync<int>(query, new
+                {
+                    person.FirstName,
+                    person.MiddleName,
+                    person.LastName,
+                    person.SecondLastName,
+                    person.Email,
+                    person.DocumentNumber,
+                    person.Phone,
+                    person.Address,
+                    person.DocumentType,
+                    person.BlodType,
+                    person.Photo,
+                    person.CityId,
+                    person.AssignamentId
+                });
+
+                person.Id = newId;
+                return person;
+
+                //await _context.Set<Person>().AddAsync(person);
+                //await _context.SaveChangesAsync();
+                //return person;
+            }
+            catch (Exception ex) 
+            {
+                _looger.LogError($"Error al crear la persona{ex.Message}");
+                throw;
+            }
+
+        }
+        
+        /// <summary>
+        /// Crear un nuevo Person en la base de datos LINQ
+        /// </summary>
         public async Task<Person> CreateAsync(Person person)
         {
             try
@@ -100,13 +187,65 @@ namespace Data
 
         }
 
+
+
+        /// <summary>
+        /// Actualiza un Person existente en la base de datos SQL
+        /// </summary>
+        public async Task<bool> UpdateAsyncSQL(Person person)
+        {
+            try
+            {
+                var query = @"
+                    UPDATE Person 
+                    SET FirstName = @FirstName, MiddleName = @MiddleName, LastName = @LastName, 
+                        SecondLastName = @SecondLastName, Email = @Email, DocumentNumber = @DocumentNumber, 
+                        Phone = @Phone, Address = @Address, DocumentType = @DocumentType, BlodType = @BlodType, 
+                        Photo = @Photo, CityId = @CityId, AssignamentId = @AssignamentId
+                    WHERE Id = @Id;
+                    SELECT CAST(@@ROWCOUNT AS int);";
+
+                int rowsAffected = await _context.QuerySingleAsync<int>(query, new
+                {
+                    person.Id,
+                    person.FirstName,
+                    person.MiddleName,
+                    person.LastName,
+                    person.SecondLastName,
+                    person.Email,
+                    person.DocumentNumber,
+                    person.Phone,
+                    person.Address,
+                    person.DocumentType,
+                    person.BlodType,
+                    person.Photo,
+                    person.CityId,
+                    person.AssignamentId
+                });
+
+                return rowsAffected > 0;
+                //_context.Set<Person>().Update(person);
+                //await _context.SaveChangesAsync();
+                //return  true;
+            }
+            catch (Exception ex) {
+                _looger.LogError($"Error al actualizar la persona {ex.Message}");
+                throw;
+            }
+            
+        } 
+
+        /// <summary>
+        /// Actualiza un Person existente en la base de datos LINQ
+        /// </summary>
         public async Task<bool> UpdateAsync(Person person)
         {
             try
             {
+
                 _context.Set<Person>().Update(person);
                 await _context.SaveChangesAsync();
-                return  true;
+                return true;
             }
             catch (Exception ex) {
                 _looger.LogError($"Error al actualizar la persona {ex.Message}");
@@ -115,6 +254,41 @@ namespace Data
             
         }
 
+
+
+        /// <summary>
+        /// Elimina un Person de la base de datos SQL
+        /// </summary>
+        public async Task<bool> DeleteAsyncSQL(int id)
+        {
+            try
+            {
+                var query = @"
+                    DELETE FROM Person WHERE Id = @Id;
+                    SELECT CAST(@@ROWCOUNT AS int);";
+
+                int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
+
+                return rowsAffected > 0;
+
+
+                //var person = await _context.Set<Person>().FindAsync(id);
+                //if (person == null)
+                //    return false;
+                //_context.Set<Person>().Remove(person);
+                //await _context.SaveChangesAsync();
+                //return true;
+            }
+            catch (Exception ex)
+            {
+                _looger.LogError($"Error al eliminar la persona {ex.Message}");
+                return false;
+            }
+        }
+        
+        /// <summary>
+        /// Elimina un Person de la base de datos LINQ
+        /// </summary>
         public async Task<bool> DeleteAsync(int id)
         {
             try

@@ -22,9 +22,12 @@ namespace Data
             _logger = logger;
         }
 
-        public async Task<IEnumerable<RolFormPermission>> GetAllAsync()
+        /// <summary>
+        /// Obtiene todos los RolFormPermission almacenados en la base de datos SQL
+        /// </summary>
+        public async Task<IEnumerable<RolFormPermission>> GetAllAsyncSQL()
         {
-            string query = @"
+            String query = @"
                 SELECT 
                     rfp.Id, 
                     rfp.RoleId, 
@@ -45,11 +48,25 @@ namespace Data
             //return await _context.Set<RolFormPermission>().ToListAsync();
         }
 
-        public async Task<RolFormPermission?> GetByIdAsync(int id)
+        /// <summary>
+        /// Obtiene todos los RolFormPermission almacenados en la base de datos LINQ
+        /// </summary>
+        public async Task<IEnumerable<RolFormPermission>> GetAllAsync()
+        {
+            return await _context.Set<RolFormPermission>().ToListAsync();
+        }
+
+
+
+
+        /// <summary>
+        /// Obtiene un RolFormPermission especifico por su identificacion SQL
+        /// </summary
+        public async Task<RolFormPermission?> GetByIdAsyncSQL(int id)
         {
             try
             {
-                string query = @"
+                String query = @"
                     SELECT 
                         rfp.Id, 
                         rfp.RoleId, 
@@ -75,6 +92,59 @@ namespace Data
 
         }
 
+        /// <summary>
+        /// Obtiene un RolFormPermission específico por su identificación LINQ
+        /// </summary>
+        public async Task<RolFormPermission?> GetByIdAsync(int id)
+        {
+            try
+            {
+                return await _context.Set<RolFormPermission>().FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener un RolFormPermission con ID {RolFormPermissionId}", id);
+                throw;
+            }
+        }
+
+
+        /// <summary>
+        /// Crear un nuevo RolFormPermission en la base de datos SQL
+        /// </summary>
+        public async Task<RolFormPermission> CreateAsyncSQL(RolFormPermission rolFormPermission)
+        {
+            try
+            {
+                string query = @"
+                    INSERT INTO RolFormPermission (RolId, FormId, PermissionId) 
+                    VALUES (@RolId, @FormId, @PermissionId);
+                    SELECT CAST(SCOPE_IDENTITY() AS int);";
+
+                int newId = await _context.QuerySingleAsync<int>(query, new
+                {
+                    rolFormPermission.RolId,
+                    rolFormPermission.FormId,
+                    rolFormPermission.PermissionId
+                });
+
+                rolFormPermission.Id = newId;
+                return rolFormPermission;
+
+                //await _context.Set<RolFormPermission>().AddAsync(rolFormPermission);
+                //await _context.SaveChangesAsync();
+                //return rolFormPermission;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al crear el RolFormPermission: {ex.Message}");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Crea un nuevo RolFormPermission en la base de datos LINQ
+        /// </summary>
         public async Task<RolFormPermission> CreateAsync(RolFormPermission rolFormPermission)
         {
             try
@@ -90,6 +160,46 @@ namespace Data
             }
         }
 
+
+
+
+        /// <summary>
+        /// Actualiza un RolFormPermission existente en la base de datos SQL
+        /// </summary>
+        public async Task<bool> UpdateAsyncSQL(RolFormPermission rolFormPermission)
+        {
+            try
+            {
+                var query = @"
+                    UPDATE RolFormPermission 
+                    SET RolId = @RolId, FormId = @FormId, PermissionId = @PermissionId
+                    WHERE Id = @Id;
+                    SELECT CAST(@@ROWCOUNT AS int);";
+
+                int rowsAffected = await _context.QuerySingleAsync<int>(query, new
+                {
+                    rolFormPermission.Id,
+                    rolFormPermission.RolId,
+                    rolFormPermission.FormId,
+                    rolFormPermission.PermissionId
+                });
+
+                return rowsAffected > 0;
+
+                //_context.Set<RolFormPermission>().Update(rolFormPermission);
+                //await _context.SaveChangesAsync();
+                //return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar el RolFormPermission : {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Actualiza un RolFormPermission existente en la base de datos LINQ
+        /// </summary>
         public async Task<bool> UpdateAsync(RolFormPermission rolFormPermission)
         {
             try
@@ -100,21 +210,35 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al actualizar el RolFormPermission : {ex.Message}");
+                _logger.LogError($"Error al actualizar el RolFormPermission: {ex.Message}");
                 return false;
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+
+
+
+        /// <summary>
+        /// Elimina un RolFormPermission de la base de datos SQL
+        /// </summary>
+        public async Task<bool> DeleteAsyncSQL(int id)
         {
             try
             {
-                var rolFormPermission = await _context.Set<RolFormPermission>().FindAsync(id);
-                if (rolFormPermission == null)
-                    return false;
-                _context.Set<RolFormPermission>().Remove(rolFormPermission);
-                await _context.SaveChangesAsync();
-                return true;
+                var query = @"
+                    DELETE FROM RolFormPermission WHERE Id = @Id;
+                    SELECT CAST(@@ROWCOUNT AS int);";
+
+                int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
+
+                return rowsAffected > 0;
+
+                //var rolFormPermission = await _context.Set<RolFormPermission>().FindAsync(id);
+                //if (rolFormPermission == null)
+                //    return false;
+                //_context.Set<RolFormPermission>().Remove(rolFormPermission);
+                //await _context.SaveChangesAsync();
+                //return true;
             }
             catch (Exception ex)
             {
@@ -122,5 +246,28 @@ namespace Data
                 return false;
             }
         }
+
+        /// <summary>
+        /// Elimina un RolFormPermission de la base de datos LINQ
+        /// </summary>
+        public async Task<bool> DeleteAsync(int id)
+        {
+            try
+            {
+                var rolFormPermission = await _context.Set<RolFormPermission>().FindAsync(id);
+                if (rolFormPermission == null)
+                    return false;
+
+                _context.Set<RolFormPermission>().Remove(rolFormPermission);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al eliminar el RolFormPermission: {ex.Message}");
+                return false;
+            }
+        }
+
     }
 }

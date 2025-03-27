@@ -11,7 +11,7 @@ namespace Entity.Model
         public int Id { get; set; }
 
         // Claves foraneas
-        public int RoleId { get; set; } /// FK 
+        public int RolId { get; set; } /// FK 
         public Rol Rol { get; set; } /// PN  
 
         public int PermissionId { get; set; } /// FK
