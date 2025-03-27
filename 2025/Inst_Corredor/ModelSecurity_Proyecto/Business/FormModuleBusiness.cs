@@ -39,6 +39,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Obtiene una relación FormModule por ID como DTO.
         /// </summary>
@@ -68,6 +69,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Crea una nueva relación FormModule.
         /// </summary>
@@ -88,6 +90,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al crear la relación FormModule.", ex);
             }
         }
+
 
         /// <summary>
         /// Actualiza una relación FormModule existente.
@@ -117,6 +120,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Elimina una relación FormModule por ID.
         /// </summary>
@@ -138,6 +142,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al eliminar la relación FormModule.", ex);
             }
         }
+
 
         /// <summary>
         /// Valida los datos de la relación FormModule.
@@ -162,6 +167,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Mapea un objeto FormModule a FormModuleDTO.
         /// </summary>
@@ -177,6 +183,7 @@ namespace Business
             };
         }
 
+
         /// <summary>
         /// Mapea un objeto FormModuleDTO a FormModule.
         /// </summary>
@@ -190,7 +197,9 @@ namespace Business
             };
         }
 
-        /// Método para mapear una lista de FormModule a una lista de ForModuleDTO <summary>
+
+        /// <summary>
+        /// Metodo para mapear una lista de FormModule a una lista de ForModuleDTO 
         /// </summary>
         /// <param name="formModule"></param>
         /// <returns></returns>

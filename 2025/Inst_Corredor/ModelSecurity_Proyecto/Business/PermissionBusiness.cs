@@ -30,7 +30,7 @@ namespace Business
             try
             {
                 var permissions = await _permissionData.GetAllAsync();
-                return permissions.Select(MapToDTO);
+                return MapToDTOList(permissions);
             }
             catch (Exception ex)
             {
@@ -38,6 +38,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al recuperar la lista de permisos.", ex);
             }
         }
+
 
         /// <summary>
         /// Obtiene un permiso por ID como DTO.
@@ -68,6 +69,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Crea un nuevo permiso.
         /// </summary>
@@ -88,6 +90,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al crear el permiso.", ex);
             }
         }
+
 
         /// <summary>
         /// Actualiza un permiso existente.
@@ -117,6 +120,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Elimina un permiso por ID.
         /// </summary>
@@ -139,6 +143,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Valida los datos del permiso.
         /// </summary>
@@ -156,6 +161,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Mapea un objeto Permission a PermissionDTO.
         /// </summary>
@@ -169,6 +175,7 @@ namespace Business
             };
         }
 
+
         /// <summary>
         /// Mapea un objeto PermissionDTO a Permission.
         /// </summary>
@@ -180,6 +187,21 @@ namespace Business
                 Name = permissionDTO.Name,
                 Description = permissionDTO.Description
             };
+        }
+
+        /// <summary>
+        /// Metodo para mapear una lista de Permission a una lista de PermissionDTO 
+        /// </summary>
+        /// <param name="permissions"></param>
+        /// <returns></returns>
+        private IEnumerable<PermissionDTO> MapToDTOList(IEnumerable<Permission> permissions)
+        {
+            var permissionsDTO = new List<PermissionDTO>();
+            foreach (var permission in permissions)
+            {
+                permissionsDTO.Add(MapToDTO(permission));
+            }
+            return permissionsDTO;
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Business
             try
             {
                 var rolFormPermissions = await _rolFormPermissionData.GetAllAsync();
-                return rolFormPermissions.Select(MapToDTO);
+                return MapToDTOList(rolFormPermissions);
             }
             catch (Exception ex)
             {
@@ -38,6 +38,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al recuperar la lista de RolFormPermission.", ex);
             }
         }
+
 
         /// <summary>
         /// Obtiene un RolFormPermission por ID como DTO.
@@ -68,6 +69,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Crea un nuevo registro de RolFormPermission.
         /// </summary>
@@ -88,6 +90,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al crear el RolFormPermission.", ex);
             }
         }
+
 
         /// <summary>
         /// Actualiza un registro existente de RolFormPermission.
@@ -118,6 +121,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Elimina un RolFormPermission por ID.
         /// </summary>
@@ -139,6 +143,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al eliminar el RolFormPermission.", ex);
             }
         }
+
 
         /// <summary>
         /// Valida los datos de RolFormPermission.
@@ -169,6 +174,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Mapea un objeto RolFormPermission a RolFormPermissionDTO.
         /// </summary>
@@ -186,6 +192,7 @@ namespace Business
             };
         }
 
+
         /// <summary>
         /// Mapea un objeto RolFormPermissionDTO a RolFormPermission.
         /// </summary>
@@ -198,6 +205,22 @@ namespace Business
                 PermissionId = rolFormPermissionDTO.PermissionId,
                 FormId = rolFormPermissionDTO.FormId
             };
+        }
+
+
+        /// <summary>
+        /// Metodo para mapear una lista de RolFormPermission a una lista de RolFormPermissionDTO 
+        /// </summary>
+        /// <param name="rolFormPermissions"></param>
+        /// <returns></returns>
+        private IEnumerable<RolFormPermissionDTO> MapToDTOList(IEnumerable<RolFormPermission> rolFormPermissions)
+        {
+            var rolFormPermissionsDTO = new List<RolFormPermissionDTO>();
+            foreach (var rolFormPermission in rolFormPermissions)
+            {
+                rolFormPermissionsDTO.Add(MapToDTO(rolFormPermission));
+            }
+            return rolFormPermissionsDTO;
         }
     }
 }

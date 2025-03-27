@@ -25,16 +25,15 @@ namespace Business
             _logger = logger;
         }
 
-        // Método para obtener todos los roles como DTOs
+        /// <summary>
+        /// Metodo para obtener todos los roles como DTOs
+        /// </summary>
         public async Task<IEnumerable<RolDTO>> GetAllRolesAsync()
         {
             try
             {
                 var roles = await _rolData.GetAllAsync();
-
-                // Metodo
                 return MapToDTOList(roles);
-
             }
             catch (Exception ex)
             {
@@ -43,7 +42,9 @@ namespace Business
             }
         }
 
-        /// Método para obtener un rol por ID como DTO <summary>
+
+        /// <summary>
+        /// Metodo para obtener un rol por ID como DTO 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -76,7 +77,9 @@ namespace Business
             }
         }
 
-        /// Método para crear un rol desde un DTO <summary>
+
+        /// <summary>
+        /// Metodo para crear un rol desde un DTO 
         /// </summary>
         /// <param name="RolDto"></param>
         /// <returns></returns>
@@ -101,7 +104,11 @@ namespace Business
         }
 
 
-        /// Método para validar el DTO
+        /// <summary>
+        /// Metodo para Validar el Rol
+        /// </summary>
+        /// <param name="RolDto"></param>
+        /// <exception cref="Utilities.Exceptions.ValidationException"></exception>
         private void ValidateRol(RolDTO RolDto)
         {
             if (RolDto == null)
@@ -133,7 +140,9 @@ namespace Business
             };
         }
 
-        /// Método para mapear de RolDTO a Rol <summary>
+
+        /// <summary>
+        /// Metodo para mapear de RolDTO a Rol 
         /// </summary>
         /// <param name="rolDTO"></param>
         /// <returns></returns>
@@ -148,7 +157,9 @@ namespace Business
             };
         }
 
-        /// Método para mapear una lista de Rol a una lista de RolDTO <summary>
+
+        /// <summary>
+        /// Metodo para mapear una lista de Rol a una lista de RolDTO 
         /// </summary>
         /// <param name="roles"></param>
         /// <returns></returns>

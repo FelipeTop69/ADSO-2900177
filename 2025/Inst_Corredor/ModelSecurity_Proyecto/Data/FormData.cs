@@ -26,7 +26,7 @@ namespace Data
         /// </summary>
         public async Task<IEnumerable<Form>> GetAllAsyncSQL()
         {
-            String query = @"SELECT * FROM FormData";
+            string query = @"SELECT * FROM FormData";
             return (IEnumerable<Form>)await _context.QueryAsync<IEnumerable<Form>>(query);
 
             //return await _context.Set<Form>().ToListAsync();
@@ -42,7 +42,6 @@ namespace Data
 
 
 
-
         /// <summary>
         /// Obtiene un FormData especifico por su identificacion SQL
         /// </summary
@@ -50,7 +49,7 @@ namespace Data
         {
             try
             {
-                String query = @"SELECT * FROM FormData WHERE Id = @Id";
+                string query = @"SELECT * FROM FormData WHERE Id = @Id";
                 return await _context.QueryFirstOrDefaultAsync<Form>(query, new { Id = id });
 
                 //return await _context.Set<Form>().FindAsync(id);
@@ -78,7 +77,6 @@ namespace Data
                 throw;
             }
         }
-
 
 
 
@@ -142,7 +140,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     UPDATE Form 
                     SET Name = @Name, Description = @Description
                     WHERE Id = @Id;
@@ -196,7 +194,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     DELETE FROM Form WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 

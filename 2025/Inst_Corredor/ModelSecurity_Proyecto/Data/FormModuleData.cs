@@ -27,7 +27,7 @@ namespace Data
         /// </summary>
         public async Task<IEnumerable<FormModule>> GetAllAsyncSQL()
         {
-            String query = @"
+            string query = @"
                 SELECT 
                     fm.Id, 
                     fm.FormId, 
@@ -54,7 +54,6 @@ namespace Data
 
 
 
-
         /// <summary>
         /// Obtiene un FormModule especifico por su identificacion SQL
         /// </summary
@@ -62,7 +61,7 @@ namespace Data
         {
             try
             {
-                String query = @"
+                string query = @"
                     SELECT 
                         fm.Id, 
                         fm.FormId, 
@@ -102,7 +101,6 @@ namespace Data
                 throw;
             }
         }
-
 
 
 
@@ -158,7 +156,6 @@ namespace Data
 
 
 
-
         /// <summary>
         /// Actualiza un FormModule existente en la base de datos SQL
         /// </summary>
@@ -166,7 +163,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     UPDATE FormModule 
                     SET FormId = @FormId, ModuleId = @ModuleId
                     WHERE Id = @Id;
@@ -212,7 +209,6 @@ namespace Data
 
 
 
-
         /// <summary>
         /// Elimina un FormModule de la base de datos SQL
         /// </summary>
@@ -220,7 +216,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     DELETE FROM FormModule WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 
@@ -263,8 +259,5 @@ namespace Data
                 return false;
             }
         }
-
-
-
     }
 }

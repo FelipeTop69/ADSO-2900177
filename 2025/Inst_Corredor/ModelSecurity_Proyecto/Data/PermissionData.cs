@@ -26,7 +26,7 @@ namespace Data
         /// </summary>
         public async Task<IEnumerable<Permission>> GetAllAsyncSQL()
         {
-            String query = @"SELECT * FROM Permission";
+            string query = @"SELECT * FROM Permission";
             return (IEnumerable<Permission>) await _context.QueryAsync<IEnumerable<Permission>>(query);
             //return await _context.Set<Permission>().ToListAsync();
         }
@@ -41,7 +41,6 @@ namespace Data
 
 
 
-
         /// <summary>
         /// Obtiene un Permission especifico por su identificacion SQL
         /// </summary
@@ -49,7 +48,7 @@ namespace Data
         {
             try
             {
-                String query = @"SELECT * FROM Permission WHERE Id = @Id";
+                string query = @"SELECT * FROM Permission WHERE Id = @Id";
                 return await _context.QueryFirstOrDefaultAsync<Permission>(query, new { Id = id  });
                 //return await _context.Set<Permission>().FindAsync(id);
             }
@@ -76,7 +75,6 @@ namespace Data
                 throw;
             }
         }
-
 
 
 
@@ -128,7 +126,6 @@ namespace Data
                 throw;
             }
         }
-
 
 
 
@@ -185,7 +182,6 @@ namespace Data
 
 
 
-
         /// <summary>
         /// Elimina un Permission de la base de datos SQL
         /// </summary>
@@ -193,7 +189,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     DELETE FROM Permission WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 
@@ -236,8 +232,5 @@ namespace Data
                 return false;
             }
         }
-
-
-
     }
 }

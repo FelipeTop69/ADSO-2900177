@@ -27,7 +27,7 @@ namespace Data
         /// </summary>
         public async Task<IEnumerable<Person>> GetAllAsyncSQL()
         {
-            String query = @"
+            string query = @"
                 SELECT 
                     p.Id, 
                     CONCAT(p.FirstName, ' ', COALESCE(p.MiddleName, ''), ' ', p.LastName, ' ', COALESCE(p.SecondLastName, '')) AS Name,
@@ -69,7 +69,7 @@ namespace Data
         {
             try
             {
-                String query = @"
+                string query = @"
                     SELECT 
                         p.Id, 
                         CONCAT(p.FirstName, ' ', COALESCE(p.MiddleName, ''), ' ', p.LastName, ' ', COALESCE(p.SecondLastName, '')) AS Name,
@@ -194,7 +194,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     UPDATE Person 
                     SET FirstName = @FirstName, MiddleName = @MiddleName, LastName = @LastName, 
                         SecondLastName = @SecondLastName, Email = @Email, DocumentNumber = @DocumentNumber, 
@@ -261,7 +261,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     DELETE FROM Person WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 

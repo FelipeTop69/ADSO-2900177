@@ -30,7 +30,7 @@ namespace Business
             try
             {
                 var rolUsers = await _rolUserData.GetAllAsync();
-                return rolUsers.Select(MapToDTO);
+                return MapToDTOList(rolUsers);
             }
             catch (Exception ex)
             {
@@ -38,6 +38,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al recuperar la lista de RolUser.", ex);
             }
         }
+
 
         /// <summary>
         /// Obtiene un RolUser por ID como DTO.
@@ -68,6 +69,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Crea una nueva asignación de RolUser.
         /// </summary>
@@ -88,6 +90,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al crear la asignación de RolUser.", ex);
             }
         }
+
 
         /// <summary>
         /// Actualiza una asignación existente de RolUser.
@@ -117,6 +120,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Elimina una asignación de RolUser por ID.
         /// </summary>
@@ -138,6 +142,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al eliminar el RolUser.", ex);
             }
         }
+
 
         /// <summary>
         /// Valida los datos de RolUser.
@@ -162,6 +167,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Mapea un objeto RolUser a RolUserDTO.
         /// </summary>
@@ -177,6 +183,7 @@ namespace Business
             };
         }
 
+
         /// <summary>
         /// Mapea un objeto RolUserDTO a RolUser.
         /// </summary>
@@ -191,5 +198,20 @@ namespace Business
         }
 
 
+        /// <summary>
+        /// Metodo para mapear una lista de RolUser a una lista de RolUserDTO 
+        /// </summary>
+        /// <param name="rolUsers"></param>
+        /// <returns></returns>
+        private IEnumerable<RolUserDTO> MapToDTOList(IEnumerable<RolUser> rolUsers)
+        {
+            var rolUsersDTO = new List<RolUserDTO>();
+            foreach (var rolUser in rolUsers)
+            {
+                rolUsersDTO.Add(MapToDTO(rolUser));
+            }
+            return rolUsersDTO;
+
+        }
     }
 }

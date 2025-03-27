@@ -30,7 +30,8 @@ namespace Business
             try
             {
                 var users = await _userData.GetAllAsync();
-                return users.Select(MapToDTO);
+                return MapToDTOList(users);
+                
             }
             catch (Exception ex)
             {
@@ -38,6 +39,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al recuperar la lista de usuarios.", ex);
             }
         }
+
 
         /// <summary>
         /// Obtiene un usuario por ID como DTO.
@@ -68,6 +70,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Crea un nuevo usuario.
         /// </summary>
@@ -88,6 +91,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al crear el usuario.", ex);
             }
         }
+
 
         /// <summary>
         /// Actualiza un usuario existente.
@@ -118,6 +122,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Elimina un usuario por ID.
         /// </summary>
@@ -140,6 +145,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Valida los datos del usuario.
         /// </summary>
@@ -157,6 +163,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Mapea un objeto User a UserDTO.
         /// </summary>
@@ -172,6 +179,7 @@ namespace Business
             };
         }
 
+
         /// <summary>
         /// Mapea un objeto UserDTO a User.
         /// </summary>
@@ -184,6 +192,22 @@ namespace Business
                 State = userDTO.State,
                 PersonId = userDTO.PersonId
             };
+        }
+
+
+        /// <summary>
+        /// Metodo para mapear una lista de User a una lista de UserDTO 
+        /// </summary>
+        /// <param name="users"></param>
+        /// <returns></returns>
+        private IEnumerable<UserDTO> MapToDTOList(IEnumerable<User> users)
+        {
+            var usersDTO = new List<UserDTO>();
+            foreach (var user in users)
+            {
+                usersDTO.Add(MapToDTO(user));
+            }
+            return usersDTO;
         }
     }
 }

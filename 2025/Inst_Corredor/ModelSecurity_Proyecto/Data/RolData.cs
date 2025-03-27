@@ -37,7 +37,7 @@ namespace Data
         ///<returns>Lista de roles</returns>
         public async Task<IEnumerable<Rol>> GetAllAsyncSQL()
         {
-            String query = @"SELECT * FROM Rol";
+            string query = @"SELECT * FROM Rol";
             return (IEnumerable<Rol>) await _context.QueryAsync<IEnumerable<Rol>>(query);
             //return await _context.Set<Rol>().ToListAsync();
         }
@@ -52,7 +52,6 @@ namespace Data
 
 
 
-
         ///<summary>
         ///Obtiene un Rol especifico por su identificacion SQL
         ///</summary> 
@@ -60,7 +59,7 @@ namespace Data
         {
             try
             {
-                String query = @"SELECT * FROM Rol WHERE Id = @Id";
+                string query = @"SELECT * FROM Rol WHERE Id = @Id";
                 return await _context.QueryFirstOrDefaultAsync<Rol>(query, new { Id = id });
                 //return await _context.Set<Rol>().FindAsync(id);
             }
@@ -86,7 +85,6 @@ namespace Data
                 throw;
             }
         }
-
 
 
 
@@ -144,7 +142,6 @@ namespace Data
 
 
 
-
         /// <summary>
         /// Actualiza un Rol existente en la base de datos SQL
         /// </summary>
@@ -154,7 +151,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     UPDATE Rol 
                     SET Name = @Name, Active = @Active, Description = @Description
                     WHERE Id = @Id;
@@ -202,7 +199,6 @@ namespace Data
 
 
 
-
         /// <summary>
         /// Elimina un Rol de la base de datos SQL
         /// </summary>
@@ -212,7 +208,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     DELETE FROM Rol WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);"; 
 
@@ -255,8 +251,5 @@ namespace Data
                 return false;
             }
         }
-
-
-
     }
 }

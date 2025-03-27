@@ -27,7 +27,7 @@ namespace Data
         /// </summary>
         public async Task<IEnumerable<User>> GetAllAsyncSQL()
         {
-            String query = @"
+            string query = @"
                 SELECT 
                     u.Id, 
                     u.Username, 
@@ -60,7 +60,7 @@ namespace Data
         {
             try
             {
-                String query = @"
+                string query = @"
                     SELECT 
                         u.Id, 
                         u.Username, 
@@ -166,7 +166,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     UPDATE [User] 
                     SET Username = @Username, Password = @Password, State = @State, PersonId = @PersonId
                     WHERE Id = @Id;
@@ -220,7 +220,7 @@ namespace Data
         public async Task<bool> DeleteAsyncSQL(int id)
         {
             try { 
-                var query = @"
+                string query = @"
                     DELETE FROM [User] WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 

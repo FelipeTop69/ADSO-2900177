@@ -30,7 +30,7 @@ namespace Business
             try
             {
                 var modules = await _moduleData.GetAllAsync();
-                return modules.Select(MapToDTO);
+                return MapToDTOList(modules);
             }
             catch (Exception ex)
             {
@@ -38,6 +38,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al recuperar la lista de módulos.", ex);
             }
         }
+
 
         /// <summary>
         /// Obtiene un módulo por ID como DTO.
@@ -68,6 +69,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Crea un nuevo módulo.
         /// </summary>
@@ -88,6 +90,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al crear el módulo.", ex);
             }
         }
+
 
         /// <summary>
         /// Actualiza un módulo existente.
@@ -117,6 +120,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Elimina un módulo por ID.
         /// </summary>
@@ -139,6 +143,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Valida los datos del módulo.
         /// </summary>
@@ -156,6 +161,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Mapea un objeto Module a ModuleDTO.
         /// </summary>
@@ -169,6 +175,7 @@ namespace Business
             };
         }
 
+
         /// <summary>
         /// Mapea un objeto ModuleDTO a Module.
         /// </summary>
@@ -180,6 +187,22 @@ namespace Business
                 Name = moduleDTO.Name,
                 Description = moduleDTO.Description
             };
+        }
+
+
+        /// <summary>
+        /// Metodo para mapear una lista de Module a una lista de ModuleDTO 
+        /// </summary>
+        /// <param name="modules"></param>
+        /// <returns></returns>
+        private IEnumerable<ModuleDTO> MapToDTOList(IEnumerable<Module> modules)
+        {
+            var modulesDTO = new List<ModuleDTO>();
+            foreach (var module in modules)
+            {
+                modulesDTO.Add(MapToDTO(module));
+            }
+            return modulesDTO;
         }
     }
 }

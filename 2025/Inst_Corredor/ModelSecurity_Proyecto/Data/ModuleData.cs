@@ -26,7 +26,7 @@ namespace Data
         /// </summary>
         public async Task<IEnumerable<Module>> GetAllAsyncSQL()
         {
-            String query = @"SELECT * FROM Module";
+            string query = @"SELECT * FROM Module";
             return (IEnumerable<Module>) await _context.QueryAsync<IEnumerable<Module>>(query);
             //return await _context.Set<Module>().ToListAsync();
         }
@@ -49,7 +49,7 @@ namespace Data
         {
             try
             {
-                String query = @"SELECT * FROM Module WHERE Id = @Id";
+                string query = @"SELECT * FROM Module WHERE Id = @Id";
                 return await _context.QueryFirstOrDefaultAsync<Module>(query, new { Id = id });
                 //return await _context.Set<Module>().FindAsync(id);
             }
@@ -140,7 +140,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     UPDATE Module 
                     SET Name = @Name, Description = @Description
                     WHERE Id = @Id;
@@ -186,7 +186,6 @@ namespace Data
 
 
 
-
         /// <summary>
         /// Elimina un Module de la base de datos SQL
         /// </summary>
@@ -194,7 +193,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     DELETE FROM Module WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 

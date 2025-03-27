@@ -27,7 +27,7 @@ namespace Data
         /// </summary>
         public async Task<IEnumerable<RolUser>> GetAllAsyncSQL()
         {
-            String query = @"
+            string query = @"
                 SELECT 
                     ru.Id, 
                     ru.RoleId, 
@@ -53,6 +53,7 @@ namespace Data
         }
 
 
+
         /// <summary>
         /// Obtiene un RolUser especifico por su identificacion SQL
         /// </summary
@@ -60,7 +61,7 @@ namespace Data
         {
             try
             {
-                String query = @"
+                string query = @"
                 SELECT 
                     ru.Id, 
                     ru.RoleId, 
@@ -99,6 +100,7 @@ namespace Data
                 throw;
             }
         }
+
 
 
         /// <summary>
@@ -152,6 +154,7 @@ namespace Data
         }
 
 
+
         /// <summary>
         /// Actualiza un RolUser existente en la base de datos SQL
         /// </summary>
@@ -159,7 +162,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     UPDATE RolUser 
                     SET UserId = @UserId, RoleId = @RoleId
                     WHERE Id = @Id;
@@ -212,7 +215,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     DELETE FROM RolUser WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 

@@ -30,7 +30,7 @@ namespace Business
             try
             {
                 var forms = await _formData.GetAllAsync();
-                return forms.Select(MapToDTO);
+                return MapToDTOList(forms);
             }
             catch (Exception ex)
             {
@@ -38,6 +38,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al recuperar la lista de formularios.", ex);
             }
         }
+
 
         /// <summary>
         /// Obtiene un formulario por ID como DTO.
@@ -68,6 +69,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Crea un nuevo formulario.
         /// </summary>
@@ -88,6 +90,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al crear el formulario.", ex);
             }
         }
+
 
         /// <summary>
         /// Actualiza un formulario existente.
@@ -117,6 +120,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Elimina un formulario por ID.
         /// </summary>
@@ -139,6 +143,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Valida los datos del formulario.
         /// </summary>
@@ -156,6 +161,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Mapea un objeto Form a FormDTO.
         /// </summary>
@@ -169,6 +175,7 @@ namespace Business
             };
         }
 
+
         /// <summary>
         /// Mapea un objeto FormDTO a Form.
         /// </summary>
@@ -180,6 +187,21 @@ namespace Business
                 Name = formDTO.Name,
                 Description = formDTO.Description
             };
+        }
+
+        /// <summary>
+        /// Metodo para mapear una lista de Form a una lista de FormDTO 
+        /// </summary>
+        /// <param name="forms"></param>
+        /// <returns></returns>
+        private IEnumerable<FormDTO> MapToDTOList(IEnumerable<Form> forms)
+        {
+            var formsDTO = new List<FormDTO>();
+            foreach (var form in forms)
+            {
+                formsDTO.Add(MapToDTO(form));
+            }
+            return formsDTO;
         }
     }
 }

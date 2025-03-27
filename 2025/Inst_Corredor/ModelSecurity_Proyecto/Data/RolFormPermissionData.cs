@@ -27,7 +27,7 @@ namespace Data
         /// </summary>
         public async Task<IEnumerable<RolFormPermission>> GetAllAsyncSQL()
         {
-            String query = @"
+            string query = @"
                 SELECT 
                     rfp.Id, 
                     rfp.RoleId, 
@@ -58,7 +58,6 @@ namespace Data
 
 
 
-
         /// <summary>
         /// Obtiene un RolFormPermission especifico por su identificacion SQL
         /// </summary
@@ -66,7 +65,7 @@ namespace Data
         {
             try
             {
-                String query = @"
+                string query = @"
                     SELECT 
                         rfp.Id, 
                         rfp.RoleId, 
@@ -107,6 +106,7 @@ namespace Data
                 throw;
             }
         }
+
 
 
         /// <summary>
@@ -162,7 +162,6 @@ namespace Data
 
 
 
-
         /// <summary>
         /// Actualiza un RolFormPermission existente en la base de datos SQL
         /// </summary>
@@ -170,7 +169,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     UPDATE RolFormPermission 
                     SET RolId = @RolId, FormId = @FormId, PermissionId = @PermissionId
                     WHERE Id = @Id;
@@ -217,7 +216,6 @@ namespace Data
 
 
 
-
         /// <summary>
         /// Elimina un RolFormPermission de la base de datos SQL
         /// </summary>
@@ -225,7 +223,7 @@ namespace Data
         {
             try
             {
-                var query = @"
+                string query = @"
                     DELETE FROM RolFormPermission WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 
@@ -268,6 +266,5 @@ namespace Data
                 return false;
             }
         }
-
     }
 }

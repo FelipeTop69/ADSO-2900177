@@ -39,6 +39,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Obtiene una persona por su ID como DTO
         /// </summary>
@@ -68,6 +69,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Crea una nueva persona desde un DTO
         /// </summary>
@@ -89,6 +91,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", "Error al crear la persona", ex);
             }
         }
+
 
         /// <summary>
         /// Actualiza una persona existente
@@ -134,6 +137,7 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Elimina una persona por su ID
         /// </summary>
@@ -155,6 +159,7 @@ namespace Business
                 throw new ExternalServiceException("Base de datos", $"Error al eliminar la persona con ID {id}", ex);
             }
         }
+
 
         /// <summary>
         /// Valida un objeto PersonDTO
@@ -178,6 +183,7 @@ namespace Business
                 throw new ValidationException("Email", "El correo electrónico de la persona es obligatorio");
             }
         }
+
 
         /// <summary>
         /// Mapea de Person a PersonDTO
@@ -203,6 +209,7 @@ namespace Business
             };
         }
 
+
         /// <summary>
         /// Mapea de PersonDTO a Person
         /// </summary>
@@ -225,12 +232,23 @@ namespace Business
             };
         }
 
+
         /// <summary>
         /// Mapea una lista de Person a una lista de PersonDTO
         /// </summary>
+        /// <summary>
+        /// Metodo para mapear una lista de Person a una lista de PersonDTO 
+        /// </summary>
+        /// <param name="persons"></param>
+        /// <returns></returns>
         private IEnumerable<PersonDTO> MapToDTOList(IEnumerable<Person> persons)
         {
-            return persons.Select(person => MapToDTO(person)).ToList();
+            var personsDTO = new List<PersonDTO>();
+            foreach (var person in persons)
+            {
+                personsDTO.Add(MapToDTO(person));
+            }
+            return personsDTO;
         }
     }
 }
