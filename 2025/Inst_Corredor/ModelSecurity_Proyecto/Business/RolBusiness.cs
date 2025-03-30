@@ -103,6 +103,59 @@ namespace Business
             }
         }
 
+        /// <summary>
+        /// Actualiza un usuario existente.
+        /// </summary>
+        public async Task<bool> UpdateUserAsync(RolDTO rolDTO)
+        {
+            try
+            {
+                ValidateRol(rolDTO);
+
+                var existingRol = await _rolData.GetByIdAsync(rolDTO.Id);
+                if (existingRol == null)
+                {
+                    throw new EntityNotFoundException("Rol", rolDTO.Id);
+                }
+
+                // Actualizar propiedades
+                existingRol.Id = rolDTO.Id;
+                existingRol.Name = rolDTO.Name;
+                existingRol.Description = rolDTO.Description;
+                existingRol.Active = rolDTO.Status;
+
+                return await _rolData.UpdateAsync(existingRol);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al actualizar el usuario con ID: {UserId}", rolDTO.Id);
+                throw new ExternalServiceException("Base de datos", "Error al actualizar el usuario.", ex);
+            }
+        }
+
+
+        /// <summary>
+        /// Elimina un rol por ID.
+        /// </summary>
+        public async Task<bool> DeleteRolAsync(int id)
+        {
+            try
+            {
+                var existingRol = await _rolData.GetByIdAsync(id);
+                if (existingRol == null)
+                {
+                    throw new EntityNotFoundException("Rol", id);
+                }
+
+                return await _rolData.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el rol con ID: {UserId}", id);
+                throw new ExternalServiceException("Base de datos", "Error al eliminar el rol.", ex);
+            }
+        }
+
 
         /// <summary>
         /// Metodo para Validar el Rol
