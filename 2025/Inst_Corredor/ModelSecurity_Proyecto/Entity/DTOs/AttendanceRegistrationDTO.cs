@@ -11,6 +11,8 @@ namespace Entity.DTOs
         public int Id { get; set; }
         public DateTime Hour { get; set; }
         public bool TypeAccess { get; set; }
+        public bool Status { get; set; }
+
 
         public int AttendanceId { get; set; }
         public string AttendanceName { get; set; }

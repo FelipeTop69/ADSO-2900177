@@ -11,6 +11,8 @@ namespace Entity.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public string Location { get; set; }
+        public bool Active { get; set; }
+
 
         //Clave foranera con Organization
         public int OrganizationId { get; set; }

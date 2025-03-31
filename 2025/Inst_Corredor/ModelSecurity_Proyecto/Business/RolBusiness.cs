@@ -158,6 +158,21 @@ namespace Business
 
 
         /// <summary>
+        /// Elimina un rol de manera logica por ID.
+        /// </summary>
+        public async Task<bool> SoftDeleteRolAsync(int id)
+        {
+            var rol = await _rolData.GetByIdAsync(id);
+            if (rol == null)
+            {
+                throw new EntityNotFoundException("Rol", id);
+            }
+
+            return await _rolData.SoftDeleteAsync(id);
+        }
+
+
+        /// <summary>
         /// Metodo para Validar el Rol
         /// </summary>
         /// <param name="RolDto"></param>

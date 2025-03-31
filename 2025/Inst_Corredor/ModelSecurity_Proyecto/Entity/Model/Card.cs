@@ -14,6 +14,7 @@ namespace Entity.Model
         public DateOnly CreationDate { get; set; }
         public DateOnly ExpirationDate { get; set; }
 
+
         /// Clave foranea con Person
         public int PersonId { get; set; }
         public Person Person { get; set; }

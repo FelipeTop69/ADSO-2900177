@@ -108,6 +108,7 @@ namespace Business
                 }
 
                 // Actualizar propiedades
+                existingRolFormPermission.Active = rolFormPermissionDTO.Status;
                 existingRolFormPermission.RolId = rolFormPermissionDTO.RolId;
                 existingRolFormPermission.PermissionId = rolFormPermissionDTO.PermissionId;
                 existingRolFormPermission.FormId = rolFormPermissionDTO.FormId;
@@ -183,6 +184,7 @@ namespace Business
             return new RolFormPermissionDTO
             {
                 Id = rolFormPermission.Id,
+                Status = rolFormPermission.Active,
                 RolId = rolFormPermission.RolId,
                 RolName = rolFormPermission.Rol?.Name,
                 PermissionId = rolFormPermission.PermissionId,
@@ -201,6 +203,7 @@ namespace Business
             return new RolFormPermission
             {
                 Id = rolFormPermissionDTO.Id,
+                Active = rolFormPermissionDTO.Status,
                 RolId = rolFormPermissionDTO.RolId,
                 PermissionId = rolFormPermissionDTO.PermissionId,
                 FormId = rolFormPermissionDTO.FormId

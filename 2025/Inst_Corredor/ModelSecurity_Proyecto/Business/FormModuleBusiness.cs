@@ -108,6 +108,7 @@ namespace Business
                 }
 
                 // Actualizar propiedades
+                existingFormModule.Active = formModuleDTO.Status;
                 existingFormModule.FormId = formModuleDTO.FormId;
                 existingFormModule.ModuleId = formModuleDTO.ModuleId;
 
@@ -176,6 +177,7 @@ namespace Business
             return new FormModuleDTO
             {
                 Id = formModule.Id,
+                Status = formModule.Active,
                 FormId = formModule.FormId,
                 ModuleId = formModule.ModuleId,
                 FormName = formModule.Form?.Name,
@@ -192,6 +194,7 @@ namespace Business
             return new FormModule
             {
                 Id = formModuleDTO.Id,
+                Active = formModuleDTO.Status,
                 FormId = formModuleDTO.FormId,
                 ModuleId = formModuleDTO.ModuleId
             };

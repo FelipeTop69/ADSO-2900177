@@ -12,6 +12,8 @@ namespace Entity.Model
      
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool Active { get; set; }
+
 
         /// Clave foranea con Division
         public int DivisionId { get; set; } /// FK

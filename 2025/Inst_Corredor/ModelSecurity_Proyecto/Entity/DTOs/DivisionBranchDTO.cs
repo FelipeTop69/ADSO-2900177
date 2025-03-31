@@ -10,6 +10,8 @@ namespace Entity.DTOs
     public class DivisionBranchDTO
     {
         public int Id { get; set; }
+        public bool Status { get; set; }
+
 
         public int DivisionId { get; set; }
         public string DivisionName { get; set; }

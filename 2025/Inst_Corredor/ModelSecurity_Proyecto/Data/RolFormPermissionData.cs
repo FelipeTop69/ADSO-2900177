@@ -30,6 +30,7 @@ namespace Data
             string query = @"
                 SELECT 
                     rfp.Id, 
+                    rfp.Active,
                     rfp.RoleId, 
                     r.Name as RoleName, 
                     rfp.PermissionId, 
@@ -68,6 +69,7 @@ namespace Data
                 string query = @"
                     SELECT 
                         rfp.Id, 
+                        rfp.Active,
                         rfp.RoleId, 
                         r.Name AS RoleName, 
                         rfp.PermissionId, 
@@ -171,13 +173,14 @@ namespace Data
             {
                 string query = @"
                     UPDATE RolFormPermission 
-                    SET RolId = @RolId, FormId = @FormId, PermissionId = @PermissionId
+                    SET RolId = @RolId, @Active, FormId = @FormId, PermissionId = @PermissionId
                     WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 
                 int rowsAffected = await _context.QuerySingleAsync<int>(query, new
                 {
                     rolFormPermission.Id,
+                    rolFormPermission.Active,
                     rolFormPermission.RolId,
                     rolFormPermission.FormId,
                     rolFormPermission.PermissionId

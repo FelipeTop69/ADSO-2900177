@@ -10,6 +10,8 @@ namespace Entity.Model
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool Active { get; set; }
+
 
         //Relaciones
         public List<Assignment> Assignments { get; set; } = new List<Assignment>(); /// PNI - Relacion de uno a muchos

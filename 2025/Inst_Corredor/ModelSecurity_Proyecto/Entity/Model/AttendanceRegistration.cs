@@ -11,7 +11,8 @@ namespace Entity.Model
         public int Id { get; set; }
 
         public DateTime Hour { get; set; } 
-        public bool IsEntrance  { get; set; } 
+        public bool IsEntrance  { get; set; }
+        public bool Active { get; set; }
 
         /// Clave foranea con Attendance
         public int AttendanceId { get; set; } /// FK
@@ -19,6 +20,7 @@ namespace Entity.Model
 
         public int AccessPointId { get; set; } /// FK
         public AccessPoint AccessPoints { get; set; } /// PN
+
 
     }
 }

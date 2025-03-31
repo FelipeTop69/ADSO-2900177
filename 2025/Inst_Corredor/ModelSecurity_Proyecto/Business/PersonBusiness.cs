@@ -125,6 +125,7 @@ namespace Business
                 person.Address = personDto.Address;
                 person.BlodType = personDto.BlodType;
                 person.Photo = personDto.Photo;
+                person.Active = personDto.Status;
                 person.CityId = personDto.CityInt;
                 person.AssignamentId = personDto.AssignmentInt;
 
@@ -202,6 +203,7 @@ namespace Business
                 Address = person.Address,
                 BlodType = person.BlodType,
                 Photo = person.Photo,
+                Status = person.Active,
                 CityInt = person.CityId,
                 CityName = person.City?.Name ?? string.Empty,
                 AssignmentInt = person.AssignamentId,
@@ -227,6 +229,7 @@ namespace Business
                 Address = personDto.Address,
                 BlodType = personDto.BlodType,
                 Photo = personDto.Photo,
+                Active = personDto.Status,
                 CityId = personDto.CityInt,
                 AssignamentId = personDto.AssignmentInt
             };

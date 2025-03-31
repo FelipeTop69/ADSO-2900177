@@ -30,6 +30,7 @@ namespace Data
             string query = @"
                 SELECT 
                     fm.Id, 
+                    fm.Active,
                     fm.FormId, 
                     f.Name as FormName, 
                     fm.ModuleId, 
@@ -64,6 +65,7 @@ namespace Data
                 string query = @"
                     SELECT 
                         fm.Id, 
+                        fm.Active,
                         fm.FormId, 
                         f.Name as FormName, 
                         fm.ModuleId, 
@@ -165,13 +167,14 @@ namespace Data
             {
                 string query = @"
                     UPDATE FormModule 
-                    SET FormId = @FormId, ModuleId = @ModuleId
+                    SET FormId = @Active, @FormId, ModuleId = @ModuleId
                     WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 
                 int rowsAffected = await _context.QuerySingleAsync<int>(query, new
                 {
                     formModule.Id,
+                    formModule.Active,
                     formModule.FormId,
                     formModule.ModuleId
                 });

@@ -108,6 +108,7 @@ namespace Business
                 }
 
                 // Actualizar propiedades
+                existingModule.Active = moduleDTO.Status;
                 existingModule.Name = moduleDTO.Name;
                 existingModule.Description = moduleDTO.Description;
 
@@ -171,7 +172,8 @@ namespace Business
             {
                 Id = module.Id,
                 Name = module.Name,
-                Description = module.Description
+                Description = module.Description,
+                Status = module.Active,
             };
         }
 
@@ -185,7 +187,8 @@ namespace Business
             {
                 Id = moduleDTO.Id,
                 Name = moduleDTO.Name,
-                Description = moduleDTO.Description
+                Description = moduleDTO.Description,
+                Active = moduleDTO.Status,
             };
         }
 

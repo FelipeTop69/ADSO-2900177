@@ -108,6 +108,7 @@ namespace Business
                 }
 
                 // Actualizar propiedades
+                existingForm.Active = formDTO.Status;
                 existingForm.Name = formDTO.Name;
                 existingForm.Description = formDTO.Description;
 
@@ -171,7 +172,8 @@ namespace Business
             {
                 Id = form.Id,
                 Name = form.Name,
-                Description = form.Description
+                Description = form.Description,
+                Status = form.Active,
             };
         }
 
@@ -185,7 +187,8 @@ namespace Business
             {
                 Id = formDTO.Id,
                 Name = formDTO.Name,
-                Description = formDTO.Description
+                Description = formDTO.Description,
+                Active = formDTO.Status,
             };
         }
 

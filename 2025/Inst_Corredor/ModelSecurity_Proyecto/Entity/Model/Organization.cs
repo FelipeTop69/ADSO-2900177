@@ -12,6 +12,8 @@ namespace Entity.Model
         public string Name { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
+        public bool Active { get; set; }
+
 
         //Relaciones
         public List<Branch> Branches { get; set; } = new List<Branch>(); /// PNI - Relacion uno a muchos

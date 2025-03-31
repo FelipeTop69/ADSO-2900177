@@ -21,6 +21,8 @@ namespace Entity.Model
         public string DocumentType { get; set; }
         public string BlodType { get; set; }
         public string? Photo { get; set; }
+        public bool Active { get; set; }
+
 
         /// Clave foranea con City
         public int CityId { get; set; } /// FK

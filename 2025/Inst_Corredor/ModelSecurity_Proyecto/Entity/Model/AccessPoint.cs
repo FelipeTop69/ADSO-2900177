@@ -12,7 +12,9 @@ namespace Entity.Model
         public int Id { get; set; }
 
         public string Name { get; set; } 
-        public string Ubication { get; set; } 
+        public string Ubication { get; set; }
+        public bool Active { get; set; }
+
 
         /// Clave Foranea con Event
         public int EventId { get; set; } // FK

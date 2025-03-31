@@ -9,6 +9,8 @@ namespace Entity.DTOs
     public class AttendanceDTO
     {
         public int Id { get; set; }
+        public bool Status { get; set; }
+
 
         public int CardId { get; set; }
         public string CardName { get; set;  }

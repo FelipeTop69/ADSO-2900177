@@ -9,6 +9,8 @@ namespace Entity.Model
     public class RolUser
     {
         public int Id { get; set; }
+        public bool Active { get; set; }
+
 
         // Claves foráneas
         public int UserId { get; set; } /// FK

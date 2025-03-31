@@ -9,6 +9,8 @@ namespace Entity.Model
     public class DivisionBranch
     {
         public int Id { get; set; }
+        public bool Active { get; set; }
+
 
         //Clave foranea con Division
         public int DivisionId { get; set; } /// PK

@@ -53,7 +53,7 @@ namespace Data
                      ON as.DivisionId = di.Id
                      WHERE as.Id = @Id";
 
-                return await _context.QueryFirstOrDefaultAsync<Assignment>(query, new { Id = id })
+                return await _context.QueryFirstOrDefaultAsync<Assignment>(query, new { Id = id });
             }
             catch(Exception ex)   
             {

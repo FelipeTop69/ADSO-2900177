@@ -10,7 +10,9 @@ namespace Entity.DTOs
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Ubication { get; set; } 
+        public string Ubication { get; set; }
+        public bool Status { get; set; }
+
 
         public int EventId { get; set; }
         public string EventName { get; set; }

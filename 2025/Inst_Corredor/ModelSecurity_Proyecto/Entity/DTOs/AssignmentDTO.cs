@@ -10,6 +10,8 @@ namespace Entity.DTOs
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool Status { get; set; }
+
 
         public int DivisionId { get; set; }
         public string DivisionName { get; set; }

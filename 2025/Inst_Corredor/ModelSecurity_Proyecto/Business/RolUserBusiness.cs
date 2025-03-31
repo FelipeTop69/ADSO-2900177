@@ -108,6 +108,7 @@ namespace Business
                 }
 
                 // Actualizar propiedades
+                existingRolUser.Active = rolUserDTO.Status;
                 existingRolUser.UserId = rolUserDTO.UserId;
                 existingRolUser.RoleId = rolUserDTO.RoleId;
 
@@ -176,6 +177,7 @@ namespace Business
             return new RolUserDTO
             {
                 Id = rolUser.Id,
+                Status = rolUser.Active,
                 UserId = rolUser.UserId,
                 UserName = rolUser.User?.Username,
                 RoleId = rolUser.RoleId,
@@ -192,6 +194,7 @@ namespace Business
             return new RolUser
             {
                 Id = rolUserDTO.Id,
+                Active = rolUserDTO.Status,
                 UserId = rolUserDTO.UserId,
                 RoleId = rolUserDTO.RoleId
             };

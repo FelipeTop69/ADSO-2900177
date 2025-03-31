@@ -108,6 +108,7 @@ namespace Business
                 }
 
                 // Actualizar propiedades
+                existingPermission.Active = permissionDTO.Status;
                 existingPermission.Name = permissionDTO.Name;
                 existingPermission.Description = permissionDTO.Description;
 
@@ -171,7 +172,8 @@ namespace Business
             {
                 Id = permission.Id,
                 Name = permission.Name,
-                Description = permission.Description
+                Description = permission.Description,
+                Status = permission.Active
             };
         }
 
@@ -185,7 +187,8 @@ namespace Business
             {
                 Id = permissionDTO.Id,
                 Name = permissionDTO.Name,
-                Description = permissionDTO.Description
+                Description = permissionDTO.Description,
+                Active = permissionDTO.Status,
             };
         }
 

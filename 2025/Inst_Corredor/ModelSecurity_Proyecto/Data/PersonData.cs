@@ -38,6 +38,7 @@ namespace Data
                     p.Address, 
                     p.BlodType, 
                     p.Photo, 
+                    p.Active,
                     p.CityId as CityInt, 
                     c.Name as CityName, 
                     p.AssignamentId as AssignmentInt, 
@@ -80,6 +81,7 @@ namespace Data
                         p.Address, 
                         p.BlodType, 
                         p.Photo, 
+                        p.Active, 
                         p.CityId as CityInt, 
                         c.Name as CityName, 
                         p.AssignamentId as AssignmentInt, 
@@ -199,7 +201,7 @@ namespace Data
                     SET FirstName = @FirstName, MiddleName = @MiddleName, LastName = @LastName, 
                         SecondLastName = @SecondLastName, Email = @Email, DocumentNumber = @DocumentNumber, 
                         Phone = @Phone, Address = @Address, DocumentType = @DocumentType, BlodType = @BlodType, 
-                        Photo = @Photo, CityId = @CityId, AssignamentId = @AssignamentId
+                        Photo = @Photo, Active = @Active, CityId = @CityId, AssignamentId = @AssignamentId
                     WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 
@@ -217,6 +219,7 @@ namespace Data
                     person.DocumentType,
                     person.BlodType,
                     person.Photo,
+                    person.Active,
                     person.CityId,
                     person.AssignamentId
                 });

@@ -31,7 +31,7 @@ namespace Data
                 SELECT 
                     u.Id, 
                     u.Username, 
-                    u.State, 
+                    u.Active, 
                     u.PersonId, 
                     p.FirstName + ' ' + p.LastName as PersonName
                 FROM [User] u
@@ -64,7 +64,7 @@ namespace Data
                     SELECT 
                         u.Id, 
                         u.Username, 
-                        u.State, 
+                        u.Active, 
                         u.PersonId, 
                         p.FirstName + ' ' + p.LastName as PersonName
                     FROM [User] u
@@ -111,16 +111,15 @@ namespace Data
             {
                 string query = @"
                     INSERT INTO [User] 
-                    (Username, Password, State, PersonId) 
+                    (Username, Password, PersonId) 
                     VALUES 
-                    (@Username, @Password, @State, @PersonId);
+                    (@Username, @Password, @PersonId);
                     SELECT CAST(SCOPE_IDENTITY() AS int);";
 
                 int newId = await _context.QuerySingleAsync<int>(query, new
                 {
                     user.Username,
                     user.Password,
-                    user.State,
                     user.PersonId
                 });
 
@@ -168,7 +167,7 @@ namespace Data
             {
                 string query = @"
                     UPDATE [User] 
-                    SET Username = @Username, Password = @Password, State = @State, PersonId = @PersonId
+                    SET Username = @Username, Password = @Password, Active = @Active, PersonId = @PersonId
                     WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 
@@ -177,7 +176,7 @@ namespace Data
                     user.Id,
                     user.Username,
                     user.Password,
-                    user.State,
+                    user.Active,
                     user.PersonId
                 });
 

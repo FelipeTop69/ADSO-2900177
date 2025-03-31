@@ -9,6 +9,8 @@ namespace Entity.DTOs
     public class RolUserDTO
     {
         public int Id { get; set; }
+        public bool Status { get; set; }
+
 
         public int RoleId { get; set; }
         public string RoleName { get; set; }

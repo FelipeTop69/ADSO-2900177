@@ -9,6 +9,8 @@ namespace Entity.Model
     public class Attendance
     {
         public int Id { get; set; }
+        public bool Active { get; set; }
+
 
         /// Clave foranea con Card
         public int CardId { get; set; } /// FK

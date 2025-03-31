@@ -110,7 +110,7 @@ namespace Business
 
                 // Actualizar propiedades
                 existingUser.Username = userDTO.Username;
-                existingUser.State = userDTO.State;
+                existingUser.Active = userDTO.Status;
                 existingUser.PersonId = userDTO.PersonId;
 
                 return await _userData.UpdateAsync(existingUser);
@@ -173,7 +173,7 @@ namespace Business
             {
                 Id = user.Id,
                 Username = user.Username,
-                State = user.State,
+                Status = user.Active,
                 PersonId = user.PersonId,
                 PersonName = user.Person?.FirstName + " " + user.Person?.LastName
             };
@@ -189,7 +189,7 @@ namespace Business
             {
                 Id = userDTO.Id,
                 Username = userDTO.Username,
-                State = userDTO.State,
+                Active = userDTO.Status,
                 PersonId = userDTO.PersonId
             };
         }

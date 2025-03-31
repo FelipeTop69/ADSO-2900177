@@ -11,6 +11,8 @@ namespace Entity.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
+        public bool Active { get; set; }
+
 
         /// Relaciones
         public ICollection<FormModule> FormModules { get; set; } /// PNI - Relacion uno a muchos
