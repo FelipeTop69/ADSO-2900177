@@ -11,7 +11,7 @@ namespace Web.Controllers
     /// <summary>
     /// Controlador para la gestión de permisos en el sistema
     /// </summary>
-    [Route("api/[controler]")]
+    [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
 

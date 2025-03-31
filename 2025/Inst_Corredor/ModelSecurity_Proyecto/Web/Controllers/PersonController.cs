@@ -9,7 +9,7 @@ using Utilities.Exceptions;
 
 namespace Web.Controllers
 {
-    [Route("api/[controler]")]
+    [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
     public class PersonController : ControllerBase

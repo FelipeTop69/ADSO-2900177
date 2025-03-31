@@ -1,13 +1,19 @@
-﻿namespace Web.Controllers
+﻿using Business;
+using Entity.DTOs;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Utilities.Exceptions;
+
+namespace Web.Controllers
 {
-    using Business;
-    using Entity.DTOs;
-    using Microsoft.AspNetCore.Http.HttpResults;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Utilities.Exceptions;
+
+    [Route("api/[controller]")]
+    [ApiController]
+    [Produces("application/json")]
+
     public class FormController : ControllerBase
     {
         private readonly FormBusiness _formBusiness;
