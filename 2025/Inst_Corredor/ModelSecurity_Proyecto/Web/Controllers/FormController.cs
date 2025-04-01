@@ -116,7 +116,7 @@ namespace Web.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateForm(int id, [FromBody] FormDTO formDTO)
+        public async Task<IActionResult> UpdateForm(int id,[FromBody] FormDTO formDTO)
         {
             try
             {

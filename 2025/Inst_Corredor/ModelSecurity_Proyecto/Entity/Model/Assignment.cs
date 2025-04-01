@@ -17,7 +17,10 @@ namespace Entity.Model
 
         /// Clave foranea con Division
         public int DivisionId { get; set; } /// FK
-        public Division Division { get; set; } /// PN   
+        public Division Division { get; set; } /// PN  
+
+        /// Relaciones 
+        public List<Person> Persons { get; set; } = new(); /// PNI - Relaciones de uno a muchos
 
     }
 }

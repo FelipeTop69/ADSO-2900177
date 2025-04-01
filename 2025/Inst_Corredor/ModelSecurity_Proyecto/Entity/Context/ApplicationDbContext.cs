@@ -1,18 +1,10 @@
 ﻿using Dapper;
+using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Reflection;
-
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Entity.Context
 {
@@ -26,6 +18,13 @@ namespace Entity.Context
         // Configuración de la aplicación.
         // </summary>
         protected readonly IConfiguration _configuration;
+
+        /// <summary>
+        /// Definition of DbSet
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="configuration"></param>
+        public DbSet<Form> Forms { get; set; }
 
         // <summary>
         // Constructor del contexto de la base de datos.

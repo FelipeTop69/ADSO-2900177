@@ -60,15 +60,15 @@
   },
   {
     "ContainingType": "Web.Controllers.FormController",
-    "Method": "GetFormById",
-    "RelativePath": "api/Form/{id}",
-    "HttpMethod": "GET",
+    "Method": "UpdateForm",
+    "RelativePath": "api/Form",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
-        "Type": "System.Int32",
+        "Name": "formDTO",
+        "Type": "Entity.DTOs.FormDTO",
         "IsRequired": true
       }
     ],
@@ -103,20 +103,15 @@
   },
   {
     "ContainingType": "Web.Controllers.FormController",
-    "Method": "UpdateForm",
+    "Method": "GetFormById",
     "RelativePath": "api/Form/{id}",
-    "HttpMethod": "PUT",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "formDTO",
-        "Type": "Entity.DTOs.FormDTO",
         "IsRequired": true
       }
     ],

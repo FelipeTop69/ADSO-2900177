@@ -1,11 +1,25 @@
+using Business;
+using Data;
+using Entity.Context;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<ApplicationDbContext>(
+    options=>options.UseSqlServer("name=defaultConn")
+);
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+/// Definicion de Servicios 
+builder.Services.AddScoped<FormBusiness>();
+builder.Services.AddScoped<FormData>();
 
 var app = builder.Build();
 
