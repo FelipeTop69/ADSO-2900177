@@ -14,9 +14,9 @@ namespace Business
     public class PersonBusiness
     {
         private readonly PersonData _personData;
-        private readonly ILogger _logger;
+        private readonly ILogger<PersonBusiness> _logger;
 
-        public PersonBusiness(PersonData personData, ILogger logger)
+        public PersonBusiness(PersonData personData, ILogger<PersonBusiness> logger)
         {
             _personData = personData;
             _logger = logger;
@@ -29,7 +29,7 @@ namespace Business
         {
             try
             {
-                var persons = await _personData.GetAllAsync();
+                var persons = await _personData.GetAllAsyncSQL();
                 return MapToDTOList(persons);
             }
             catch (Exception ex)
@@ -51,15 +51,15 @@ namespace Business
                 throw new ValidationException("id", "El ID de la persona debe ser mayor que cero");
             }
 
+            var person = await _personData.GetByIdAsyncSQL(id);
+            if (person == null)
+            {
+                _logger.LogInformation("No se encontró ninguna persona con ID: {PersonId}", id);
+                throw new EntityNotFoundException("Person", id);
+            }
+
             try
             {
-                var person = await _personData.GetByIdAsync(id);
-                if (person == null)
-                {
-                    _logger.LogInformation("No se encontró ninguna persona con ID: {PersonId}", id);
-                    throw new EntityNotFoundException("Person", id);
-                }
-
                 return MapToDTO(person);
             }
             catch (Exception ex)
@@ -81,7 +81,7 @@ namespace Business
 
                 var person = MapToEntity(personDto);
 
-                var createdPerson = await _personData.CreateAsync(person);
+                var createdPerson = await _personData.CreateAsyncSQL(person);
 
                 return MapToDTO(createdPerson);
             }
@@ -104,19 +104,21 @@ namespace Business
                 throw new ValidationException("id", "El ID de la persona debe ser mayor que cero");
             }
 
+            ValidatePerson(personDto);
+
+            var person = await _personData.GetByIdAsyncSQL(personDto.Id);
+            if (person == null)
+            {
+                _logger.LogWarning("No se encontró la persona con ID {PersonId} para actualizar", personDto.Id);
+                throw new EntityNotFoundException("Person", personDto.Id);
+            }
+
             try
             {
-                ValidatePerson(personDto);
-
-                var person = await _personData.GetByIdAsync(personDto.Id);
-                if (person == null)
-                {
-                    _logger.LogWarning("No se encontró la persona con ID {PersonId} para actualizar", personDto.Id);
-                    throw new EntityNotFoundException("Person", personDto.Id);
-                }
+                
 
                 // Actualizar los datos de la persona con la información del DTO
-                person.FirstName = personDto.Name;
+                person.Name = personDto.Name;
                 person.LastName = personDto.LastName;
                 person.Email = personDto.Email;
                 person.DocumentType = personDto.DocumentType;
@@ -124,12 +126,9 @@ namespace Business
                 person.Phone = personDto.Phone;
                 person.Address = personDto.Address;
                 person.BlodType = personDto.BlodType;
-                person.Photo = personDto.Photo;
-                person.Active = personDto.Status;
-                person.CityId = personDto.CityInt;
-                person.AssignamentId = personDto.AssignmentInt;
+                
 
-                return await _personData.UpdateAsync(person);
+                return await _personData.UpdateAsyncSQL(person);
             }
             catch (Exception ex)
             {
@@ -152,12 +151,46 @@ namespace Business
 
             try
             {
-                return await _personData.DeleteAsync(id);
+                return await _personData.DeleteAsyncSQL(id);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al eliminar la persona con ID: {PersonId}", id);
                 throw new ExternalServiceException("Base de datos", $"Error al eliminar la persona con ID {id}", ex);
+            }
+        }
+
+
+        /// <summary>
+        /// Elimina un person de manera logica por ID
+        /// </summary>
+        public async Task<bool> DeletePersonLogicalAsync(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ValidationException("ID", "El ID del person debe ser mayor que cero.");
+            }
+
+            var existingPerson = await _personData.GetByIdAsyncSQL(id);
+            if (existingPerson == null)
+            {
+                throw new EntityNotFoundException("Person", id);
+            }
+
+            try
+            {
+                return await _personData.DeleteLogicAsyncSQL(id);
+
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error en servicio externo al eliminar el person con ID: {PersonId}", id);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el person de manera logica con ID: {PersonId}", id);
+                throw new ExternalServiceException("Base de datos", "Error al eliminar el person de manera logica.", ex);
             }
         }
 
@@ -194,7 +227,7 @@ namespace Business
             return new PersonDTO
             {
                 Id = person.Id,
-                Name = person.FirstName,
+                Name = person.Name,
                 LastName = person.LastName,
                 Email = person.Email,
                 DocumentType = person.DocumentType,
@@ -202,12 +235,7 @@ namespace Business
                 Phone = person.Phone,
                 Address = person.Address,
                 BlodType = person.BlodType,
-                Photo = person.Photo,
                 Status = person.Active,
-                CityInt = person.CityId,
-                CityName = person.City?.Name ?? string.Empty,
-                AssignmentInt = person.AssignamentId,
-                AssignmentName = person.Assignment?.Name ?? string.Empty
             };
         }
 
@@ -220,7 +248,7 @@ namespace Business
             return new Person
             {
                 Id = personDto.Id,
-                FirstName = personDto.Name,
+                Name = personDto.Name,
                 LastName = personDto.LastName,
                 Email = personDto.Email,
                 DocumentType = personDto.DocumentType,
@@ -228,10 +256,7 @@ namespace Business
                 Phone = personDto.Phone,
                 Address = personDto.Address,
                 BlodType = personDto.BlodType,
-                Photo = personDto.Photo,
                 Active = personDto.Status,
-                CityId = personDto.CityInt,
-                AssignamentId = personDto.AssignmentInt
             };
         }
 

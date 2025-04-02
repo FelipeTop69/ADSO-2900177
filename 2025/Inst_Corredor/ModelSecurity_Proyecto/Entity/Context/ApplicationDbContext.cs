@@ -24,7 +24,13 @@ namespace Entity.Context
         /// </summary>
         /// <param name="options"></param>
         /// <param name="configuration"></param>
-        public DbSet<Form> Forms { get; set; }
+        public DbSet<Form> Form { get; set; }
+        public DbSet<Person> Person { get; set; }
+        public DbSet<Entity.Model.Module> Module { get; set; }
+        public DbSet<Rol> Rol { get; set; }
+        public DbSet<Permission> Permission { get; set; }
+        public DbSet<User> User { get; set; }
+
 
         // <summary>
         // Constructor del contexto de la base de datos.

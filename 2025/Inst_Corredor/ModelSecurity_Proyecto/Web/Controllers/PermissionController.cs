@@ -110,37 +110,32 @@ namespace Web.Controllers
         /// <summary>
         /// Actualiza un permissionBusiness existente en el sistema
         /// </summary>
-        [HttpPut("{id}")]
+        [HttpPut("Updated")]
         [ProducesResponseType(typeof(PermissionDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdatePermission(int id, [FromBody] PermissionDTO permissionDTO)
+        public async Task<IActionResult> UpdatePermission([FromBody] PermissionDTO permissionDTO)
         {
             try
             {
-                if (id != permissionDTO.Id)
-                {
-                    return BadRequest(new { message = "El ID de la ruta no coincide con el ID del objeto." });
-                }
-
                 var updatedPermission = await _permissionBusiness.UpdatePermissionAsync(permissionDTO);
 
                 return Ok(updatedPermission);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar el permissionBusiness con ID: {PermissionId}", id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar el permissionBusiness con ID: {PermissionId}", permissionDTO.Id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "No se encontró el permissionBusiness con ID: {PermissionId}", id);
+                _logger.LogInformation(ex, "No se encontró el permissionBusiness con ID: {PermissionId}", permissionDTO.Id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar el permissionBusiness con ID: {PermissionId}", id);
+                _logger.LogError(ex, "Error al actualizar el permissionBusiness con ID: {PermissionId}", permissionDTO.Id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -169,6 +164,40 @@ namespace Web.Controllers
             catch (ExternalServiceException ex)
             {
                 _logger.LogError(ex, "Error al eliminar el permissionBusiness con ID: {PermissionId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Elimina de manera logica un form del sistema
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("Logical/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteLogicalFormAsync(int id)
+        {
+            try
+            {
+                var deleted = await _permissionBusiness.DeletePermissionLogicalAsync(id);
+
+                if (!deleted)
+                {
+                    return NotFound(new { message = "Permission no encontrado o ya eliminado." });
+                }
+
+                return Ok(new { message = "Eliminación lógica exitosa." });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el permission con ID: {PermissionId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el permission de manera lógica con ID: {PermissionId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }

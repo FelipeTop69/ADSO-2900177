@@ -14,9 +14,9 @@ namespace Data
     public class UserData
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<UserData> _logger;
 
-        public UserData(ApplicationDbContext context, ILogger logger)
+        public UserData(ApplicationDbContext context, ILogger<UserData> logger)
         {
             _context = context;
             _logger = logger;
@@ -25,21 +25,20 @@ namespace Data
         /// <summary>
         /// Obtiene todos los UserData almacenados en la base de datos SQL
         /// </summary>
-        public async Task<IEnumerable<User>> GetAllAsyncSQL()
+        public async Task<IEnumerable<UserDTO>> GetAllAsyncSQL()
         {
             string query = @"
                 SELECT 
                     u.Id, 
                     u.Username, 
-                    u.Active, 
+                    u.Active AS Status, 
                     u.PersonId, 
-                    p.FirstName + ' ' + p.LastName as PersonName
+                    p.Name + ' ' + p.LastName as PersonName
                 FROM [User] u
                 INNER JOIN Person p 
                 ON u.PersonId = p.Id";
 
-            return (IEnumerable<User>) await _context.QueryAsync<IEnumerable<User>>(query);
-            //return await _context.Set<User>().ToListAsync();
+            return await _context.QueryAsync<UserDTO>(query);
         }
 
         /// <summary>
@@ -55,7 +54,7 @@ namespace Data
         /// <summary>
         /// Obtiene un UserData especifico por su identificacion SQL
         /// </summary
-        public async Task<User?> GetByIdAsyncSQL(int id)
+        public async Task<UserDTO?> GetByIdAsyncSQL(int id)
 
         {
             try
@@ -66,13 +65,13 @@ namespace Data
                         u.Username, 
                         u.Active, 
                         u.PersonId, 
-                        p.FirstName + ' ' + p.LastName as PersonName
+                        p.Name + ' ' + p.LastName as PersonName
                     FROM [User] u
                     INNER JOIN Person p 
                     ON u.PersonId = p.Id
                     WHERE u.Id = @Id";
 
-                return await _context.QueryFirstOrDefaultAsync<User>(query, new { Id = id });
+                return await _context.QueryFirstOrDefaultAsync<UserDTO>(query, new { Id = id });
                 //return await _context.Set<User>().FindAsync(id);
             }
             catch (Exception ex)
@@ -226,12 +225,7 @@ namespace Data
                 int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
 
                 return rowsAffected > 0;
-                //var user = await _context.Set<User>().FindAsync(id);
-                //if (user == null)
-                //    return false;
-                //_context.Set<User>().Remove(user);
-                //await _context.SaveChangesAsync();
-                //return true;
+
             }
             catch (Exception ex)
             {
@@ -257,6 +251,58 @@ namespace Data
             catch (Exception ex)
             {
                 _logger.LogError($"Error al eliminar el usuario {ex.Message}");
+                return false;
+            }
+        }
+
+
+
+        /// <summary>
+        /// Elimina un User de manera logica de la base  de datos SQL
+        /// </summary>
+        public async Task<bool> DeleteLogicAsyncSQL(int id)
+        {
+            try
+            {
+                string query = @"
+                    UPDATE [User] 
+                    SET Active = 0
+                    WHERE Id = @Id;
+                    SELECT CAST(@@ROWCOUNT AS int);";
+
+                int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
+
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar logicamente user: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Elimina un FormData de manera logica de la base  de datos LINQ
+        /// </summary>
+        public async Task<bool> DeleteLogicAsync(int id)
+        {
+            try
+            {
+                var user = await GetByIdAsync(id);
+                if (user == null)
+                {
+                    return false;
+                }
+
+                user.Active = false;
+                await _context.SaveChangesAsync();
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al eliminar de manera logica el User: {ex.Message}");
                 return false;
             }
         }

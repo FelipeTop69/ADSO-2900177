@@ -109,37 +109,32 @@ namespace Web.Controllers
         /// <summary>
         /// Actualiza un person existente en el sistema
         /// </summary>
-        [HttpPut("{id}")]
+        [HttpPut("Update")]
         [ProducesResponseType(typeof(RolDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdatePersonAsync(int id, [FromBody] PersonDTO personDto)
+        public async Task<IActionResult> UpdatePersonAsync([FromBody] PersonDTO personDto)
         {
             try
             {
-                if (id != personDto.Id)
-                {
-                    return BadRequest(new { message = "El ID de la ruta no coincide con el ID del objeto." });
-                }
-
                 var updatedPerson = await _personBusiness.UpdatePersonAsync(personDto);
 
                 return Ok(updatedPerson);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar el person con ID: {PersonId}", id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar el person con ID: {PersonId}", personDto.Id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "No se encontró el person con ID: {PersonId}", id);
+                _logger.LogInformation(ex, "No se encontró el person con ID: {PersonId}", personDto.Id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar el rol con ID: {PersonId}", id);
+                _logger.LogError(ex, "Error al actualizar el rol con ID: {PersonId}", personDto.Id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -168,6 +163,40 @@ namespace Web.Controllers
             catch (ExternalServiceException ex)
             {
                 _logger.LogError(ex, "Error al eliminar el person con ID: {PersonId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+
+        /// <summary>
+        /// Elimina un person  de manera logica del sistema
+        /// </summary>
+
+        [HttpDelete("Logical/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteLogicalFormAsync(int id)
+        {
+            try
+            {
+                var deleted = await _personBusiness.DeletePersonLogicalAsync(id);
+
+                if (!deleted)
+                {
+                    return NotFound(new { message = "Person no encontrado o ya eliminado." });
+                }
+
+                return Ok(new { message = "Eliminación lógica exitosa." });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el person con ID: {PersonId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el person de manera lógica con ID: {PersonId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }

@@ -19,13 +19,13 @@ namespace Data
     public  class RolData
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<RolData> _logger;
 
         ///<summary>
         ///Constructor que recibe el contexto de la base de datos
         ///</summary>
         ///<param name="context">Instancia de <see cref="ApplicationDbContext"/> Para la conexion con la base de datos.</param>
-        public RolData(ApplicationDbContext context, ILogger logger)
+        public RolData(ApplicationDbContext context, ILogger<RolData> logger)
         {
             _context = context;
             _logger = logger;
@@ -37,8 +37,8 @@ namespace Data
         ///<returns>Lista de roles</returns>
         public async Task<IEnumerable<Rol>> GetAllAsyncSQL()
         {
-            string query = @"SELECT * FROM Rol";
-            return (IEnumerable<Rol>) await _context.QueryAsync<IEnumerable<Rol>>(query);
+            string query = @"SELECT * FROM Rol WHERE Active = 1";
+            return (IEnumerable<Rol>) await _context.QueryAsync<Rol>(query);
             //return await _context.Set<Rol>().ToListAsync();
         }
 
@@ -276,6 +276,11 @@ namespace Data
             }
         }
 
+        /// <summary>
+        /// Eliminacion Logica de un Rol de la base de datos LINQ
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<bool> SoftDeleteAsync(int id)
         {
             var rol = await _context.Set<Rol>().FindAsync(id);

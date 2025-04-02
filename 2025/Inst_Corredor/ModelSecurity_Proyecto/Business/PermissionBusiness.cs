@@ -29,7 +29,7 @@ namespace Business
         {
             try
             {
-                var permissions = await _permissionData.GetAllAsync();
+                var permissions = await _permissionData.GetAllAsyncSQL();
                 return MapToDTOList(permissions);
             }
             catch (Exception ex)
@@ -50,16 +50,14 @@ namespace Business
                 _logger.LogWarning("Intento de obtener un permiso con ID inválido: {PermissionId}", id);
                 throw new ValidationException("id", "El ID del permiso debe ser mayor que cero.");
             }
-
+            var permission = await _permissionData.GetByIdAsync(id);
+            if (permission == null)
+            {
+                _logger.LogInformation("No se encontró ningún permiso con ID: {PermissionId}", id);
+                throw new EntityNotFoundException("Permission", id);
+            }
             try
             {
-                var permission = await _permissionData.GetByIdAsync(id);
-                if (permission == null)
-                {
-                    _logger.LogInformation("No se encontró ningún permiso con ID: {PermissionId}", id);
-                    throw new EntityNotFoundException("Permission", id);
-                }
-
                 return MapToDTO(permission);
             }
             catch (Exception ex)
@@ -97,17 +95,16 @@ namespace Business
         /// </summary>
         public async Task<bool> UpdatePermissionAsync(PermissionDTO permissionDTO)
         {
+            ValidatePermission(permissionDTO);
+
+            var existingPermission = await _permissionData.GetByIdAsync(permissionDTO.Id);
+            if (existingPermission == null)
+            {
+                throw new EntityNotFoundException("Permission", permissionDTO.Id);
+            }
             try
             {
-                ValidatePermission(permissionDTO);
 
-                var existingPermission = await _permissionData.GetByIdAsync(permissionDTO.Id);
-                if (existingPermission == null)
-                {
-                    throw new EntityNotFoundException("Permission", permissionDTO.Id);
-                }
-
-                // Actualizar propiedades
                 existingPermission.Active = permissionDTO.Status;
                 existingPermission.Name = permissionDTO.Name;
                 existingPermission.Description = permissionDTO.Description;
@@ -123,7 +120,7 @@ namespace Business
 
 
         /// <summary>
-        /// Elimina un permiso por ID.
+        /// Elimina un permision por ID.
         /// </summary>
         public async Task<bool> DeletePermissionAsync(int id)
         {
@@ -141,6 +138,40 @@ namespace Business
             {
                 _logger.LogError(ex, "Error al eliminar el permiso con ID: {PermissionId}", id);
                 throw new ExternalServiceException("Base de datos", "Error al eliminar el permiso.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Elimina un formulario de manera logica por ID
+        /// </summary>
+        public async Task<bool> DeletePermissionLogicalAsync(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ValidationException("ID", "El ID del Permission debe ser mayor que cero.");
+            }
+
+            var existingPermission = await _permissionData.GetByIdAsyncSQL(id);
+            if (existingPermission == null)
+            {
+                throw new EntityNotFoundException("Form", id);
+            }
+
+            try
+            {
+
+                return await _permissionData.DeleteLogicAsyncSQL(id);
+
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error en servicio externo al eliminar el Permission con ID: {FormId}", id);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el Permission de manera logica con ID: {FormId}", id);
+                throw new ExternalServiceException("Base de datos", "Error al eliminar el Permission de manera logica.", ex);
             }
         }
 

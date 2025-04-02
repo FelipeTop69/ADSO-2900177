@@ -108,37 +108,32 @@ namespace Web.Controllers
         /// <summary>
         /// Actualiza un module existente en el sistema
         /// </summary>
-        [HttpPut("{id}")]
+        [HttpPut("Updated/")]
         [ProducesResponseType(typeof(ModuleDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateModule(int id, [FromBody] ModuleDTO moduleDTO)
+        public async Task<IActionResult> UpdateModule([FromBody] ModuleDTO moduleDTO)
         {
             try
-            {
-                if (id != moduleDTO.Id)
-                {
-                    return BadRequest(new { message = "El ID de la ruta no coincide con el ID del objeto." });
-                }
-
+            { 
                 var updatedModule = await _moduleBusiness.UpdateModuleAsync(moduleDTO);
 
                 return Ok(updatedModule);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar el module con ID: {ModuleId}", id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar el module con ID: {ModuleId}",moduleDTO.Id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "No se encontró el module con ID: {ModuleId}", id);
+                _logger.LogInformation(ex, "No se encontró el module con ID: {ModuleId}", moduleDTO.Id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar el module con ID: {ModuleId}", id);
+                _logger.LogError(ex, "Error al actualizar el module con ID: {ModuleId}",moduleDTO.Id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -167,6 +162,39 @@ namespace Web.Controllers
             catch (ExternalServiceException ex)
             {
                 _logger.LogError(ex, "Error al eliminar el module con ID: {ModuleId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+
+        /// <summary>
+        /// Elimina un Module de manera logica
+        /// </summary>
+        [HttpDelete("Logical/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteLogicalModuleAsync(int id)
+        {
+            try
+            {
+                var deleted = await _moduleBusiness.DeleteModuleLogicalAsync(id);
+
+                if (!deleted)
+                {
+                    return NotFound(new { message = "Module no encontrado o ya eliminado." });
+                }
+
+                return Ok(new { message = "Eliminación lógica exitosa." });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el Module con ID: {ModuleId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el Module de manera lógica con ID: {ModuleId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }

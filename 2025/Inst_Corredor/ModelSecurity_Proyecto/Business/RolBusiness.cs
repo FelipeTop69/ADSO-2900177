@@ -17,9 +17,9 @@ namespace Business
     public class RolBusiness
     {
         private readonly RolData _rolData;
-        private readonly ILogger _logger;
+        private readonly ILogger<RolBusiness> _logger;
 
-        public RolBusiness(RolData rolData, ILogger logger)
+        public RolBusiness(RolData rolData, ILogger<RolBusiness> logger)
         {
             _rolData = rolData;
             _logger = logger;
@@ -32,7 +32,7 @@ namespace Business
         {
             try
             {
-                var roles = await _rolData.GetAllAsync();
+                var roles = await _rolData.GetAllAsyncSQL();
                 return MapToDTOList(roles);
             }
             catch (Exception ex)
@@ -58,16 +58,15 @@ namespace Business
                 throw new Utilities.Exceptions.ValidationException("id", "El ID del rol debe ser mayor que cero");
             }
 
+            var rol = await _rolData.GetByIdAsync(id);
+            if (rol == null)
+            {
+                _logger.LogInformation("No se encontró ningún rol con ID: {RolId}", id);
+                throw new EntityNotFoundException("Rol", id);
+            }
+
             try
             {
-                var rol = await _rolData.GetByIdAsync(id);
-                if (rol == null)
-                {
-                    _logger.LogInformation("No se encontró ningún rol con ID: {RolId}", id);
-                    throw new EntityNotFoundException("Rol", id);
-                }
-
-                // Metodo
                 return MapToDTO(rol);
             }
             catch (Exception ex)
@@ -103,20 +102,23 @@ namespace Business
             }
         }
 
+
         /// <summary>
         /// Actualiza un usuario existente.
         /// </summary>
         public async Task<bool> UpdateUserAsync(RolDTO rolDTO)
         {
+
+            ValidateRol(rolDTO);
+
+            var existingRol = await _rolData.GetByIdAsync(rolDTO.Id);
+            if (existingRol == null)
+            {
+                throw new EntityNotFoundException("Rol", rolDTO.Id);
+            }
             try
             {
-                ValidateRol(rolDTO);
-
-                var existingRol = await _rolData.GetByIdAsync(rolDTO.Id);
-                if (existingRol == null)
-                {
-                    throw new EntityNotFoundException("Rol", rolDTO.Id);
-                }
+                
 
                 // Actualizar propiedades
                 existingRol.Id = rolDTO.Id;
@@ -139,13 +141,14 @@ namespace Business
         /// </summary>
         public async Task<bool> DeleteRolAsync(int id)
         {
+            var existingRol = await _rolData.GetByIdAsync(id);
+            if (existingRol == null)
+            {
+                throw new EntityNotFoundException("Rol", id);
+            }
             try
             {
-                var existingRol = await _rolData.GetByIdAsync(id);
-                if (existingRol == null)
-                {
-                    throw new EntityNotFoundException("Rol", id);
-                }
+                
 
                 return await _rolData.DeleteAsync(id);
             }

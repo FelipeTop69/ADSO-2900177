@@ -14,9 +14,9 @@ namespace Data
     public class PersonData
     {
         protected readonly ApplicationDbContext _context;
-        protected readonly ILogger _looger;
+        protected readonly ILogger<PersonData> _looger;
 
-        public PersonData(ApplicationDbContext context, ILogger logger)
+        public PersonData(ApplicationDbContext context, ILogger<PersonData> logger)
         {
             _context = context;
             _looger = logger;
@@ -27,29 +27,9 @@ namespace Data
         /// </summary>
         public async Task<IEnumerable<Person>> GetAllAsyncSQL()
         {
-            string query = @"
-                SELECT 
-                    p.Id, 
-                    CONCAT(p.FirstName, ' ', COALESCE(p.MiddleName, ''), ' ', p.LastName, ' ', COALESCE(p.SecondLastName, '')) AS Name,
-                    p.Email, 
-                    p.DocumentType, 
-                    p.DocumentNumber, 
-                    p.Phone, 
-                    p.Address, 
-                    p.BlodType, 
-                    p.Photo, 
-                    p.Active,
-                    p.CityId as CityInt, 
-                    c.Name as CityName, 
-                    p.AssignamentId as AssignmentInt, 
-                    a.Name AS AssignmentName
-                FROM Person p
-                INNER JOIN City c 
-                ON p.CityId = c.Id
-                INNER JOIN Assignment a 
-                ON p.AssignamentId = a.Id";
+            string query = @"SELECT * FROM Person WHERE Active = 1;";
 
-            return (IEnumerable<Person>) await _context.QueryAsync<IEnumerable<Person>>(query);
+            return (IEnumerable<Person>) await _context.QueryAsync<Person>(query);
             //return await _context.Set<Person>().ToListAsync();
         }
 
@@ -66,32 +46,11 @@ namespace Data
         /// <summary>
         /// Obtiene un Person especifico por su identificacion SQL
         /// </summary
-        public async Task<Person?> GetBydIdAsyncSQL(int id)
+        public async Task<Person?> GetByIdAsyncSQL(int id)
         {
             try
             {
-                string query = @"
-                    SELECT 
-                        p.Id, 
-                        CONCAT(p.FirstName, ' ', COALESCE(p.MiddleName, ''), ' ', p.LastName, ' ', COALESCE(p.SecondLastName, '')) AS Name,
-                        p.Email, 
-                        p.DocumentType, 
-                        p.DocumentNumber, 
-                        p.Phone, 
-                        p.Address, 
-                        p.BlodType, 
-                        p.Photo, 
-                        p.Active, 
-                        p.CityId as CityInt, 
-                        c.Name as CityName, 
-                        p.AssignamentId as AssignmentInt, 
-                        a.Name as AssignmentName
-                    FROM Person p
-                    INNER JOIN City c 
-                    ON p.CityId = c.Id
-                    INNER JOIN Assignment a 
-                    ON p.AssignamentId = a.Id
-                    WHERE p.Id = @Id";
+                string query = " SELECT * FROM Person WHERE Id = @Id ";
 
                 return await _context.QueryFirstOrDefaultAsync<Person>(query, new { Id = id });
                 //return await _context.Set<Person>().FindAsync(id);
@@ -129,28 +88,23 @@ namespace Data
             {
                 string query = @"
                     INSERT INTO Person 
-                    (FirstName, MiddleName, LastName, SecondLastName, Email, DocumentNumber, Phone, 
-                     Address, DocumentType, BlodType, Photo, CityId, AssignamentId) 
+                    (Name, LastName, Email, DocumentNumber, Phone, 
+                     Address, DocumentType, BlodType) 
                     VALUES 
-                    (@FirstName, @MiddleName, @LastName, @SecondLastName, @Email, @DocumentNumber, @Phone, 
-                     @Address, @DocumentType, @BlodType, @Photo, @CityId, @AssignamentId);
+                    (@Name, @LastName, @Email, @DocumentNumber, @Phone, 
+                     @Address, @DocumentType, @BlodType);
                     SELECT CAST(SCOPE_IDENTITY() AS int);";
 
                 int newId = await _context.QuerySingleAsync<int>(query, new
                 {
-                    person.FirstName,
-                    person.MiddleName,
+                    person.Name,
                     person.LastName,
-                    person.SecondLastName,
                     person.Email,
                     person.DocumentNumber,
                     person.Phone,
                     person.Address,
                     person.DocumentType,
                     person.BlodType,
-                    person.Photo,
-                    person.CityId,
-                    person.AssignamentId
                 });
 
                 person.Id = newId;
@@ -198,30 +152,22 @@ namespace Data
             {
                 string query = @"
                     UPDATE Person 
-                    SET FirstName = @FirstName, MiddleName = @MiddleName, LastName = @LastName, 
-                        SecondLastName = @SecondLastName, Email = @Email, DocumentNumber = @DocumentNumber, 
-                        Phone = @Phone, Address = @Address, DocumentType = @DocumentType, BlodType = @BlodType, 
-                        Photo = @Photo, Active = @Active, CityId = @CityId, AssignamentId = @AssignamentId
+                    SET Name = @Name, LastName = @LastName, Email = @Email, DocumentNumber = @DocumentNumber, 
+                        Phone = @Phone, Address = @Address, DocumentType = @DocumentType, BlodType = @BlodType
                     WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 
                 int rowsAffected = await _context.QuerySingleAsync<int>(query, new
                 {
                     person.Id,
-                    person.FirstName,
-                    person.MiddleName,
+                    person.Name,
                     person.LastName,
-                    person.SecondLastName,
                     person.Email,
                     person.DocumentNumber,
                     person.Phone,
                     person.Address,
                     person.DocumentType,
                     person.BlodType,
-                    person.Photo,
-                    person.Active,
-                    person.CityId,
-                    person.AssignamentId
                 });
 
                 return rowsAffected > 0;
@@ -271,14 +217,6 @@ namespace Data
                 int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
 
                 return rowsAffected > 0;
-
-
-                //var person = await _context.Set<Person>().FindAsync(id);
-                //if (person == null)
-                //    return false;
-                //_context.Set<Person>().Remove(person);
-                //await _context.SaveChangesAsync();
-                //return true;
             }
             catch (Exception ex)
             {
@@ -304,6 +242,58 @@ namespace Data
             catch (Exception ex)
             {
                 _looger.LogError($"Error al eliminar la persona {ex.Message}");
+                return false;
+            }
+        }
+
+
+
+        /// <summary>
+        /// Elimina un Person de manera logica de la base  de datos SQL
+        /// </summary>
+        public async Task<bool> DeleteLogicAsyncSQL(int id)
+        {
+            try
+            {
+                string query = @"
+                    UPDATE Person 
+                    SET Active = 0
+                    WHERE Id = @Id;
+                    SELECT CAST(@@ROWCOUNT AS int);";
+
+                int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
+
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar logicamente form: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Elimina un Person de manera logica de la base  de datos LINQ
+        /// </summary>
+        public async Task<bool> DeleteLogicAsync(int id)
+        {
+            try
+            {
+                var person = await GetByIdAsync(id);
+                if (person == null)
+                {
+                    return false;
+                }
+
+                person.Active = false;
+                await _context.SaveChangesAsync();
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                _looger.LogError($"Error al eliminar de manera logica el Person: {ex.Message}");
                 return false;
             }
         }

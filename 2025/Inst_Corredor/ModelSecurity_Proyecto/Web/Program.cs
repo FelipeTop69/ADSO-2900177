@@ -21,6 +21,22 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<FormBusiness>();
 builder.Services.AddScoped<FormData>();
 
+builder.Services.AddScoped<PersonBusiness>();
+builder.Services.AddScoped<PersonData>();
+
+builder.Services.AddScoped<ModuleBusiness>();
+builder.Services.AddScoped<ModuleData>();
+
+builder.Services.AddScoped<RolBusiness>();
+builder.Services.AddScoped<RolData>();
+
+builder.Services.AddScoped<PermissionBusiness>();
+builder.Services.AddScoped<PermissionData>();
+
+builder.Services.AddScoped<UserBusiness>();
+builder.Services.AddScoped<UserData>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

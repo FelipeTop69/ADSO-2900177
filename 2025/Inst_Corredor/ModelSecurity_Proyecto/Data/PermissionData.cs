@@ -13,9 +13,9 @@ namespace Data
     public class PermissionData
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<PermissionData> _logger;
 
-        public PermissionData(ApplicationDbContext context, ILogger logger)
+        public PermissionData(ApplicationDbContext context, ILogger<PermissionData> logger)
         {
             _context = context;
             _logger = logger;
@@ -26,8 +26,8 @@ namespace Data
         /// </summary>
         public async Task<IEnumerable<Permission>> GetAllAsyncSQL()
         {
-            string query = @"SELECT * FROM Permission";
-            return (IEnumerable<Permission>) await _context.QueryAsync<IEnumerable<Permission>>(query);
+            string query = @"SELECT * FROM Permission WHERE Active = 1";
+            return (IEnumerable<Permission>) await _context.QueryAsync<Permission>(query);
             //return await _context.Set<Permission>().ToListAsync();
         }
 
@@ -216,12 +216,11 @@ namespace Data
         /// </summary>
         public async Task<bool> DeleteAsync(int id)
         {
+            var permission = await _context.Set<Permission>().FindAsync(id);
+            if (permission == null)
+                return false;
             try
             {
-                var permission = await _context.Set<Permission>().FindAsync(id);
-                if (permission == null)
-                    return false;
-
                 _context.Set<Permission>().Remove(permission);
                 await _context.SaveChangesAsync();
                 return true;
@@ -229,6 +228,58 @@ namespace Data
             catch (Exception ex)
             {
                 _logger.LogError($"Error al eliminar el Permission: {ex.Message}");
+                return false;
+            }
+        }
+
+        
+
+        /// <summary>
+        /// Elimina un Permission de manera logica de la base  de datos SQL
+        /// </summary>
+        public async Task<bool> DeleteLogicAsyncSQL(int id)
+        {
+            try
+            {
+                string query = @"
+                    UPDATE Permission 
+                    SET Active = 0
+                    WHERE Id = @Id;
+                    SELECT CAST(@@ROWCOUNT AS int);";
+
+                int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
+
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar logicamente permission: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Elimina un Permission de manera logica de la base  de datos LINQ
+        /// </summary>
+        public async Task<bool> DeleteLogicAsync(int id)
+        {
+            try
+            {
+                var permission = await GetByIdAsync(id);
+                if (permission == null)
+                {
+                    return false;
+                }
+
+                permission.Active = false;
+                await _context.SaveChangesAsync();
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al eliminar de manera logica el Form: {ex.Message}");
                 return false;
             }
         }

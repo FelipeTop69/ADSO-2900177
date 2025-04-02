@@ -7,6 +7,7 @@ using Data;
 using Entity.DTOs;
 using Entity.Model;
 using Microsoft.Extensions.Logging;
+using Microsoft.SqlServer.Server;
 using Utilities.Exceptions;
 
 namespace Business
@@ -23,13 +24,13 @@ namespace Business
         }
 
         /// <summary>
-        /// Obtiene todos los formularios como DTOs.
+        /// Obtiene todos los formularios 
         /// </summary>
         public async Task<IEnumerable<FormDTO>> GetAllFormsAsync()
         {
             try
             {
-                var forms = await _formData.GetAllAsync();
+                var forms = await _formData.GetAllAsyncSQL();
                 return MapToDTOList(forms);
             }
             catch (Exception ex)
@@ -41,7 +42,7 @@ namespace Business
 
 
         /// <summary>
-        /// Obtiene un formulario por ID como DTO.
+        /// Obtiene un formulario por ID
         /// </summary>
         public async Task<FormDTO> GetFormByIdAsync(int id)
         {
@@ -51,16 +52,22 @@ namespace Business
                 throw new ValidationException("id", "El ID del formulario debe ser mayor que cero.");
             }
 
-            try
+            var form = await _formData.GetByIdAsyncSQL(id);
+            if (form == null)
             {
-                var form = await _formData.GetByIdAsync(id);
-                if (form == null)
-                {
-                    _logger.LogInformation("No se encontró ningún formulario con ID: {FormId}", id);
-                    throw new EntityNotFoundException("Form", id);
-                }
+                _logger.LogInformation("No se encontró ningún formulario con ID: {FormId}", id);
+                throw new EntityNotFoundException("Form", id);
+            }
+
+            try
+            { 
 
                 return MapToDTO(form);
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error en servicio externo al obtener el formulario con ID: {FormId}", id);
+                throw;
             }
             catch (Exception ex)
             {
@@ -80,7 +87,7 @@ namespace Business
                 ValidateForm(formDTO);
 
                 var form = MapToEntity(formDTO);
-                var createdForm = await _formData.CreateAsync(form);
+                var createdForm = await _formData.CreateAsyncSQL(form);
 
                 return MapToDTO(createdForm);
             }
@@ -97,27 +104,31 @@ namespace Business
         /// </summary>
         public async Task<bool> UpdateFormAsync(FormDTO formDTO)
         {
+            ValidateForm(formDTO);
+
+            var existingForm = await _formData.GetByIdAsyncSQL(formDTO.Id);
+            if (existingForm == null)
+            {
+                throw new EntityNotFoundException("Form", formDTO.Id);
+            }
+
             try
             {
-                ValidateForm(formDTO);
-
-                var existingForm = await _formData.GetByIdAsync(formDTO.Id);
-                if (existingForm == null)
-                {
-                    throw new EntityNotFoundException("Form", formDTO.Id);
-                }
-
-                // Actualizar propiedades
                 existingForm.Active = formDTO.Status;
                 existingForm.Name = formDTO.Name;
                 existingForm.Description = formDTO.Description;
 
                 return await _formData.UpdateAsync(existingForm);
             }
-            catch (Exception ex)
+            catch (ExternalServiceException ex) 
             {
-                _logger.LogError(ex, "Error al actualizar el formulario con ID: {FormId}", formDTO.Id);
-                throw new ExternalServiceException("Base de datos", "Error al actualizar el formulario.", ex);
+                _logger.LogError(ex, "Error en servicio externo al actualizar el formulario con ID: {FormId}", formDTO.Id);
+                throw;
+            }
+            catch (Exception ex) 
+            {
+                _logger.LogError(ex, "Error inesperado al actualizar el formulario con ID: {FormId}", formDTO.Id);
+                throw new ExternalServiceException("Base de datos", "Error inesperado al actualizar el formulario.", ex);
             }
         }
 
@@ -127,22 +138,63 @@ namespace Business
         /// </summary>
         public async Task<bool> DeleteFormAsync(int id)
         {
+            var existingForm = await _formData.GetByIdAsyncSQL(id);
+            if (existingForm == null)
+            {
+                throw new EntityNotFoundException("Form", id);
+            }
             try
             {
-                var existingForm = await _formData.GetByIdAsync(id);
-                if (existingForm == null)
-                {
-                    throw new EntityNotFoundException("Form", id);
-                }
-
-                return await _formData.DeleteAsync(id);
+                return await _formData.DeleteAsyncSQL(id);
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error en servicio externo al eliminar el formulario con ID: {FormId}", id);
+                throw;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al eliminar el formulario con ID: {FormId}", id);
                 throw new ExternalServiceException("Base de datos", "Error al eliminar el formulario.", ex);
             }
+
         }
+
+
+        /// <summary>
+        /// Elimina un formulario de manera logica por ID
+        /// </summary>
+        public async Task<bool> DeleteFormLogicalAsync(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ValidationException("ID", "El ID del formulario debe ser mayor que cero.");
+            }
+
+            var existingForm = await _formData.GetByIdAsyncSQL(id);
+            if (existingForm == null)
+            {
+                throw new EntityNotFoundException("Form", id);
+            }
+
+            try
+            {
+
+                return await _formData.DeleteLogicAsyncSQL(id);
+
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error en servicio externo al eliminar el formulario con ID: {FormId}", id);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el formulario de manera logica con ID: {FormId}", id);
+                throw new ExternalServiceException("Base de datos", "Error al eliminar el formulario de manera logica.", ex);
+            }
+        }
+
 
 
         /// <summary>

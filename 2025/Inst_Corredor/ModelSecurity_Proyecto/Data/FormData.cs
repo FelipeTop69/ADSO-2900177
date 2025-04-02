@@ -26,18 +26,18 @@ namespace Data
         /// </summary>
         public async Task<IEnumerable<Form>> GetAllAsyncSQL()
         {
-            string query = @"SELECT * FROM FormData";
-            return (IEnumerable<Form>)await _context.QueryAsync<IEnumerable<Form>>(query);
-
-            //return await _context.Set<Form>().ToListAsync();
+            string query = "SELECT * FROM Form WHERE Active = 1;";
+            return (IEnumerable<Form>) await _context.QueryAsync<Form>(query);
         }
 
         /// <summary>
         /// Obtiene todos los Form almacenados en la base de datos LINQ
         /// </summary>
         public async Task<IEnumerable<Form>> GetAllAsync()
-        {
-            return await _context.Set<Form>().ToListAsync();
+{
+            return await _context.Set<Form>()
+                         .Where(f => f.Active) 
+                         .ToListAsync();
         }
 
 
@@ -49,7 +49,7 @@ namespace Data
         {
             try
             {
-                string query = @"SELECT * FROM FormData WHERE Id = @Id";
+                string query = "SELECT * FROM Form WHERE Id = @Id;";
                 return await _context.QueryFirstOrDefaultAsync<Form>(query, new { Id = id });
 
                 //return await _context.Set<Form>().FindAsync(id);
@@ -132,7 +132,6 @@ namespace Data
 
 
 
-
         /// <summary>
         /// Actualiza un FormData existente en la base de datos SQL
         /// </summary>
@@ -141,7 +140,7 @@ namespace Data
             try
             {
                 string query = @"
-                    UPDATE Form 
+                    UPDATE Form
                     SET Name = @Name, Description = @Description
                     WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
@@ -186,7 +185,6 @@ namespace Data
 
 
 
-
         /// <summary>
         /// Elimina un FormData de la base de datos SQL
         /// </summary>
@@ -201,13 +199,6 @@ namespace Data
                 int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
 
                 return rowsAffected > 0;
-
-                //var form = await _context.Set<Form>().FindAsync(id);
-                //if (form == null)
-                //    return false;
-                //_context.Set<Form>().Remove(form);
-                //await _context.SaveChangesAsync();
-                //return true;
             }
             catch (Exception ex)
             {
@@ -237,5 +228,60 @@ namespace Data
                 return false;
             }
         }
+
+
+
+        /// <summary>
+        /// Elimina un FormData de manera logica de la base  de datos SQL
+        /// </summary>
+        public async Task<bool> DeleteLogicAsyncSQL(int id)
+        {
+            try
+            {
+                string query = @"
+                    UPDATE Form 
+                    SET Active = 0
+                    WHERE Id = @Id;
+                    SELECT CAST(@@ROWCOUNT AS int);"; 
+
+                int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
+
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar logicamente form: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Elimina un FormData de manera logica de la base  de datos LINQ
+        /// </summary>
+        public async Task<bool> DeleteLogicAsync(int id)
+        {
+            try
+            {
+                var form = await GetByIdAsync(id);
+                if (form == null)
+                {
+                    return false;
+                }
+
+                form.Active = false; 
+                await _context.SaveChangesAsync();
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al eliminar de manera logica el Form: {ex.Message}");
+                return false;
+            }
+        }
+
+
+
     }
 }

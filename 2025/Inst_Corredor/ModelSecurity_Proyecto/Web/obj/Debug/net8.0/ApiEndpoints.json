@@ -1,31 +1,8 @@
 [
   {
     "ContainingType": "Web.Controllers.FormController",
-    "Method": "GetAllForms",
-    "RelativePath": "api/Form",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[Entity.DTOs.FormDTO, Entity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "Web.Controllers.FormController",
     "Method": "CreateForm",
-    "RelativePath": "api/Form",
+    "RelativePath": "api/Form/Create",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -60,32 +37,23 @@
   },
   {
     "ContainingType": "Web.Controllers.FormController",
-    "Method": "UpdateForm",
-    "RelativePath": "api/Form",
-    "HttpMethod": "PUT",
+    "Method": "DeleteForm",
+    "RelativePath": "api/Form/Delete/{id}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "formDTO",
-        "Type": "Entity.DTOs.FormDTO",
+        "Name": "id",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Entity.DTOs.FormDTO",
-        "MediaTypes": [
-          "application/json"
-        ],
+        "Type": "System.Void",
+        "MediaTypes": [],
         "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
@@ -103,8 +71,31 @@
   },
   {
     "ContainingType": "Web.Controllers.FormController",
+    "Method": "GetAllForms",
+    "RelativePath": "api/Form/GetAll",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[Entity.DTOs.FormDTO, Entity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.FormController",
     "Method": "GetFormById",
-    "RelativePath": "api/Form/{id}",
+    "RelativePath": "api/Form/GetById/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -146,8 +137,8 @@
   },
   {
     "ContainingType": "Web.Controllers.FormController",
-    "Method": "DeleteForm",
-    "RelativePath": "api/Form/{id}",
+    "Method": "DeleteLogicalFormAsync",
+    "RelativePath": "api/Form/Logical/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -163,6 +154,49 @@
         "Type": "System.Void",
         "MediaTypes": [],
         "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.FormController",
+    "Method": "UpdateForm",
+    "RelativePath": "api/Form/Update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "formDTO",
+        "Type": "Entity.DTOs.FormDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Entity.DTOs.FormDTO",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 400
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
@@ -466,9 +500,9 @@
   },
   {
     "ContainingType": "Web.Controllers.ModuleController",
-    "Method": "UpdateModule",
+    "Method": "DeleteModule",
     "RelativePath": "api/Module/{id}",
-    "HttpMethod": "PUT",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -476,7 +510,70 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
       },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.ModuleController",
+    "Method": "DeleteLogicalModuleAsync",
+    "RelativePath": "api/Module/Logical/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.ModuleController",
+    "Method": "UpdateModule",
+    "RelativePath": "api/Module/Updated",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
         "Name": "moduleDTO",
         "Type": "Entity.DTOs.ModuleDTO",
@@ -497,40 +594,6 @@
           "application/json"
         ],
         "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "Web.Controllers.ModuleController",
-    "Method": "DeleteModule",
-    "RelativePath": "api/Module/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
@@ -650,9 +713,9 @@
   },
   {
     "ContainingType": "Web.Controllers.PermissionController",
-    "Method": "UpdatePermission",
+    "Method": "DeletePermission",
     "RelativePath": "api/Permission/{id}",
-    "HttpMethod": "PUT",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -660,7 +723,70 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
       },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.PermissionController",
+    "Method": "DeleteLogicalFormAsync",
+    "RelativePath": "api/Permission/Logical/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.PermissionController",
+    "Method": "UpdatePermission",
+    "RelativePath": "api/Permission/Updated",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
         "Name": "permissionDTO",
         "Type": "Entity.DTOs.PermissionDTO",
@@ -681,40 +807,6 @@
           "application/json"
         ],
         "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "Web.Controllers.PermissionController",
-    "Method": "DeletePermission",
-    "RelativePath": "api/Permission/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
@@ -834,9 +926,9 @@
   },
   {
     "ContainingType": "Web.Controllers.PersonController",
-    "Method": "UpdatePersonAsync",
+    "Method": "DeletePersonAsync",
     "RelativePath": "api/Person/{id}",
-    "HttpMethod": "PUT",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -844,7 +936,70 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
       },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.PersonController",
+    "Method": "DeleteLogicalFormAsync",
+    "RelativePath": "api/Person/Logical/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.PersonController",
+    "Method": "UpdatePersonAsync",
+    "RelativePath": "api/Person/Update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
         "Name": "personDto",
         "Type": "Entity.DTOs.PersonDTO",
@@ -865,40 +1020,6 @@
           "application/json"
         ],
         "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "Web.Controllers.PersonController",
-    "Method": "DeletePersonAsync",
-    "RelativePath": "api/Person/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
@@ -1018,9 +1139,9 @@
   },
   {
     "ContainingType": "Web.Controllers.RolController",
-    "Method": "UpdateRolAsync",
+    "Method": "DeleteRolAsync",
     "RelativePath": "api/Rol/{id}",
-    "HttpMethod": "PUT",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -1028,7 +1149,70 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
       },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.RolController",
+    "Method": "DeleteLogicalFormAsync",
+    "RelativePath": "api/Rol/Logical/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.RolController",
+    "Method": "UpdateRolAsync",
+    "RelativePath": "api/Rol/Updated",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
         "Name": "rolDto",
         "Type": "Entity.DTOs.RolDTO",
@@ -1049,40 +1233,6 @@
           "application/json"
         ],
         "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "Web.Controllers.RolController",
-    "Method": "DeleteRolAsync",
-    "RelativePath": "api/Rol/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
@@ -1498,8 +1648,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "userDTO",
-        "Type": "Entity.DTOs.UserDTO",
+        "Name": "userCreateDTO",
+        "Type": "Entity.DTOs.UserCreateDTO",
         "IsRequired": true
       }
     ],
@@ -1570,54 +1720,6 @@
   },
   {
     "ContainingType": "Web.Controllers.UserController",
-    "Method": "UpdateUser",
-    "RelativePath": "api/User/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "userDTO",
-        "Type": "Entity.DTOs.UserDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Entity.DTOs.UserDTO",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "Web.Controllers.UserController",
     "Method": "DeleteUser",
     "RelativePath": "api/User/{id}",
     "HttpMethod": "DELETE",
@@ -1635,6 +1737,83 @@
         "Type": "System.Void",
         "MediaTypes": [],
         "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.UserController",
+    "Method": "DeleteLogicalUserAsync",
+    "RelativePath": "api/User/Logical/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.UserController",
+    "Method": "UpdateUser",
+    "RelativePath": "api/User/Update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userCreateDTO",
+        "Type": "Entity.DTOs.UserCreateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Entity.DTOs.UserDTO",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 400
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",

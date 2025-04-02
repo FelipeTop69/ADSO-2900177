@@ -29,8 +29,7 @@ namespace Business
         {
             try
             {
-                var users = await _userData.GetAllAsync();
-                return MapToDTOList(users);
+                return  await _userData.GetAllAsyncSQL();
                 
             }
             catch (Exception ex)
@@ -51,17 +50,17 @@ namespace Business
                 _logger.LogWarning("Intento de obtener un usuario con ID inválido: {UserId}", id);
                 throw new ValidationException("id", "El ID del usuario debe ser mayor que cero.");
             }
-
+            var user = await _userData.GetByIdAsyncSQL(id);
+            if (user == null)
+            {
+                _logger.LogInformation("No se encontró ningún usuario con ID: {UserId}", id);
+                throw new EntityNotFoundException("User", id);
+            }
             try
             {
-                var user = await _userData.GetByIdAsync(id);
-                if (user == null)
-                {
-                    _logger.LogInformation("No se encontró ningún usuario con ID: {UserId}", id);
-                    throw new EntityNotFoundException("User", id);
-                }
+                
 
-                return MapToDTO(user);
+                return user;
             }
             catch (Exception ex)
             {
@@ -74,20 +73,20 @@ namespace Business
         /// <summary>
         /// Crea un nuevo usuario.
         /// </summary>
-        public async Task<UserDTO> CreateUserAsync(UserDTO userDTO)
+        public async Task<UserCreateDTO> CreateUserAsync(UserCreateDTO userCreateDTO)
         {
             try
             {
-                ValidateUser(userDTO);
+                //ValidateUser(userDTO);
 
-                var user = MapToEntity(userDTO);
+                var user = MapCreateToEntity(userCreateDTO);
                 var createdUser = await _userData.CreateAsync(user);
 
-                return MapToDTO(createdUser);
+                return MapToCreateDTO(createdUser);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear un nuevo usuario: {Username}", userDTO?.Username ?? "null");
+                _logger.LogError(ex, "Error al crear un nuevo usuario: {Username}", userCreateDTO?.Username ?? "null");
                 throw new ExternalServiceException("Base de datos", "Error al crear el usuario.", ex);
             }
         }
@@ -96,28 +95,31 @@ namespace Business
         /// <summary>
         /// Actualiza un usuario existente.
         /// </summary>
-        public async Task<bool> UpdateUserAsync(UserDTO userDTO)
+        public async Task<bool> UpdateUserAsync(UserCreateDTO userCreateDTO)
         {
+
+            //ValidateUser(userDTO);
+
+            var existingUser = await _userData.GetByIdAsync(userCreateDTO.Id);
+            if (existingUser == null)
+            {
+                throw new EntityNotFoundException("User", userCreateDTO.Id);
+            }
             try
             {
-                ValidateUser(userDTO);
-
-                var existingUser = await _userData.GetByIdAsync(userDTO.Id);
-                if (existingUser == null)
-                {
-                    throw new EntityNotFoundException("User", userDTO.Id);
-                }
+                
 
                 // Actualizar propiedades
-                existingUser.Username = userDTO.Username;
-                existingUser.Active = userDTO.Status;
-                existingUser.PersonId = userDTO.PersonId;
+                existingUser.Username = userCreateDTO.Username;
+                existingUser.Password = userCreateDTO.Password;
+                existingUser.Active = userCreateDTO.Status;
+                existingUser.PersonId = userCreateDTO.PersonId;
 
                 return await _userData.UpdateAsync(existingUser);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar el usuario con ID: {UserId}", userDTO.Id);
+                _logger.LogError(ex, "Error al actualizar el usuario con ID: {UserId}", userCreateDTO.Id);
                 throw new ExternalServiceException("Base de datos", "Error al actualizar el usuario.", ex);
             }
         }
@@ -130,7 +132,7 @@ namespace Business
         {
             try
             {
-                var existingUser = await _userData.GetByIdAsync(id);
+                var existingUser = await _userData.GetByIdAsyncSQL(id);
                 if (existingUser == null)
                 {
                     throw new EntityNotFoundException("User", id);
@@ -142,6 +144,41 @@ namespace Business
             {
                 _logger.LogError(ex, "Error al eliminar el usuario con ID: {UserId}", id);
                 throw new ExternalServiceException("Base de datos", "Error al eliminar el usuario.", ex);
+            }
+        }
+
+
+        /// <summary>
+        /// Elimina un user de manera logica por ID
+        /// </summary>
+        public async Task<bool> DeleteUserLogicalAsync(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ValidationException("ID", "El ID del user debe ser mayor que cero.");
+            }
+
+            var existingUser = await _userData.GetByIdAsyncSQL(id);
+            if (existingUser == null)
+            {
+                throw new EntityNotFoundException("Form", id);
+            }
+
+            try
+            {
+
+                return await _userData.DeleteLogicAsyncSQL(id);
+
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error en servicio externo al eliminar el user con ID: {UserId}", id);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el user de manera logica con ID: {UserId}", id);
+                throw new ExternalServiceException("Base de datos", "Error al eliminar el user de manera logica.", ex);
             }
         }
 
@@ -173,10 +210,11 @@ namespace Business
             {
                 Id = user.Id,
                 Username = user.Username,
+                Password = user.Password,
                 Status = user.Active,
                 PersonId = user.PersonId,
-                PersonName = user.Person?.FirstName + " " + user.Person?.LastName
             };
+
         }
 
 
@@ -191,6 +229,39 @@ namespace Business
                 Username = userDTO.Username,
                 Active = userDTO.Status,
                 PersonId = userDTO.PersonId
+            };
+        }
+
+
+        /// <summary>
+        /// Mapea un objeto User a UserCreateDTO.
+        /// </summary>
+        private UserCreateDTO MapToCreateDTO(User user)
+        {
+            return new UserCreateDTO
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Password = user.Password,
+                Status = user.Active,
+                PersonId = user.PersonId,
+            };
+
+        }
+
+
+        /// <summary>
+        /// Mapea un objeto UserCreateDTO a User.
+        /// </summary>
+        private User MapCreateToEntity(UserCreateDTO userCreateDTO)
+        {
+            return new User
+            {
+                Id = userCreateDTO.Id,
+                Username = userCreateDTO.Username,
+                Password = userCreateDTO.Password,
+                Active = userCreateDTO.Status,
+                PersonId = userCreateDTO.PersonId
             };
         }
 

@@ -135,37 +135,32 @@ namespace Web.Controllers
         /// <response code="400">Datos inválidos o ID incorrecto</response>
         /// <response code="404">Rol no encontrado</response>
         /// <response code="500">Error interno del servidor</response>
-        [HttpPut("{id}")]
+        [HttpPut("Updated")]
         [ProducesResponseType(typeof(RolDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateRolAsync(int id, [FromBody] RolDTO rolDto)
+        public async Task<IActionResult> UpdateRolAsync([FromBody] RolDTO rolDto)
         {
             try
             {
-                if (id != rolDto.Id)
-                {
-                    return BadRequest(new { message = "El ID de la ruta no coincide con el ID del objeto." });
-                }
-
                 var updatedRol = await _rolBusiness.UpdateUserAsync(rolDto);
 
                 return Ok(updatedRol);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar el rol con ID: {RolId}", id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar el rol con ID: {RolId}", rolDto.Id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "No se encontró el rol con ID: {RolId}", id);
+                _logger.LogInformation(ex, "No se encontró el rol con ID: {RolId}", rolDto.Id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar el rol con ID: {RolId}", id);
+                _logger.LogError(ex, "Error al actualizar el rol con ID: {RolId}", rolDto.Id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -184,20 +179,52 @@ namespace Web.Controllers
         [ProducesResponseType(500)]
         public async Task<IActionResult> DeleteRolAsync(int id)
         {
+            var deleted = await _rolBusiness.DeleteRolAsync(id);
+
+            if (!deleted)
+            {
+                return NotFound(new { message = "Rol no encontrado o ya eliminado" });
+            }
             try
             {
-                var deleted = await _rolBusiness.DeleteRolAsync(id);
-
-                if (!deleted)
-                {
-                    return NotFound(new { message = "Rol no encontrado o ya eliminado" });
-                }
-
                 return Ok(new { message = "Rol eliminado exitosamente" });
             }
             catch (ExternalServiceException ex)
             {
                 _logger.LogError(ex, "Error al eliminar el rol con ID: {RolId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Elimina de manera logica un form del sistema
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("Logical/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteLogicalFormAsync(int id)
+        {
+            var deleted = await _rolBusiness.SoftDeleteRolAsync(id);
+
+            if (!deleted)
+            {
+                return NotFound(new { message = "Rol no encontrado o ya eliminado." });
+            }
+            try
+            {
+                return Ok(new { message = "Eliminación lógica exitosa." });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el Rol con ID: {RolId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el Rol de manera lógica con ID: {RolId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }

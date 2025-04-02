@@ -1,4 +1,5 @@
 ﻿using Business;
+using Data;
 using Entity.DTOs;
 using Entity.Model;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -87,11 +88,11 @@ namespace Web.Controllers
         [ProducesResponseType(typeof(UserDTO), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> CreateUser([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> CreateUser([FromBody] UserCreateDTO userCreateDTO)
         {
             try
             {
-                var createdUser = await _userBusiness.CreateUserAsync(userDTO);
+                var createdUser = await _userBusiness.CreateUserAsync(userCreateDTO);
                 return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
             }
             catch (ValidationException ex)
@@ -110,37 +111,33 @@ namespace Web.Controllers
         /// <summary>
         /// Actualiza un userBusiness existente en el sistema
         /// </summary>
-        [HttpPut("{id}")]
+        [HttpPut("Update")]
         [ProducesResponseType(typeof(UserDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDTO userDTO)
+        public async Task<IActionResult> UpdateUser([FromBody] UserCreateDTO userCreateDTO)
         {
+          
+
+            var updatedUser = await _userBusiness.UpdateUserAsync(userCreateDTO);
             try
             {
-                if (id != userDTO.Id)
-                {
-                    return BadRequest(new { message = "El ID de la ruta no coincide con el ID del objeto." });
-                }
-
-                var updatedUser = await _userBusiness.UpdateUserAsync(userDTO);
-
                 return Ok(updatedUser);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar el user con ID: {UserId}", id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar el user con ID: {UserId}", userCreateDTO.Id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "No se encontró el user con ID: {UserId}", id);
+                _logger.LogInformation(ex, "No se encontró el user con ID: {UserId}", userCreateDTO.Id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar el user con ID: {UserId}", id);
+                _logger.LogError(ex, "Error al actualizar el user con ID: {UserId}", userCreateDTO.Id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -155,20 +152,53 @@ namespace Web.Controllers
         [ProducesResponseType(500)]
         public async Task<IActionResult> DeleteUser(int id)
         {
+            var deleted = await _userBusiness.DeleteUserAsync(id);
+
+            if (!deleted)
+            {
+                return NotFound(new { message = "User no encontrado o ya eliminado" });
+            }
             try
             {
-                var deleted = await _userBusiness.DeleteUserAsync(id);
-
-                if (!deleted)
-                {
-                    return NotFound(new { message = "User no encontrado o ya eliminado" });
-                }
-
                 return Ok(new { message = "User eliminado exitosamente" });
             }
             catch (ExternalServiceException ex)
             {
                 _logger.LogError(ex, "Error al eliminar el user con ID: {UserId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Elimina de manera logica un form del sistema
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("Logical/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteLogicalUserAsync(int id)
+        {
+            try
+            {
+                var deleted = await _userBusiness.DeleteUserLogicalAsync(id);
+
+                if (!deleted)
+                {
+                    return NotFound(new { message = "Formulario no encontrado o ya eliminado." });
+                }
+
+                return Ok(new { message = "Eliminación lógica exitosa." });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el formulario con ID: {FormId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el formulario de manera lógica con ID: {FormId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }

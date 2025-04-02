@@ -28,7 +28,7 @@ namespace Web.Controllers
         /// <summary>
         /// Obtener todos los forms del sistema
         /// </summary>
-        [HttpGet]
+        [HttpGet("GetAll")]
         [ProducesResponseType(typeof(IEnumerable<FormDTO>), 200)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllForms()
@@ -50,7 +50,7 @@ namespace Web.Controllers
         ///<summary>
         /// Obtener un form especificio por su ID
         /// </summary>
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id}")]
         [ProducesResponseType(typeof(FormDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -84,7 +84,7 @@ namespace Web.Controllers
         /// <summary>
         /// Crea un nuevo form en el sistema
         /// </summary>
-        [HttpPost]
+        [HttpPost("Create")]
         [ProducesResponseType(typeof(FormDTO), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -111,37 +111,33 @@ namespace Web.Controllers
         /// <summary>
         /// Actualiza un form existente en el sistema
         /// </summary>
-        [HttpPut("{id}")]
+        [HttpPut("Update")]
         [ProducesResponseType(typeof(FormDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateForm(int id,[FromBody] FormDTO formDTO)
+        public async Task<IActionResult> UpdateForm([FromBody] FormDTO formDTO)
         {
             try
             {
-                if (id != formDTO.Id)
-                {
-                    return BadRequest(new { message = "El ID de la ruta no coincide con el ID del objeto." });
-                }
 
                 var updatedForm = await _formBusiness.UpdateFormAsync(formDTO);
 
-                return Ok(updatedForm);
+                return Ok(new { message = "Form Actualizado exitosamente" });
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar el form con ID: {FormId}", id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar el form con ID: {FormId}", formDTO.Id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "No se encontró el form con ID: {FormId}", id);
+                _logger.LogInformation(ex, "No se encontró el form con ID: {FormId}", formDTO.Id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar el form con ID: {FormId}", id);
+                _logger.LogError(ex, "Error al actualizar el form con ID: {FormId}", formDTO.Id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -150,7 +146,7 @@ namespace Web.Controllers
         /// <summary>
         /// Elimina un form del sistema
         /// </summary>
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -167,9 +163,48 @@ namespace Web.Controllers
 
                 return Ok(new { message = "Form eliminado exitosamente" });
             }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el form con ID: {FormId}", id);
+                return NotFound(new { message = ex.Message });
+            }
             catch (ExternalServiceException ex)
             {
                 _logger.LogError(ex, "Error al eliminar el form con ID: {FormId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Elimina de manera logica un form del sistema
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("Logical/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteLogicalFormAsync(int id)
+        {
+            try
+            {
+                var deleted = await _formBusiness.DeleteFormLogicalAsync(id);
+
+                if (!deleted)
+                {
+                    return NotFound(new { message = "Formulario no encontrado o ya eliminado." });
+                }
+
+                return Ok(new { message = "Eliminación lógica exitosa." });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el formulario con ID: {FormId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el formulario de manera lógica con ID: {FormId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }

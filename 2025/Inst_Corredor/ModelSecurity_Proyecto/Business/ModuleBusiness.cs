@@ -29,7 +29,7 @@ namespace Business
         {
             try
             {
-                var modules = await _moduleData.GetAllAsync();
+                var modules = await _moduleData.GetAllAsyncSQL();
                 return MapToDTOList(modules);
             }
             catch (Exception ex)
@@ -45,20 +45,18 @@ namespace Business
         /// </summary>
         public async Task<ModuleDTO> GetModuleByIdAsync(int id)
         {
-            if (id <= 0)
+
+
+            var module = await _moduleData.GetByIdAsyncSQL(id);
+            if (module == null)
             {
-                _logger.LogWarning("Intento de obtener un módulo con ID inválido: {ModuleId}", id);
-                throw new ValidationException("id", "El ID del módulo debe ser mayor que cero.");
+                _logger.LogInformation("No se encontró ningún módulo con ID: {ModuleId}", id);
+                throw new EntityNotFoundException("Module", id);
             }
 
             try
             {
-                var module = await _moduleData.GetByIdAsync(id);
-                if (module == null)
-                {
-                    _logger.LogInformation("No se encontró ningún módulo con ID: {ModuleId}", id);
-                    throw new EntityNotFoundException("Module", id);
-                }
+                
 
                 return MapToDTO(module);
             }
@@ -80,7 +78,7 @@ namespace Business
                 ValidateModule(moduleDTO);
 
                 var module = MapToEntity(moduleDTO);
-                var createdModule = await _moduleData.CreateAsync(module);
+                var createdModule = await _moduleData.CreateAsyncSQL(module);
 
                 return MapToDTO(createdModule);
             }
@@ -97,15 +95,16 @@ namespace Business
         /// </summary>
         public async Task<bool> UpdateModuleAsync(ModuleDTO moduleDTO)
         {
+            ValidateModule(moduleDTO);
+
+            var existingModule = await _moduleData.GetByIdAsyncSQL(moduleDTO.Id);
+            if (existingModule == null)
+            {
+                throw new EntityNotFoundException("Module", moduleDTO.Id);
+            }
+
             try
             {
-                ValidateModule(moduleDTO);
-
-                var existingModule = await _moduleData.GetByIdAsync(moduleDTO.Id);
-                if (existingModule == null)
-                {
-                    throw new EntityNotFoundException("Module", moduleDTO.Id);
-                }
 
                 // Actualizar propiedades
                 existingModule.Active = moduleDTO.Status;
@@ -206,6 +205,40 @@ namespace Business
                 modulesDTO.Add(MapToDTO(module));
             }
             return modulesDTO;
+        }
+
+        /// <summary>
+        /// Elimina un Module de manera logica por ID
+        /// </summary>
+        public async Task<bool> DeleteModuleLogicalAsync(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ValidationException("ID", "El ID del module debe ser mayor que cero.");
+            }
+
+            var existingModule = await _moduleData.GetByIdAsyncSQL(id);
+            if (existingModule == null)
+            {
+                throw new EntityNotFoundException("Module", id);
+            }
+
+            try
+            {
+
+                return await _moduleData.DeleteLogicAsyncSQL(id);
+
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error en servicio externo al eliminar el module con ID: {FormId}", id);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el module de manera logica con ID: {FormId}", id);
+                throw new ExternalServiceException("Base de datos", "Error al eliminar el domule de manera logica.", ex);
+            }
         }
     }
 }
