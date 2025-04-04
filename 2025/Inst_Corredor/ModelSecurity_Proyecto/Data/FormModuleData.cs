@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Entity.Context;
-using Entity.DTOs;
+using Entity.DTOs.FormModuleDTOs;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,9 +14,9 @@ namespace Data
     public class FormModuleData
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<FormModuleData> _logger;
 
-        public FormModuleData(ApplicationDbContext context, ILogger logger)
+        public FormModuleData(ApplicationDbContext context, ILogger<FormModuleData> logger)
         {
             _context = context;
             _logger = logger;
@@ -25,12 +25,12 @@ namespace Data
         /// <summary>
         /// Obtiene todos los FormModule almacenados en la base de datos SQL
         /// </summary>
-        public async Task<IEnumerable<FormModule>> GetAllAsyncSQL()
+        public async Task<IEnumerable<FormModuleDTO>> GetAllAsyncSQL()
         {
             string query = @"
                 SELECT 
                     fm.Id, 
-                    fm.Active,
+                    fm.Active as Status,
                     fm.FormId, 
                     f.Name as FormName, 
                     fm.ModuleId, 
@@ -41,8 +41,7 @@ namespace Data
                 INNER JOIN Module m 
                 ON fm.ModuleId = m.Id";
 
-            return (IEnumerable<FormModule>) await _context.QueryAsync<IEnumerable<FormModule>>(query);
-            //return await _context.Set<FormModule>().ToListAsync();
+            return await _context.QueryAsync<FormModuleDTO>(query);
         }
 
         /// <summary>
@@ -58,14 +57,14 @@ namespace Data
         /// <summary>
         /// Obtiene un FormModule especifico por su identificacion SQL
         /// </summary
-        public async Task<FormModule?> GetByIdAsyncSQL(int id)
+        public async Task<FormModuleDTO?> GetByIdAsyncSQL(int id)
         {
             try
             {
                 string query = @"
                     SELECT 
                         fm.Id, 
-                        fm.Active,
+                        fm.Active as Status,
                         fm.FormId, 
                         f.Name as FormName, 
                         fm.ModuleId, 
@@ -77,7 +76,7 @@ namespace Data
                     ON fm.ModuleId = m.Id
                     WHERE fm.Id = @Id";
 
-                return await _context.QueryFirstOrDefaultAsync<FormModule>(query, new { Id = id });
+                return await _context.QueryFirstOrDefaultAsync<FormModuleDTO>(query, new { Id = id });
                 //return await _context.Set<FormModule>().FindAsync(id);
             }
             catch (Exception ex)
@@ -227,12 +226,6 @@ namespace Data
 
                 return rowsAffected > 0;
 
-                //var formModule = await _context.Set<FormModule>().FindAsync(id);
-                //if (formModule == null)
-                //    return false;
-                //_context.Set<FormModule>().Remove(formModule);
-                //await _context.SaveChangesAsync();
-                //return true;
             }
             catch (Exception ex)
             {
@@ -259,6 +252,56 @@ namespace Data
             catch (Exception ex)
             {
                 _logger.LogError($"Error al eliminar el FormModule: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Elimina un FormModule de manera logica de la base  de datos SQL
+        /// </summary>
+        public async Task<bool> DeleteLogicAsyncSQL(int id)
+        {
+            try
+            {
+                string query = @"
+                    UPDATE FormModule 
+                    SET Active = 0
+                    WHERE Id = @Id;
+                    SELECT CAST(@@ROWCOUNT AS int);";
+
+                int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
+
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar logicamente FormModule: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Elimina un FormModuleData de manera logica de la base  de datos LINQ
+        /// </summary>
+        public async Task<bool> DeleteLogicAsync(int id)
+        {
+            try
+            {
+                var formModule = await GetByIdAsync(id);
+                if (formModule == null)
+                {
+                    return false;
+                }
+
+                formModule.Active = false;
+                await _context.SaveChangesAsync();
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al eliminar de manera logica el User: {ex.Message}");
                 return false;
             }
         }

@@ -299,17 +299,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FormModuleDTO"
+                "$ref": "#/components/schemas/FormModuleOptionsDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/FormModuleDTO"
+                "$ref": "#/components/schemas/FormModuleOptionsDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/FormModuleDTO"
+                "$ref": "#/components/schemas/FormModuleOptionsDTO"
               }
             }
           }
@@ -320,7 +320,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FormModuleDTO"
+                  "$ref": "#/components/schemas/FormModuleOptionsDTO"
                 }
               }
             }
@@ -393,7 +393,7 @@
           }
         }
       },
-      "put": {
+      "delete": {
         "tags": [
           "FormModule"
         ],
@@ -408,21 +408,46 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/FormModule/Update": {
+      "put": {
+        "tags": [
+          "FormModule"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FormModuleDTO"
+                "$ref": "#/components/schemas/FormModuleOptionsDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/FormModuleDTO"
+                "$ref": "#/components/schemas/FormModuleOptionsDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/FormModuleDTO"
+                "$ref": "#/components/schemas/FormModuleOptionsDTO"
               }
             }
           }
@@ -462,7 +487,9 @@
             "description": "Internal Server Error"
           }
         }
-      },
+      }
+    },
+    "/api/FormModule/Logical/{id}": {
       "delete": {
         "tags": [
           "FormModule"
@@ -2299,6 +2326,27 @@
           "moduleName": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FormModuleOptionsDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "formId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "moduleId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

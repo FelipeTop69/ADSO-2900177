@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Data;
-using Entity.DTOs;
+using Entity.DTOs.FormModuleDTOs;
 using Entity.Model;
 using Microsoft.Extensions.Logging;
 using Utilities.Exceptions;
@@ -29,8 +29,9 @@ namespace Business
         {
             try
             {
-                var formModules = await _formModuleData.GetAllAsync();
-                return MapToDTOList(formModules);
+                var formModules = await _formModuleData.GetAllAsyncSQL();
+                return formModules;
+                //return MapToDTOList(formModules);
             }
             catch (Exception ex)
             {
@@ -51,16 +52,16 @@ namespace Business
                 throw new ValidationException("id", "El ID de la relación FormModule debe ser mayor que cero.");
             }
 
+            var formModule = await _formModuleData.GetByIdAsyncSQL(id);
+            if (formModule == null)
+            {
+                _logger.LogInformation("No se encontró ninguna relación FormModule con ID: {FormModuleId}", id);
+                throw new EntityNotFoundException("FormModule", id);
+            }
+
             try
             {
-                var formModule = await _formModuleData.GetByIdAsync(id);
-                if (formModule == null)
-                {
-                    _logger.LogInformation("No se encontró ninguna relación FormModule con ID: {FormModuleId}", id);
-                    throw new EntityNotFoundException("FormModule", id);
-                }
-
-                return MapToDTO(formModule);
+                return formModule;
             }
             catch (Exception ex)
             {
@@ -73,11 +74,11 @@ namespace Business
         /// <summary>
         /// Crea una nueva relación FormModule.
         /// </summary>
-        public async Task<FormModuleDTO> CreateFormModuleAsync(FormModuleDTO formModuleDTO)
+        public async Task<FormModuleOptionsDTO> CreateFormModuleAsync(FormModuleOptionsDTO formModuleDTO)
         {
             try
             {
-                ValidateFormModule(formModuleDTO);
+                //ValidateFormModule(formModuleDTO);
 
                 var formModule = MapToEntity(formModuleDTO);
                 var createdFormModule = await _formModuleData.CreateAsync(formModule);
@@ -95,11 +96,11 @@ namespace Business
         /// <summary>
         /// Actualiza una relación FormModule existente.
         /// </summary>
-        public async Task<bool> UpdateFormModuleAsync(FormModuleDTO formModuleDTO)
+        public async Task<bool> UpdateFormModuleAsync(FormModuleOptionsDTO formModuleDTO)
         {
             try
             {
-                ValidateFormModule(formModuleDTO);
+                //ValidateFormModule(formModuleDTO);
 
                 var existingFormModule = await _formModuleData.GetByIdAsync(formModuleDTO.Id);
                 if (existingFormModule == null)
@@ -129,7 +130,7 @@ namespace Business
         {
             try
             {
-                var existingFormModule = await _formModuleData.GetByIdAsync(id);
+                var existingFormModule = await _formModuleData.GetByIdAsyncSQL(id);
                 if (existingFormModule == null)
                 {
                     throw new EntityNotFoundException("FormModule", id);
@@ -141,6 +142,40 @@ namespace Business
             {
                 _logger.LogError(ex, "Error al eliminar la relación FormModule con ID: {FormModuleId}", id);
                 throw new ExternalServiceException("Base de datos", "Error al eliminar la relación FormModule.", ex);
+            }
+        }
+
+
+        /// <summary>
+        /// Elimina un FormModule de manera logica por ID
+        /// </summary>
+        public async Task<bool> DeleteFormModuleLogicalAsync(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ValidationException("ID", "El ID del formModule debe ser mayor que cero.");
+            }
+
+            var existingUser = await _formModuleData.GetByIdAsyncSQL(id);
+            if (existingUser == null)
+            {
+                throw new EntityNotFoundException("FormModule", id);
+            }
+            try
+            {
+
+                return await _formModuleData.DeleteLogicAsyncSQL(id);
+
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error en servicio externo al eliminar el formModule con ID: {FormModuleId}", id);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el formModule de manera logica con ID: {FormModuleId}", id);
+                throw new ExternalServiceException("Base de datos", "Error al eliminar el user de manera logica.", ex);
             }
         }
 
@@ -172,16 +207,16 @@ namespace Business
         /// <summary>
         /// Mapea un objeto FormModule a FormModuleDTO.
         /// </summary>
-        private FormModuleDTO MapToDTO(FormModule formModule)
+        private FormModuleOptionsDTO MapToDTO(FormModule formModule)
         {
-            return new FormModuleDTO
+            return new FormModuleOptionsDTO
             {
                 Id = formModule.Id,
                 Status = formModule.Active,
+
                 FormId = formModule.FormId,
+
                 ModuleId = formModule.ModuleId,
-                FormName = formModule.Form?.Name,
-                ModuleName = formModule.Module?.Name
             };
         }
 
@@ -189,14 +224,14 @@ namespace Business
         /// <summary>
         /// Mapea un objeto FormModuleDTO a FormModule.
         /// </summary>
-        private FormModule MapToEntity(FormModuleDTO formModuleDTO)
+        private FormModule MapToEntity(FormModuleOptionsDTO formModuleOptionsDTO)
         {
             return new FormModule
             {
-                Id = formModuleDTO.Id,
-                Active = formModuleDTO.Status,
-                FormId = formModuleDTO.FormId,
-                ModuleId = formModuleDTO.ModuleId
+                Id = formModuleOptionsDTO.Id,
+                Active = formModuleOptionsDTO.Status,
+                FormId = formModuleOptionsDTO.FormId,
+                ModuleId = formModuleOptionsDTO.ModuleId
             };
         }
 
@@ -211,7 +246,7 @@ namespace Business
             var formModuleDTO = new List<FormModuleDTO>();
             foreach (var formModule1 in formModule)
             {
-                formModuleDTO.Add(MapToDTO(formModule1));
+                //formModuleDTO.Add(MapToDTO(formModule1));
             }
             return formModuleDTO;
         }

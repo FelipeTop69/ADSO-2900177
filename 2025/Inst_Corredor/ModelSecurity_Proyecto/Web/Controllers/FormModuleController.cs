@@ -1,5 +1,5 @@
 ﻿using Business;
-using Entity.DTOs;
+using Entity.DTOs.FormModuleDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -84,14 +84,14 @@ namespace Web.Controllers
         /// Crea un nuevo formModule en el sistema
         /// </summary>
         [HttpPost]
-        [ProducesResponseType(typeof(FormModuleDTO), 201)]
+        [ProducesResponseType(typeof(FormModuleOptionsDTO), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> CreateFormModule([FromBody] FormModuleDTO formModuleDTO)
+        public async Task<IActionResult> CreateFormModule([FromBody] FormModuleOptionsDTO formModuleOptionsDTO)
         {
             try
             {
-                var createdFormModule = await _formModuleBusiness.CreateFormModuleAsync(formModuleDTO);
+                var createdFormModule = await _formModuleBusiness.CreateFormModuleAsync(formModuleOptionsDTO);
                 return CreatedAtAction(nameof(GetFormModuleById), new { id = createdFormModule.Id }, createdFormModule);
             }
             catch (ValidationException ex)
@@ -110,37 +110,32 @@ namespace Web.Controllers
         /// <summary>
         /// Actualiza un formModule existente en el sistema
         /// </summary>
-        [HttpPut("{id}")]
+        [HttpPut("Update/")]
         [ProducesResponseType(typeof(FormModuleDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateFormModule(int id, [FromBody] FormModuleDTO formModuleDTO)
+        public async Task<IActionResult> UpdateFormModule([FromBody] FormModuleOptionsDTO formModuleDTO)
         {
             try
             {
-                if (id != formModuleDTO.Id)
-                {
-                    return BadRequest(new { message = "El ID de la ruta no coincide con el ID del objeto." });
-                }
-
                 var updatedFormModule = await _formModuleBusiness.UpdateFormModuleAsync(formModuleDTO);
 
                 return Ok(updatedFormModule);
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar el formModule con ID: {FormModuleId}", id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar el formModule con ID: {FormModuleId}",formModuleDTO.Id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "No se encontró el formModule con ID: {FormModuleId}", id);
+                _logger.LogInformation(ex, "No se encontró el formModule con ID: {FormModuleId}",formModuleDTO.Id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar el formModule con ID: {FormModuleId}", id);
+                _logger.LogError(ex, "Error al actualizar el formModule con ID: {FormModuleId}",formModuleDTO.Id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -169,6 +164,40 @@ namespace Web.Controllers
             catch (ExternalServiceException ex)
             {
                 _logger.LogError(ex, "Error al eliminar el formModule con ID: {FormModuleId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Elimina de manera logica un formModule del sistema
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("Logical/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteLogicalFormModuleAsync(int id)
+        {
+            try
+            {
+                var deleted = await _formModuleBusiness.DeleteFormModuleLogicalAsync(id);
+
+                if (!deleted)
+                {
+                    return NotFound(new { message = "FormModule no encontrado o ya eliminado." });
+                }
+
+                return Ok(new { message = "Eliminación lógica exitosa." });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el FormModule con ID: {FormModuleId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el FormModule de manera lógica con ID: {FormModuleId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }

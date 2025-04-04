@@ -36,6 +36,9 @@ builder.Services.AddScoped<PermissionData>();
 builder.Services.AddScoped<UserBusiness>();
 builder.Services.AddScoped<UserData>();
 
+builder.Services.AddScoped<FormModuleBusiness>();
+builder.Services.AddScoped<FormModuleData>();
+
 
 var app = builder.Build();
 

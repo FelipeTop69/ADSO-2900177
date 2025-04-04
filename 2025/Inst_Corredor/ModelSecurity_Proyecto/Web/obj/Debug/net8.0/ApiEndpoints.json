@@ -222,7 +222,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[Entity.DTOs.FormModuleDTO, Entity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[Entity.DTOs.FormModuleDTOs.FormModuleDTO, Entity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -244,14 +244,14 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "formModuleDTO",
-        "Type": "Entity.DTOs.FormModuleDTO",
+        "Name": "formModuleOptionsDTO",
+        "Type": "Entity.DTOs.FormModuleDTOs.FormModuleOptionsDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Entity.DTOs.FormModuleDTO",
+        "Type": "Entity.DTOs.FormModuleDTOs.FormModuleOptionsDTO",
         "MediaTypes": [
           "application/json"
         ],
@@ -287,55 +287,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Entity.DTOs.FormModuleDTO",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "Web.Controllers.FormModuleController",
-    "Method": "UpdateFormModule",
-    "RelativePath": "api/FormModule/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "formModuleDTO",
-        "Type": "Entity.DTOs.FormModuleDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Entity.DTOs.FormModuleDTO",
+        "Type": "Entity.DTOs.FormModuleDTOs.FormModuleDTO",
         "MediaTypes": [
           "application/json"
         ],
@@ -381,6 +333,83 @@
         "Type": "System.Void",
         "MediaTypes": [],
         "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.FormModuleController",
+    "Method": "DeleteLogicalFormModuleAsync",
+    "RelativePath": "api/FormModule/Logical/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.FormModuleController",
+    "Method": "UpdateFormModule",
+    "RelativePath": "api/FormModule/Update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "formModuleDTO",
+        "Type": "Entity.DTOs.FormModuleDTOs.FormModuleOptionsDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Entity.DTOs.FormModuleDTOs.FormModuleDTO",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 400
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
@@ -1626,7 +1655,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[Entity.DTOs.UserDTO, Entity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[Entity.DTOs.UserDTOs.UserDTO, Entity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -1649,13 +1678,13 @@
     "Parameters": [
       {
         "Name": "userCreateDTO",
-        "Type": "Entity.DTOs.UserCreateDTO",
+        "Type": "Entity.DTOs.UserDTOs.UserCreateDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Entity.DTOs.UserDTO",
+        "Type": "Entity.DTOs.UserDTOs.UserDTO",
         "MediaTypes": [
           "application/json"
         ],
@@ -1691,7 +1720,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Entity.DTOs.UserDTO",
+        "Type": "Entity.DTOs.UserDTOs.UserDTO",
         "MediaTypes": [
           "application/json"
         ],
@@ -1796,13 +1825,13 @@
     "Parameters": [
       {
         "Name": "userCreateDTO",
-        "Type": "Entity.DTOs.UserCreateDTO",
+        "Type": "Entity.DTOs.UserDTOs.UserCreateDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Entity.DTOs.UserDTO",
+        "Type": "Entity.DTOs.UserDTOs.UserDTO",
         "MediaTypes": [
           "application/json"
         ],

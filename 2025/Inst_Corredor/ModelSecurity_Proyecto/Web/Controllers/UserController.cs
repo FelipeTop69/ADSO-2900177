@@ -1,6 +1,6 @@
 ﻿using Business;
 using Data;
-using Entity.DTOs;
+using Entity.DTOs.UserDTOs;
 using Entity.Model;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;

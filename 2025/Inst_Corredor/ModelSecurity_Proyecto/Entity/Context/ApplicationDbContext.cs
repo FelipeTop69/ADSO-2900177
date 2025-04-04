@@ -30,23 +30,24 @@ namespace Entity.Context
         public DbSet<Rol> Rol { get; set; }
         public DbSet<Permission> Permission { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<FormModule> formModule { get; set; }
 
 
-        // <summary>
-        // Constructor del contexto de la base de datos.
-        // </summary>
-        // <param name="options">Opciones de configuración para el contexto de base de datos.</param>
-        // <param name="configuration">Instancia de IConfiguration para acceder a la configuración de la aplicación.</param>
+        /// <summary>
+        /// Constructor del contexto de la base de datos.
+        /// </summary>
+        /// <param name="options">Opciones de configuración para el contexto de base de datos.</param>
+        /// <param name="configuration">Instancia de IConfiguration para acceder a la configuración de la aplicación.</param>
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IConfiguration configuration)
         : base(options)
         {
             _configuration = configuration;
         }
 
-        // <summary>
-        // Configura los modelos de la base de datos aplicando configuraciones desde ensamblados.
-        // </summary>
-        // <param name="modelBuilder">Constructor del modelo de base de datos.</param>
+        /// <summary>
+        /// Configura los modelos de la base de datos aplicando configuraciones desde ensamblados.
+        /// </summary>
+        /// <param name="modelBuilder">Constructor del modelo de base de datos.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

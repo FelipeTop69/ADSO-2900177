@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Data;
-using Entity.DTOs;
+using Entity.DTOs.UserDTOs;
 using Entity.Model;
 using Microsoft.Extensions.Logging;
 using Utilities.Exceptions;
@@ -161,7 +161,7 @@ namespace Business
             var existingUser = await _userData.GetByIdAsyncSQL(id);
             if (existingUser == null)
             {
-                throw new EntityNotFoundException("Form", id);
+                throw new EntityNotFoundException("User", id);
             }
 
             try
