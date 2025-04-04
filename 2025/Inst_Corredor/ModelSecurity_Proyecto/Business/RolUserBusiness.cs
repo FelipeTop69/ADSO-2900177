@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Data;
-using Entity.DTOs;
+using Entity.DTOs.RolUserDTOs;
 using Entity.Model;
 using Microsoft.Extensions.Logging;
 using Utilities.Exceptions;
@@ -29,8 +29,8 @@ namespace Business
         {
             try
             {
-                var rolUsers = await _rolUserData.GetAllAsync();
-                return MapToDTOList(rolUsers);
+                var rolUsers = await _rolUserData.GetAllAsyncSQL();
+                return rolUsers;
             }
             catch (Exception ex)
             {
@@ -53,14 +53,14 @@ namespace Business
 
             try
             {
-                var rolUser = await _rolUserData.GetByIdAsync(id);
+                var rolUser = await _rolUserData.GetByIdAsyncSQL(id);
                 if (rolUser == null)
                 {
                     _logger.LogInformation("No se encontró ningún RolUser con ID: {RolUserId}", id);
                     throw new EntityNotFoundException("RolUser", id);
                 }
 
-                return MapToDTO(rolUser);
+                return rolUser;
             }
             catch (Exception ex)
             {
@@ -73,14 +73,14 @@ namespace Business
         /// <summary>
         /// Crea una nueva asignación de RolUser.
         /// </summary>
-        public async Task<RolUserDTO> CreateRolUserAsync(RolUserDTO rolUserDTO)
+        public async Task<RolUserOptionsDTO> CreateRolUserAsync(RolUserOptionsDTO rolUserDTO)
         {
             try
             {
-                ValidateRolUser(rolUserDTO);
+                //ValidateRolUser(rolUserDTO);
 
                 var rolUser = MapToEntity(rolUserDTO);
-                var createdRolUser = await _rolUserData.CreateAsync(rolUser);
+                var createdRolUser = await _rolUserData.CreateAsyncSQL(rolUser);
 
                 return MapToDTO(createdRolUser);
             }
@@ -95,11 +95,11 @@ namespace Business
         /// <summary>
         /// Actualiza una asignación existente de RolUser.
         /// </summary>
-        public async Task<bool> UpdateRolUserAsync(RolUserDTO rolUserDTO)
+        public async Task<bool> UpdateRolUserAsync(RolUserOptionsDTO rolUserDTO)
         {
             try
             {
-                ValidateRolUser(rolUserDTO);
+                //ValidateRolUser(rolUserDTO);
 
                 var existingRolUser = await _rolUserData.GetByIdAsync(rolUserDTO.Id);
                 if (existingRolUser == null)
@@ -112,7 +112,7 @@ namespace Business
                 existingRolUser.UserId = rolUserDTO.UserId;
                 existingRolUser.RoleId = rolUserDTO.RoleId;
 
-                return await _rolUserData.UpdateAsync(existingRolUser);
+                return await _rolUserData.UpdateAsyncSQL(existingRolUser);
             }
             catch (Exception ex)
             {
@@ -129,18 +129,53 @@ namespace Business
         {
             try
             {
-                var existingRolUser = await _rolUserData.GetByIdAsync(id);
+                var existingRolUser = await _rolUserData.GetByIdAsyncSQL(id);
                 if (existingRolUser == null)
                 {
                     throw new EntityNotFoundException("RolUser", id);
                 }
 
-                return await _rolUserData.DeleteAsync(id);
+                return await _rolUserData.DeleteAsyncSQL(id);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al eliminar el RolUser con ID: {RolUserId}", id);
                 throw new ExternalServiceException("Base de datos", "Error al eliminar el RolUser.", ex);
+            }
+        }
+
+
+
+        /// <summary>
+        /// Elimina un FormModule de manera logica por ID
+        /// </summary>
+        public async Task<bool> DeleteRolUserLogicalAsync(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ValidationException("ID", "El ID del rolUser debe ser mayor que cero.");
+            }
+
+            var existingUser = await _rolUserData.GetByIdAsyncSQL(id);
+            if (existingUser == null)
+            {
+                throw new EntityNotFoundException("rolUser", id);
+            }
+            try
+            {
+
+                return await _rolUserData.DeleteLogicAsyncSQL(id);
+
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error en servicio externo al eliminar el rolUser con ID: {RolUserId}", id);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el rolUser de manera logica con ID: {RolUserId}", id);
+                throw new ExternalServiceException("Base de datos", "Error al eliminar el rolUser de manera logica.", ex);
             }
         }
 
@@ -172,16 +207,14 @@ namespace Business
         /// <summary>
         /// Mapea un objeto RolUser a RolUserDTO.
         /// </summary>
-        private RolUserDTO MapToDTO(RolUser rolUser)
+        private RolUserOptionsDTO MapToDTO(RolUser rolUser)
         {
-            return new RolUserDTO
+            return new RolUserOptionsDTO
             {
                 Id = rolUser.Id,
                 Status = rolUser.Active,
                 UserId = rolUser.UserId,
-                UserName = rolUser.User?.Username,
                 RoleId = rolUser.RoleId,
-                RoleName = rolUser.Rol?.Name
             };
         }
 
@@ -189,7 +222,7 @@ namespace Business
         /// <summary>
         /// Mapea un objeto RolUserDTO a RolUser.
         /// </summary>
-        private RolUser MapToEntity(RolUserDTO rolUserDTO)
+        private RolUser MapToEntity(RolUserOptionsDTO rolUserDTO)
         {
             return new RolUser
             {
@@ -211,7 +244,7 @@ namespace Business
             var rolUsersDTO = new List<RolUserDTO>();
             foreach (var rolUser in rolUsers)
             {
-                rolUsersDTO.Add(MapToDTO(rolUser));
+                //rolUsersDTO.Add(MapToDTO(rolUser));
             }
             return rolUsersDTO;
 

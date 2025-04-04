@@ -4,18 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entity.DTOs
+namespace Entity.DTOs.RolUserDTOs
 {
-    public class RolUserDTO
+    public class RolUserOptionsDTO
     {
         public int Id { get; set; }
         public bool Status { get; set; }
 
-
         public int RoleId { get; set; }
-        public string RoleName { get; set; }
 
         public int UserId { get; set; }
-        public string UserName { get; set; }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Entity.Context;
-using Entity.DTOs;
+using Entity.DTOs.RolFormPermissionDTOs;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,9 +14,9 @@ namespace Data
     public class RolFormPermissionData
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<RolFormPermissionData> _logger;
 
-        public RolFormPermissionData(ApplicationDbContext context, ILogger logger)
+        public RolFormPermissionData(ApplicationDbContext context, ILogger<RolFormPermissionData> logger)
         {
             _context = context;
             _logger = logger;
@@ -25,27 +25,27 @@ namespace Data
         /// <summary>
         /// Obtiene todos los RolFormPermission almacenados en la base de datos SQL
         /// </summary>
-        public async Task<IEnumerable<RolFormPermission>> GetAllAsyncSQL()
+        public async Task<IEnumerable<RolFormPermissionDTO>> GetAllAsyncSQL()
         {
             string query = @"
                 SELECT 
                     rfp.Id, 
-                    rfp.Active,
-                    rfp.RoleId, 
-                    r.Name as RoleName, 
+                    rfp.Active as Status,
+                    rfp.RolId, 
+                    r.Name as RolName, 
                     rfp.PermissionId, 
                     p.Name as PermissionName, 
                     rfp.FormId, 
                     f.Name as FormName
                 FROM RolFormPermission rfp
                 INNER JOIN Rol r 
-                ON rfp.RoleId = r.Id
+                ON rfp.RolId = r.Id
                 INNER JOIN Permission p 
                 ON rfp.PermissionId = p.Id
                 INNER JOIN Form f 
                 ON rfp.FormId = f.Id";
 
-            return (IEnumerable<RolFormPermission>) await _context.QueryAsync<IEnumerable<RolFormPermission>>(query);
+            return (IEnumerable<RolFormPermissionDTO>) await _context.QueryAsync<RolFormPermissionDTO>(query);
             //return await _context.Set<RolFormPermission>().ToListAsync();
         }
 
@@ -62,27 +62,27 @@ namespace Data
         /// <summary>
         /// Obtiene un RolFormPermission especifico por su identificacion SQL
         /// </summary
-        public async Task<RolFormPermission?> GetByIdAsyncSQL(int id)
+        public async Task<RolFormPermissionDTO?> GetByIdAsyncSQL(int id)
         {
             try
             {
                 string query = @"
                     SELECT 
                         rfp.Id, 
-                        rfp.Active,
-                        rfp.RoleId, 
-                        r.Name AS RoleName, 
+                        rfp.Active as Status,
+                        rfp.RolId, 
+                        r.Name AS RolName, 
                         rfp.PermissionId, 
                         p.Name AS PermissionName, 
                         rfp.FormId, 
                         f.Name AS FormName
                     FROM RolFormPermission rfp
-                    INNER JOIN Rol r ON rfp.RoleId = r.Id
+                    INNER JOIN Rol r ON rfp.RolId = r.Id
                     INNER JOIN Permission p ON rfp.PermissionId = p.Id
                     INNER JOIN Form f ON rfp.FormId = f.Id
                     WHERE rfp.Id = @Id";
 
-                return await _context.QueryFirstOrDefaultAsync<RolFormPermission>(query, new { Id = id });
+                return await _context.QueryFirstOrDefaultAsync<RolFormPermissionDTO>(query, new { Id = id });
                 //return await _context.Set<RolFormPermission>().FindAsync(id);
             }
             catch (Exception ex)
@@ -266,6 +266,58 @@ namespace Data
             catch (Exception ex)
             {
                 _logger.LogError($"Error al eliminar el RolFormPermission: {ex.Message}");
+                return false;
+            }
+        }
+
+
+
+        /// <summary>
+        /// Elimina un RolFormPermission de manera logica de la base  de datos SQL
+        /// </summary>
+        public async Task<bool> DeleteLogicAsyncSQL(int id)
+        {
+            try
+            {
+                string query = @"
+                    UPDATE RolFormPermission
+                    SET Active = 0
+                    WHERE Id = @Id;
+                    SELECT CAST(@@ROWCOUNT AS int);";
+
+                int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
+
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar logicamente RolFormPermission: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Elimina un FormModuleData de manera logica de la base  de datos LINQ
+        /// </summary>
+        public async Task<bool> DeleteLogicAsync(int id)
+        {
+            try
+            {
+                var rolFormPermission = await GetByIdAsync(id);
+                if (rolFormPermission == null)
+                {
+                    return false;
+                }
+
+                rolFormPermission.Active = false;
+                await _context.SaveChangesAsync();
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al eliminar de manera logica el RolFormPermission: {ex.Message}");
                 return false;
             }
         }

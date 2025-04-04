@@ -1287,7 +1287,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[Entity.DTOs.RolFormPermissionDTO, Entity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[Entity.DTOs.RolFormPermissionDTOs.RolFormPermissionDTO, Entity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -1310,13 +1310,13 @@
     "Parameters": [
       {
         "Name": "rolFormPermissionDTO",
-        "Type": "Entity.DTOs.RolFormPermissionDTO",
+        "Type": "Entity.DTOs.RolFormPermissionDTOs.RolFormPermissionOptionsDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Entity.DTOs.RolFormPermissionDTO",
+        "Type": "Entity.DTOs.RolFormPermissionDTOs.RolFormPermissionOptionsDTO",
         "MediaTypes": [
           "application/json"
         ],
@@ -1352,55 +1352,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Entity.DTOs.RolFormPermissionDTO",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "Web.Controllers.RolFormPermissionController",
-    "Method": "UpdateRolFormPermission",
-    "RelativePath": "api/RolFormPermission/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "rolFormPermissionDTO",
-        "Type": "Entity.DTOs.RolFormPermissionDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Entity.DTOs.RolFormPermissionDTO",
+        "Type": "Entity.DTOs.RolFormPermissionDTOs.RolFormPermissionDTO",
         "MediaTypes": [
           "application/json"
         ],
@@ -1462,6 +1414,83 @@
     ]
   },
   {
+    "ContainingType": "Web.Controllers.RolFormPermissionController",
+    "Method": "DeleteLogicaRolFormPermissionAsync",
+    "RelativePath": "api/RolFormPermission/Logical/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.RolFormPermissionController",
+    "Method": "UpdateRolFormPermission",
+    "RelativePath": "api/RolFormPermission/Update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rolFormPermissionDTO",
+        "Type": "Entity.DTOs.RolFormPermissionDTOs.RolFormPermissionOptionsDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Entity.DTOs.RolFormPermissionDTOs.RolFormPermissionOptionsDTO",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 400
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
     "ContainingType": "Web.Controllers.RolUserController",
     "Method": "GetAllRolUsers",
     "RelativePath": "api/RolUser",
@@ -1471,7 +1500,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[Entity.DTOs.RolUserDTO, Entity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[Entity.DTOs.RolUserDTOs.RolUserDTO, Entity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -1494,13 +1523,13 @@
     "Parameters": [
       {
         "Name": "rolUserDTO",
-        "Type": "Entity.DTOs.RolUserDTO",
+        "Type": "Entity.DTOs.RolUserDTOs.RolUserOptionsDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Entity.DTOs.RolUserDTO",
+        "Type": "Entity.DTOs.RolUserDTOs.RolUserOptionsDTO",
         "MediaTypes": [
           "application/json"
         ],
@@ -1536,55 +1565,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Entity.DTOs.RolUserDTO",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "Web.Controllers.RolUserController",
-    "Method": "UpdateRolUser",
-    "RelativePath": "api/RolUser/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "rolUserDTO",
-        "Type": "Entity.DTOs.RolUserDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "Entity.DTOs.RolUserDTO",
+        "Type": "Entity.DTOs.RolUserDTOs.RolUserDTO",
         "MediaTypes": [
           "application/json"
         ],
@@ -1630,6 +1611,83 @@
         "Type": "System.Void",
         "MediaTypes": [],
         "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.RolUserController",
+    "Method": "DeleteLogicalRolUserAsync",
+    "RelativePath": "api/RolUser/Logical/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.RolUserController",
+    "Method": "UpdateRolUser",
+    "RelativePath": "api/RolUser/Update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "rolUserDTO",
+        "Type": "Entity.DTOs.RolUserDTOs.RolUserOptionsDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Entity.DTOs.RolUserDTOs.RolUserOptionsDTO",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 400
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",

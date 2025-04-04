@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Entity.Context;
-using Entity.DTOs;
+using Entity.DTOs.RolUserDTOs;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,9 +14,9 @@ namespace Data
     public class RolUserData
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger<RolUserData> _logger;
 
-        public RolUserData(ApplicationDbContext context, ILogger logger)
+        public RolUserData(ApplicationDbContext context, ILogger<RolUserData> logger)
         {
             _context = context;
             _logger = logger;
@@ -25,12 +25,12 @@ namespace Data
         /// <summary>
         /// Obtiene todos los RolUser almacenados en la base de datos SQL
         /// </summary>
-        public async Task<IEnumerable<RolUser>> GetAllAsyncSQL()
+        public async Task<IEnumerable<RolUserDTO>> GetAllAsyncSQL()
         {
             string query = @"
                 SELECT 
                     ru.Id, 
-                    ru.Active,
+                    ru.Active as Status,
                     ru.RoleId, 
                     r.Name AS RoleName, 
                     ru.UserId, 
@@ -41,7 +41,7 @@ namespace Data
                 INNER JOIN [User] u 
                 ON ru.UserId = u.Id";
 
-            return (IEnumerable<RolUser>) await _context.QueryAsync<IEnumerable<User>>(query);
+            return (IEnumerable<RolUserDTO>) await _context.QueryAsync<RolUserDTO>(query);
             //return await _context.Set<RolUser>().ToListAsync(); 
         }
 
@@ -58,14 +58,14 @@ namespace Data
         /// <summary>
         /// Obtiene un RolUser especifico por su identificacion SQL
         /// </summary
-        public async Task<RolUser?> GetByIdAsyncSQL(int id)
+        public async Task<RolUserDTO?> GetByIdAsyncSQL(int id)
         {
             try
             {
                 string query = @"
                 SELECT 
                     ru.Id, 
-                    ru.Active,
+                    ru.Active as Status,
                     ru.RoleId, 
                     r.Name as RoleName, 
                     ru.UserId, 
@@ -76,7 +76,7 @@ namespace Data
                 INNER JOIN [User] u 
                 ON ru.UserId = u.Id";
 
-                return await _context.QueryFirstOrDefaultAsync<RolUser>(query, new { Id = id });
+                return await _context.QueryFirstOrDefaultAsync<RolUserDTO>(query, new { Id = id });
                 //return await _context.Set<RolUser>().FindAsync(id);
             }
             catch (Exception ex)
@@ -166,7 +166,9 @@ namespace Data
             {
                 string query = @"
                     UPDATE RolUser 
-                    SET UserId = @Active, @UserId, RoleId = @RoleId
+                    SET Active = @Active, 
+                        UserId = @UserId, 
+                        RoleId = @RoleId
                     WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 
@@ -258,6 +260,58 @@ namespace Data
             catch (Exception ex)
             {
                 _logger.LogError($"Error al eliminar el RolUser: {ex.Message}");
+                return false;
+            }
+        }
+        
+
+
+        /// <summary>
+        /// Elimina un RolUser de manera logica de la base  de datos SQL
+        /// </summary>
+        public async Task<bool> DeleteLogicAsyncSQL(int id)
+        {
+            try
+            {
+                string query = @"
+                    UPDATE RolUser 
+                    SET Active = 0
+                    WHERE Id = @Id;
+                    SELECT CAST(@@ROWCOUNT AS int);";
+
+                int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
+
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar logicamente FormModule: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Elimina un rolUser de manera logica de la base  de datos LINQ
+        /// </summary>
+        public async Task<bool> DeleteLogicAsync(int id)
+        {
+            try
+            {
+                var rolUser = await GetByIdAsync(id);
+                if (rolUser == null)
+                {
+                    return false;
+                }
+
+                rolUser.Active = false;
+                await _context.SaveChangesAsync();
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al eliminar de manera logica el User: {ex.Message}");
                 return false;
             }
         }

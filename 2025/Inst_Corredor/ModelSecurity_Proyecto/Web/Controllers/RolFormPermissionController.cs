@@ -1,5 +1,5 @@
 ﻿using Business;
-using Entity.DTOs;
+using Entity.DTOs.RolFormPermissionDTOs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -83,10 +83,10 @@ namespace Web.Controllers
         /// Crea un nuevo rolFormPermissionBusiness en el sistema
         /// </summary>
         [HttpPost]
-        [ProducesResponseType(typeof(RolFormPermissionDTO), 201)]
+        [ProducesResponseType(typeof(RolFormPermissionOptionsDTO), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> CreateRolFormPermission([FromBody] RolFormPermissionDTO rolFormPermissionDTO)
+        public async Task<IActionResult> CreateRolFormPermission([FromBody] RolFormPermissionOptionsDTO rolFormPermissionDTO)
         {
             try
             {
@@ -109,19 +109,15 @@ namespace Web.Controllers
         /// <summary>
         /// Actualiza un rolFormPermissionBusiness existente en el sistema
         /// </summary>
-        [HttpPut("{id}")]
-        [ProducesResponseType(typeof(RolFormPermissionDTO), 200)]
+        [HttpPut("Update/")]
+        [ProducesResponseType(typeof(RolFormPermissionOptionsDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateRolFormPermission(int id, [FromBody] RolFormPermissionDTO rolFormPermissionDTO)
+        public async Task<IActionResult> UpdateRolFormPermission([FromBody] RolFormPermissionOptionsDTO rolFormPermissionDTO)
         {
             try
             {
-                if (id != rolFormPermissionDTO.Id)
-                {
-                    return BadRequest(new { message = "El ID de la ruta no coincide con el ID del objeto." });
-                }
 
                 var updatedRolFormPermission = await _rolFormPermissionBusiness.UpdateRolFormPermissionAsync(rolFormPermissionDTO);
 
@@ -129,17 +125,17 @@ namespace Web.Controllers
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar el rolFormPermissionBusiness con ID: {RolFormPermissionId}", id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar el rolFormPermissionBusiness con ID: {RolFormPermissionId}", rolFormPermissionDTO.Id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "No se encontró el rolFormPermissionBusiness con ID: {RolFormPermissionId}", id);
+                _logger.LogInformation(ex, "No se encontró el rolFormPermissionBusiness con ID: {RolFormPermissionId}", rolFormPermissionDTO.Id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar el rolFormPermissionBusiness con ID: {RolFormPermissionId}", id);
+                _logger.LogError(ex, "Error al actualizar el rolFormPermissionBusiness con ID: {RolFormPermissionId}", rolFormPermissionDTO.Id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -168,6 +164,41 @@ namespace Web.Controllers
             catch (ExternalServiceException ex)
             {
                 _logger.LogError(ex, "Error al eliminar el rolFormPermissionBusiness con ID: {RolFormPermissionId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+
+        /// <summary>
+        /// Elimina de manera logica un formModule del sistema
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("Logical/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteLogicaRolFormPermissionAsync(int id)
+        {
+            try
+            {
+                var deleted = await _rolFormPermissionBusiness.DeleteRolFormPermissionLogicalAsync(id);
+
+                if (!deleted)
+                {
+                    return NotFound(new { message = "RolFormPermission no encontrado o ya eliminado." });
+                }
+
+                return Ok(new { message = "Eliminación lógica exitosa." });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el RolFormPermission con ID: {RolFormPermissionId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el FormModulRolFormPermissione de manera lógica con ID: {RolFormPermissionId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }

@@ -1,5 +1,5 @@
 ﻿using Business;
-using Entity.DTOs;
+using Entity.DTOs.RolUserDTOs;
 using Entity.Model;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -84,10 +84,10 @@ namespace Web.Controllers
         /// Crea un nuevo rolUserBusiness en el sistema
         /// </summary>
         [HttpPost]
-        [ProducesResponseType(typeof(RolUserDTO), 201)]
+        [ProducesResponseType(typeof(RolUserOptionsDTO), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> CreateRolUser([FromBody] RolUserDTO rolUserDTO)
+        public async Task<IActionResult> CreateRolUser([FromBody] RolUserOptionsDTO rolUserDTO)
         {
             try
             {
@@ -110,19 +110,15 @@ namespace Web.Controllers
         /// <summary>
         /// Actualiza un rolUserBusiness existente en el sistema
         /// </summary>
-        [HttpPut("{id}")]
-        [ProducesResponseType(typeof(RolUserDTO), 200)]
+        [HttpPut("Update/")]
+        [ProducesResponseType(typeof(RolUserOptionsDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateRolUser(int id, [FromBody] RolUserDTO rolUserDTO)
+        public async Task<IActionResult> UpdateRolUser([FromBody] RolUserOptionsDTO rolUserDTO)
         {
             try
             {
-                if (id != rolUserDTO.Id)
-                {
-                    return BadRequest(new { message = "El ID de la ruta no coincide con el ID del objeto." });
-                }
 
                 var updatedRolUser = await _rolUserBusiness.UpdateRolUserAsync(rolUserDTO);
 
@@ -130,17 +126,17 @@ namespace Web.Controllers
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar el rolUserBusiness con ID: {RolUserId}", id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar el rolUserBusiness con ID: {RolUserId}", rolUserDTO.Id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "No se encontró el rolUserBusiness con ID: {RolUserId}", id);
+                _logger.LogInformation(ex, "No se encontró el rolUserBusiness con ID: {RolUserId}", rolUserDTO.Id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar el rolUserBusiness con ID: {RolUserId}", id);
+                _logger.LogError(ex, "Error al actualizar el rolUserBusiness con ID: {RolUserId}", rolUserDTO.Id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -169,6 +165,41 @@ namespace Web.Controllers
             catch (ExternalServiceException ex)
             {
                 _logger.LogError(ex, "Error al eliminar el rolUserBusiness con ID: {RolUserId}", id);
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+
+        /// <summary>
+        /// Elimina de manera logica un formModule del sistema
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("Logical/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteLogicalRolUserAsync(int id)
+        {
+            try
+            {
+                var deleted = await _rolUserBusiness.DeleteRolUserLogicalAsync(id);
+
+                if (!deleted)
+                {
+                    return NotFound(new { message = "RolUSer no encontrado o ya eliminado." });
+                }
+
+                return Ok(new { message = "Eliminación lógica exitosa." });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el RolUser con ID: {RolUserId}", id);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ExternalServiceException ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el RolUser de manera lógica con ID: {RolUserId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
