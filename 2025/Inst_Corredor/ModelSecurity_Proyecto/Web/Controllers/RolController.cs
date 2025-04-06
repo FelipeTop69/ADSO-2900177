@@ -73,10 +73,10 @@ namespace Web.Controllers
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetRolById(int id)
         {
-            var Rol = await _rolBusiness.GetRolByIdAsync(id);
 
             try
             {
+                var Rol = await _rolBusiness.GetRolByIdAsync(id);   
                 return Ok(Rol);
             }
             catch (ValidationException ex)
@@ -139,7 +139,7 @@ namespace Web.Controllers
         /// <response code="400">Datos inválidos o ID incorrecto</response>
         /// <response code="404">Rol no encontrado</response>
         /// <response code="500">Error interno del servidor</response>
-        [HttpPut("Updated/")]
+        [HttpPut("Update/")]
         [ProducesResponseType(typeof(RolDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]

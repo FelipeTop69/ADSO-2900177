@@ -8,7 +8,10 @@ using Utilities.Exceptions;
 
 namespace Web.Controllers
 {
-    [Route("api/[controller]")]
+    /// <summary>
+    /// Controllador para la gestión de Modules en el sistema
+    /// </summary>
+    [Route("api/[controller]/")]
     [ApiController]
     [Produces("application/json")]
 
@@ -17,16 +20,24 @@ namespace Web.Controllers
         private readonly ModuleBusiness _moduleBusiness;
         private readonly ILogger<ModuleController> _logger;
 
+        /// <summary>
+        /// Constructor del contmoduleador de Module
+        /// </summary>
+        /// <param name="ModuleBusiness">Capa de negocio de Module</param>
+        /// <param name="logger">Logger para registro de Module</param>
         public ModuleController(ModuleBusiness moduleBusiness, ILogger<ModuleController> logger)
         {
             _moduleBusiness = moduleBusiness;
             _logger = logger;
         }
 
-        ///<summary>
-        /// Obtener todos los modules del sistema
-        ///</summary>
-        [HttpGet]
+        /// <summary>
+        /// Obtiene todos los Modules del sistema
+        /// </summary>
+        /// <returns>Lista de Modulees</returns>
+        /// <response code="200">Retorna la lista de Modules</response>
+        /// <response code="500">Error interno del servidor</response>
+        [HttpGet("GetAll/")]
         [ProducesResponseType(typeof(IEnumerable<ModuleDTO>), 200)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllModules()
@@ -44,10 +55,16 @@ namespace Web.Controllers
         }
 
 
-        ///<summary>
-        /// Obtener un module especificio por su ID
+        /// <summary>
+        /// Obtiene un Module específico por su ID
         /// </summary>
-        [HttpGet("{id}")]
+        /// <param name="id">ID del Module</param>
+        /// <returns>Module solicitado</returns>
+        /// <response code="200">Retorna el Module solicitado</response>
+        /// <response code="400">ID proporcionado no válido</response>
+        /// <response code="404">Module no encontrado</response>
+        /// <response code="500">Error interno del servidor</response>
+        [HttpGet("GetById/{id}/")]
         [ProducesResponseType(typeof(ModuleDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -79,9 +96,14 @@ namespace Web.Controllers
 
 
         /// <summary>
-        /// Crea un nuevo module en el sistema
+        /// Crea un nuevo Module en el sistema
         /// </summary>
-        [HttpPost]
+        /// <param name="ModuleDTO">Datos del Module a crear</param>
+        /// <returns>module creado</returns>
+        /// <response code="201">Retorna el Module creado</response>
+        /// <response code="400">Datos del Module no válidos</response>
+        /// <response code="500">Error interno del servidor</response>
+        [HttpPost("Create/")]
         [ProducesResponseType(typeof(ModuleDTO), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -106,9 +128,16 @@ namespace Web.Controllers
 
 
         /// <summary>
-        /// Actualiza un module existente en el sistema
+        /// Actualiza un Module existente en el sistema
         /// </summary>
-        [HttpPut("Updated/")]
+        /// <param name="id">ID del Module a actualizar</param>
+        /// <param name="moduleDto">Datos actualizados del Module</param>
+        /// <returns>Module actualizado</returns>
+        /// <response code="200">Retorna el Module actualizado</response>
+        /// <response code="400">Datos inválidos o ID incorrecto</response>
+        /// <response code="404">Module no encontrado</response>
+        /// <response code="500">Error interno del servidor</response>
+        [HttpPut("Update/")]
         [ProducesResponseType(typeof(ModuleDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -140,9 +169,15 @@ namespace Web.Controllers
 
 
         /// <summary>
-        /// Elimina un module del sistema
+        /// Elimina un Module del sistema
         /// </summary>
-        [HttpDelete("{id}")]
+        /// <param name="id">ID del Module a eliminar</param>
+        /// <returns>Mensaje de confirmación</returns>
+        /// <response code="200">El Module fue eliminado exitosamente</response>
+        /// <response code="400">Parametro Incorrecto</response>
+        /// <response code="404">Module no encontrado</response>
+        /// <response code="500">Error interno del servidor</response>
+        [HttpDelete("Delete/{id}/")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -150,14 +185,13 @@ namespace Web.Controllers
         {
             try
             {
-                var deleted = await _moduleBusiness.DeleteModuleAsync(id);
-
-                if (!deleted)
-                {
-                    return NotFound(new { message = "Module no encontrado o ya eliminado" });
-                }
-
+                await _moduleBusiness.DeleteModuleAsync(id);
                 return Ok(new { message = "Module eliminado exitosamente" });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el Module con ID: {ModuleId}", id);
+                return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
@@ -168,9 +202,15 @@ namespace Web.Controllers
 
 
         /// <summary>
-        /// Elimina un Module de manera logica
+        /// Elimina un Module de manera logcica del sistema
         /// </summary>
-        [HttpDelete("Logical/{id}")]
+        /// <param name="id">ID del Module a eliminar de manera logica</param>
+        /// <returns>Mensaje de confirmación</returns>
+        /// <response code="200">El Module fue eliminado de manera logica exitosamente</response>
+        /// <response code="400">Parametro Incorrecto</response>
+        /// <response code="404">Module no encontrado</response>
+        /// <response code="500">Error interno del servidor</response>
+        [HttpDelete("Logical/{id}/")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -178,13 +218,7 @@ namespace Web.Controllers
         {
             try
             {
-                var deleted = await _moduleBusiness.DeleteModuleLogicalAsync(id);
-
-                if (!deleted)
-                {
-                    return NotFound(new { message = "Module no encontrado o ya eliminado." });
-                }
-
+                await _moduleBusiness.DeleteModuleLogicalAsync(id);
                 return Ok(new { message = "Eliminación lógica exitosa." });
             }
             catch (EntityNotFoundException ex)

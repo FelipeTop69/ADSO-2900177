@@ -76,10 +76,10 @@ namespace Business
         /// </summary>
         public async Task<FormModuleOptionsDTO> CreateFormModuleAsync(FormModuleOptionsDTO formModuleDTO)
         {
+            ValidateFormModule(formModuleDTO);
+
             try
             {
-                //ValidateFormModule(formModuleDTO);
-
                 var formModule = MapToEntity(formModuleDTO);
                 var createdFormModule = await _formModuleData.CreateAsync(formModule);
 
@@ -98,17 +98,19 @@ namespace Business
         /// </summary>
         public async Task<bool> UpdateFormModuleAsync(FormModuleOptionsDTO formModuleDTO)
         {
+
+            var existingFormModule = await _formModuleData.GetByIdAsync(formModuleDTO.Id);
+            if (existingFormModule == null)
+            {
+                throw new EntityNotFoundException("FormModule", formModuleDTO.Id);
+            }
+
+            ValidateFormModule(formModuleDTO);
+
+
             try
             {
-                //ValidateFormModule(formModuleDTO);
 
-                var existingFormModule = await _formModuleData.GetByIdAsync(formModuleDTO.Id);
-                if (existingFormModule == null)
-                {
-                    throw new EntityNotFoundException("FormModule", formModuleDTO.Id);
-                }
-
-                // Actualizar propiedades
                 existingFormModule.Active = formModuleDTO.Status;
                 existingFormModule.FormId = formModuleDTO.FormId;
                 existingFormModule.ModuleId = formModuleDTO.ModuleId;
@@ -128,14 +130,13 @@ namespace Business
         /// </summary>
         public async Task<bool> DeleteFormModuleAsync(int id)
         {
+            var existingFormModule = await _formModuleData.GetByIdAsyncSQL(id);
+            if (existingFormModule == null)
+            {
+                throw new EntityNotFoundException("FormModule", id);
+            }
             try
             {
-                var existingFormModule = await _formModuleData.GetByIdAsyncSQL(id);
-                if (existingFormModule == null)
-                {
-                    throw new EntityNotFoundException("FormModule", id);
-                }
-
                 return await _formModuleData.DeleteAsync(id);
             }
             catch (Exception ex)
@@ -183,7 +184,7 @@ namespace Business
         /// <summary>
         /// Valida los datos de la relación FormModule.
         /// </summary>
-        private void ValidateFormModule(FormModuleDTO formModuleDTO)
+        private void ValidateFormModule(FormModuleOptionsDTO formModuleDTO)
         {
             if (formModuleDTO == null)
             {

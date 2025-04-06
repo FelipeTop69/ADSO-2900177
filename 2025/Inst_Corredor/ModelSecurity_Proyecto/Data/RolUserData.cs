@@ -39,7 +39,8 @@ namespace Data
                 INNER JOIN Rol r 
                 ON ru.RoleId = r.Id
                 INNER JOIN [User] u 
-                ON ru.UserId = u.Id";
+                ON ru.UserId = u.Id
+                WHERE ru.Active = 1";
 
             return (IEnumerable<RolUserDTO>) await _context.QueryAsync<RolUserDTO>(query);
             //return await _context.Set<RolUser>().ToListAsync(); 
@@ -74,10 +75,10 @@ namespace Data
                 INNER JOIN Rol r 
                 ON ru.RoleId = r.Id
                 INNER JOIN [User] u 
-                ON ru.UserId = u.Id";
+                ON ru.UserId = u.Id
+                WHERE ru.Id = @Id";
 
                 return await _context.QueryFirstOrDefaultAsync<RolUserDTO>(query, new { Id = id });
-                //return await _context.Set<RolUser>().FindAsync(id);
             }
             catch (Exception ex)
             {
@@ -125,10 +126,6 @@ namespace Data
 
                 rolUser.Id = newId;
                 return rolUser;
-
-                //await _context.Set<RolUser>().AddAsync(rolUser);
-                //await _context.SaveChangesAsync();
-                //return rolUser;
             }
             catch (Exception ex)
             {
@@ -181,10 +178,6 @@ namespace Data
                 });
 
                 return rowsAffected > 0;
-
-                //_context.Set<RolUser>().Update(rolUser);
-                //await _context.SaveChangesAsync();
-                //return true;
             }
             catch (Exception ex)
             {
@@ -227,13 +220,6 @@ namespace Data
                 int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
 
                 return rowsAffected > 0;
-
-                //var rolUser = await _context.Set<RolUser>().FindAsync(id);
-                //if (rolUser == null)
-                //    return false;
-                //_context.Set<RolUser>().Remove(rolUser);
-                //await _context.SaveChangesAsync();
-                //return true;
             }
             catch (Exception ex)
             {
@@ -285,7 +271,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al eliminar logicamente FormModule: {ex.Message}");
+                Console.WriteLine($"Error al eliminar logicamente RolUser: {ex.Message}");
                 return false;
             }
         }
@@ -311,7 +297,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al eliminar de manera logica el User: {ex.Message}");
+                _logger.LogError($"Error al eliminar de manera logica el RolUser: {ex.Message}");
                 return false;
             }
         }

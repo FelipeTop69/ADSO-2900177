@@ -51,15 +51,15 @@ namespace Business
                 throw new ValidationException("id", "El ID de RolUser debe ser mayor que cero.");
             }
 
+            var rolUser = await _rolUserData.GetByIdAsyncSQL(id);
+            if (rolUser == null)
+            {
+                _logger.LogInformation("No se encontró ningún RolUser con ID: {RolUserId}", id);
+                throw new EntityNotFoundException("RolUser", id);
+            }
+
             try
             {
-                var rolUser = await _rolUserData.GetByIdAsyncSQL(id);
-                if (rolUser == null)
-                {
-                    _logger.LogInformation("No se encontró ningún RolUser con ID: {RolUserId}", id);
-                    throw new EntityNotFoundException("RolUser", id);
-                }
-
                 return rolUser;
             }
             catch (Exception ex)
@@ -75,10 +75,9 @@ namespace Business
         /// </summary>
         public async Task<RolUserOptionsDTO> CreateRolUserAsync(RolUserOptionsDTO rolUserDTO)
         {
+            ValidateRolUser(rolUserDTO);
             try
             {
-                //ValidateRolUser(rolUserDTO);
-
                 var rolUser = MapToEntity(rolUserDTO);
                 var createdRolUser = await _rolUserData.CreateAsyncSQL(rolUser);
 
@@ -97,17 +96,15 @@ namespace Business
         /// </summary>
         public async Task<bool> UpdateRolUserAsync(RolUserOptionsDTO rolUserDTO)
         {
+            ValidateRolUser(rolUserDTO);
+
+            var existingRolUser = await _rolUserData.GetByIdAsync(rolUserDTO.Id);
+            if (existingRolUser == null)
+            {
+                throw new EntityNotFoundException("RolUser", rolUserDTO.Id);
+            }
             try
             {
-                //ValidateRolUser(rolUserDTO);
-
-                var existingRolUser = await _rolUserData.GetByIdAsync(rolUserDTO.Id);
-                if (existingRolUser == null)
-                {
-                    throw new EntityNotFoundException("RolUser", rolUserDTO.Id);
-                }
-
-                // Actualizar propiedades
                 existingRolUser.Active = rolUserDTO.Status;
                 existingRolUser.UserId = rolUserDTO.UserId;
                 existingRolUser.RoleId = rolUserDTO.RoleId;
@@ -127,14 +124,13 @@ namespace Business
         /// </summary>
         public async Task<bool> DeleteRolUserAsync(int id)
         {
+            var existingRolUser = await _rolUserData.GetByIdAsyncSQL(id);
+            if (existingRolUser == null)
+            {
+                throw new EntityNotFoundException("RolUser", id);
+            }
             try
             {
-                var existingRolUser = await _rolUserData.GetByIdAsyncSQL(id);
-                if (existingRolUser == null)
-                {
-                    throw new EntityNotFoundException("RolUser", id);
-                }
-
                 return await _rolUserData.DeleteAsyncSQL(id);
             }
             catch (Exception ex)
@@ -147,7 +143,7 @@ namespace Business
 
 
         /// <summary>
-        /// Elimina un FormModule de manera logica por ID
+        /// Elimina un RolUser de manera logica por ID
         /// </summary>
         public async Task<bool> DeleteRolUserLogicalAsync(int id)
         {
@@ -183,7 +179,7 @@ namespace Business
         /// <summary>
         /// Valida los datos de RolUser.
         /// </summary>
-        private void ValidateRolUser(RolUserDTO rolUserDTO)
+        private void ValidateRolUser(RolUserOptionsDTO rolUserDTO)
         {
             if (rolUserDTO == null)
             {

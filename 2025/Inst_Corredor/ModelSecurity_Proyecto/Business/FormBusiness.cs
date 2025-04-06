@@ -12,11 +12,19 @@ using Utilities.Exceptions;
 
 namespace Business
 {
+    ///<summary>
+    ///Clase de negocio encargada de la logica relacionada con Form en el sistema;
+    ///</summary>
     public class FormBusiness
     {
         private readonly FormData _formData;
         private readonly ILogger<FormBusiness> _logger;
 
+        /// <summary>
+        /// Inicializa una nueva instancia de la clase <see cref="FormBusiness"/>.
+        /// </summary>
+        /// <param name="formData">Capa de acceso a datos para Form.</param>
+        /// <param name="logger">Logger para registro de Form</param>
         public FormBusiness(FormData formData, ILogger<FormBusiness> logger)
         {
             _formData = formData;
@@ -24,8 +32,12 @@ namespace Business
         }
 
         /// <summary>
-        /// Obtiene todos los formularios 
+        /// Obtiene todos los Forms y los mapea a objetos <see cref="FormDTO"/>.
         /// </summary>
+        /// <returns>Una colección de objetos <see cref="FormDTO"/> que representan todos los Forms existentes.</returns>
+        /// <exception cref="ExternalServiceException">
+        /// Se lanza cuando ocurre un error al intentar recuperar los datos desde la base de datos.
+        /// </exception>
         public async Task<IEnumerable<FormDTO>> GetAllFormsAsync()
         {
             try
@@ -35,51 +47,65 @@ namespace Business
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener todos los formularios.");
-                throw new ExternalServiceException("Base de datos", "Error al recuperar la lista de formularios.", ex);
+                _logger.LogError(ex, "Error al obtener todos los Forms.");
+                throw new ExternalServiceException("Base de datos", "Error al recuperar la lista de Forms.", ex);
             }
         }
 
 
         /// <summary>
-        /// Obtiene un formulario por ID
+        /// Obtiene un Form especifico por su identificador y lo mapea a un objeto <see cref="FormDTO"/>.
         /// </summary>
+        /// <param name="id">Identificador único del form a buscar. Debe ser mayor que cero.</param>
+        /// <returns>Un objeto <see cref="FormDTO"/> que representa el form solicitado.</returns>
+        /// <exception cref="Utilities.Exceptions.ValidationException">
+        /// Se lanza cuando el parámetro <paramref name="id"/> es menor o igual a cero.
+        /// </exception>
+        /// <exception cref="EntityNotFoundException">
+        /// Se lanza cuando no se encuentra ningún form con el ID especificado.
+        /// </exception>
+        /// <exception cref="ExternalServiceException">
+        /// Se lanza cuando ocurre un error inesperado al mapear o recuperar el form desde la base de datos.
+        /// </exception>
         public async Task<FormDTO> GetFormByIdAsync(int id)
         {
             if (id <= 0)
             {
-                _logger.LogWarning("Intento de obtener un formulario con ID inválido: {FormId}", id);
-                throw new ValidationException("id", "El ID del formulario debe ser mayor que cero.");
+                _logger.LogWarning("Se intentó obtener un Form con ID inválido: {FormId}", id);
+                throw new Utilities.Exceptions.ValidationException("id", "El ID del Form debe ser mayor que cero");
             }
 
             var form = await _formData.GetByIdAsyncSQL(id);
+
             if (form == null)
             {
-                _logger.LogInformation("No se encontró ningún formulario con ID: {FormId}", id);
+                _logger.LogInformation("No se encontró ningún Form con ID: {FormId}", id);
                 throw new EntityNotFoundException("Form", id);
             }
 
             try
             { 
-
                 return MapToDTO(form);
-            }
-            catch (ExternalServiceException ex)
-            {
-                _logger.LogError(ex, "Error en servicio externo al obtener el formulario con ID: {FormId}", id);
-                throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el formulario con ID: {FormId}", id);
-                throw new ExternalServiceException("Base de datos", $"Error al recuperar el formulario con ID {id}.", ex);
+                _logger.LogError(ex, "Error al obtener el Form con ID: {FormId}", id);
+                throw new ExternalServiceException("Base de datos", $"Error al recuperar el Form con ID {id}.", ex);
             }
         }
 
 
         /// <summary>
-        /// Crea un nuevo formulario.
+        /// Crea un nuevo Form en la base de datos a partir de un objeto <see cref="FormDTO"/>.
         /// </summary>
+        /// <param name="FormDto">Objeto <see cref="FormDTO"/> que contiene la información del form a crear.</param>
+        /// <returns>El objeto <see cref="FormDTO"/> que representa el Form recién creado, incluyendo su identificador asignado.</returns>
+        /// <exception cref="Utilities.Exceptions.ValidationException">
+        /// Se lanza si el DTO del form no cumple con las reglas de validación definidas.
+        /// </exception>
+        /// <exception cref="ExternalServiceException">
+        /// Se lanza cuando ocurre un error al intentar crear el form en la base de datos.
+        /// </exception>
         public async Task<FormDTO> CreateFormAsync(FormDTO formDTO)
         {
             try
@@ -93,17 +119,33 @@ namespace Business
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear un nuevo formulario.");
-                throw new ExternalServiceException("Base de datos", "Error al crear el formulario.", ex);
+                _logger.LogError(ex, "Error al crear nuevo Form: {FormNombre}", formDTO?.Name ?? "null");
+                throw new ExternalServiceException("Base de datos", "Error al crear el Form.", ex);
             }
         }
 
 
         /// <summary>
-        /// Actualiza un formulario existente.
+        /// Actualiza un Form existente en la base de datos con los datos proporcionados en el <see cref="FormDTO"/>.
         /// </summary>
+        /// <param name="formDTO">Objeto <see cref="FormDTO"/> con la información actualizada del Form. Debe contener un ID válido.</param>
+        /// <returns>Un valor booleano que indica si la operación de actualización fue exitosa.</returns>
+        /// <exception cref="Utilities.Exceptions.ValidationException">
+        /// Se lanza si el DTO del form no cumple con las reglas de validación definidas.
+        /// </exception>
+        /// <exception cref="EntityNotFoundException">
+        /// Se lanza si no se encuentra ningún form con el ID especificado.
+        /// </exception>
+        /// <exception cref="ExternalServiceException">
+        /// Se lanza cuando ocurre un error inesperado al intentar actualizar el form en la base de datos.
+        /// </exception>
         public async Task<bool> UpdateFormAsync(FormDTO formDTO)
         {
+            if (formDTO.Id <= 0)
+            {
+                throw new ValidationException("El ID del Form debe ser mayor a cero.");
+            }
+
             ValidateForm(formDTO);
 
             var existingForm = await _formData.GetByIdAsyncSQL(formDTO.Id);
@@ -120,55 +162,67 @@ namespace Business
 
                 return await _formData.UpdateAsync(existingForm);
             }
-            catch (ExternalServiceException ex) 
-            {
-                _logger.LogError(ex, "Error en servicio externo al actualizar el formulario con ID: {FormId}", formDTO.Id);
-                throw;
-            }
             catch (Exception ex) 
             {
-                _logger.LogError(ex, "Error inesperado al actualizar el formulario con ID: {FormId}", formDTO.Id);
-                throw new ExternalServiceException("Base de datos", "Error inesperado al actualizar el formulario.", ex);
+                _logger.LogError(ex, "Error inesperado al actualizar el Form con ID: {FormId}", formDTO.Id);
+                throw new ExternalServiceException("Base de datos", "Error inesperado al actualizar el Form.", ex);
             }
         }
 
 
         /// <summary>
-        /// Elimina un formulario por ID.
+        /// Elimina un Form existente por su identificador.
         /// </summary>
+        /// <param name="id">Identificador único del Form a eliminar.</param>
+        /// <returns>Un valor booleano que indica si la eliminación fue exitosa.</returns>
+        /// <exception cref="EntityNotFoundException">
+        /// Se lanza si no se encuentra ningún Form con el ID especificado.
+        /// </exception>
+        /// <exception cref="ExternalServiceException">
+        /// Se lanza cuando ocurre un error inesperado al intentar eliminar el Form desde la base de datos.
+        /// </exception>
         public async Task<bool> DeleteFormAsync(int id)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException("El ID del Form debe ser un número mayor a cero.", nameof(id));
+            }
+
             var existingForm = await _formData.GetByIdAsyncSQL(id);
             if (existingForm == null)
             {
                 throw new EntityNotFoundException("Form", id);
             }
+
             try
             {
                 return await _formData.DeleteAsyncSQL(id);
             }
-            catch (ExternalServiceException ex)
-            {
-                _logger.LogError(ex, "Error en servicio externo al eliminar el formulario con ID: {FormId}", id);
-                throw;
-            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar el formulario con ID: {FormId}", id);
-                throw new ExternalServiceException("Base de datos", "Error al eliminar el formulario.", ex);
+                _logger.LogError(ex, "Error al eliminar el Form con ID: {FormId}", id);
+                throw new ExternalServiceException("Base de datos", "Error al eliminar el Form.", ex);
             }
 
         }
 
 
         /// <summary>
-        /// Elimina un formulario de manera logica por ID
+        /// Elimina un Form existente de manera logica por su identificador.
         /// </summary>
+        /// <param name="id">Identificador único del Form a eliminar de manera logica.</param>
+        /// <returns>Un valor booleano que indica si la eliminación logica fue exitosa.</returns>
+        /// <exception cref="EntityNotFoundException">
+        /// Se lanza si no se encuentra ningún Form con el ID especificado.
+        /// </exception>
+        /// <exception cref="ExternalServiceException">
+        /// Se lanza cuando ocurre un error inesperado al intentar eliminar de manera logica el Form desde la base de datos.
+        /// </exception>
         public async Task<bool> DeleteFormLogicalAsync(int id)
         {
             if (id <= 0)
             {
-                throw new ValidationException("ID", "El ID del formulario debe ser mayor que cero.");
+                throw new ArgumentException("El ID del Form debe ser un número mayor a cero.", nameof(id));
             }
 
             var existingForm = await _formData.GetByIdAsyncSQL(id);
@@ -179,14 +233,7 @@ namespace Business
 
             try
             {
-
                 return await _formData.DeleteLogicAsyncSQL(id);
-
-            }
-            catch (ExternalServiceException ex)
-            {
-                _logger.LogError(ex, "Error en servicio externo al eliminar el formulario con ID: {FormId}", id);
-                throw;
             }
             catch (Exception ex)
             {
@@ -196,7 +243,6 @@ namespace Business
         }
 
 
-
         /// <summary>
         /// Valida los datos del formulario.
         /// </summary>
@@ -204,13 +250,13 @@ namespace Business
         {
             if (formDTO == null)
             {
-                throw new ValidationException("El objeto formulario no puede ser nulo.");
+                throw new ValidationException("El objeto Form no puede ser nulo.");
             }
 
             if (string.IsNullOrWhiteSpace(formDTO.Name))
             {
-                _logger.LogWarning("Intento de crear/actualizar un formulario con Name vacío.");
-                throw new ValidationException("Name", "El nombre del formulario es obligatorio.");
+                _logger.LogWarning("Intento de crear/actualizar un Form con Name vacío.");
+                throw new ValidationException("Name", "El nombre del Form es obligatorio.");
             }
         }
 
@@ -243,6 +289,7 @@ namespace Business
                 Active = formDTO.Status,
             };
         }
+
 
         /// <summary>
         /// Metodo para mapear una lista de Form a una lista de FormDTO 

@@ -36,7 +36,8 @@ namespace Data
                     p.Name + ' ' + p.LastName as PersonName
                 FROM [User] u
                 INNER JOIN Person p 
-                ON u.PersonId = p.Id";
+                ON u.PersonId = p.Id 
+                WHERE u.Active = 1;";
 
             return await _context.QueryAsync<UserDTO>(query);
         }
@@ -63,7 +64,7 @@ namespace Data
                     SELECT 
                         u.Id, 
                         u.Username, 
-                        u.Active, 
+                        u.Active as Status, 
                         u.PersonId, 
                         p.Name + ' ' + p.LastName as PersonName
                     FROM [User] u
@@ -72,11 +73,10 @@ namespace Data
                     WHERE u.Id = @Id";
 
                 return await _context.QueryFirstOrDefaultAsync<UserDTO>(query, new { Id = id });
-                //return await _context.Set<User>().FindAsync(id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener una usuario con ID {UserId}", id);
+                _logger.LogError(ex, "Error al obtener un User con ID {UserId}", id);
                 throw;
             }
 
@@ -124,10 +124,6 @@ namespace Data
 
                 user.Id = newId;
                 return user;
-
-                //await _context.Set<User>().AddAsync(user);
-                //await _context.SaveChangesAsync();
-                //return user;
             }
             catch (Exception ex)
             {
@@ -143,7 +139,6 @@ namespace Data
         {
             try
             {
-
                 await _context.Set<User>().AddAsync(user);
                 await _context.SaveChangesAsync();
                 return user;
@@ -180,10 +175,6 @@ namespace Data
                 });
 
                 return rowsAffected > 0;
-
-                //_context.Set<User>().Update(user);
-                //await _context.SaveChangesAsync();
-                //return true;
             }
             catch (Exception ex)
             {

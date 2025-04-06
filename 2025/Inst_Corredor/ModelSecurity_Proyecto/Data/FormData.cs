@@ -10,29 +10,38 @@ using Microsoft.Extensions.Logging;
 
 namespace Data
 {
+    ///<summary>
+    ///Repositorio encargador de la gestion de la entidad Form en la base de datos
+    ///</summary>
     public class FormData
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<FormData> _logger;
 
+        ///<summary>
+        ///Constructor que recibe el contexto de la base de datos
+        ///</summary>
+        ///<param name="context">Instancia de <see cref="ApplicationDbContext"/> Para la conexion con la base de datos.</param>
         public FormData(ApplicationDbContext context, ILogger<FormData> logger)
         {
             _context = context;
             _logger = logger;
         }
 
-        /// <summary>
-        /// Obtiene todos los Form almacenados en la base de datos SQL
-        /// </summary>
+        ///<summary>
+        ///Obtiene todos los Forms almacenados en la base de datos SQL
+        ///</summary>
+        ///<returns>Lista de Forms</returns>
         public async Task<IEnumerable<Form>> GetAllAsyncSQL()
         {
             string query = "SELECT * FROM Form WHERE Active = 1;";
-            return (IEnumerable<Form>) await _context.QueryAsync<Form>(query);
+            return await _context.QueryAsync<Form>(query);
         }
 
         /// <summary>
-        /// Obtiene todos los Form almacenados en la base de datos LINQ
+        /// Obtiene todos los Forms almacenados en la base de datos LINQ
         /// </summary>
+        ///<returns>Lista de Forms</returns>
         public async Task<IEnumerable<Form>> GetAllAsync()
 {
             return await _context.Set<Form>()
@@ -42,21 +51,19 @@ namespace Data
 
 
 
-        /// <summary>
-        /// Obtiene un FormData especifico por su identificacion SQL
-        /// </summary
+        ///<summary>
+        ///Obtiene un Form especifico por su identificacion SQL
+        ///</summary> 
         public async Task<Form?> GetByIdAsyncSQL(int id)
         {
             try
             {
-                string query = "SELECT * FROM Form WHERE Id = @Id;";
+                string query = "SELECT * FROM Form WHERE Id = @Id AND Active = 1;";
                 return await _context.QueryFirstOrDefaultAsync<Form>(query, new { Id = id });
-
-                //return await _context.Set<Form>().FindAsync(id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el formulario con ID {FormId}", id);
+                _logger.LogError(ex, "Error al obtener el Form con ID {FormId}", id);
                 throw;
             }
 
@@ -69,7 +76,10 @@ namespace Data
         {
             try
             {
-                return await _context.Set<Form>().FindAsync(id);
+                return await _context.Set<Form>()
+                    .AsNoTracking() // Usar AsNoTracking() mejora el rendimiento se modificara el objeto.
+                    .Where(f => f.Id == id && f.Active)
+                    .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -80,9 +90,11 @@ namespace Data
 
 
 
-        /// <summary>
-        /// Crear un nuevo FormData en la base de datos SQL
-        /// </summary>
+        ///<summary>
+        ///Crear un nuevo Form en la base de datos SQL
+        ///</summary>
+        ///<param name="form">Instancia del Form al crear</param>
+        ///<returns>El Form creado</returns>
         public async Task<Form> CreateAsyncSQL(Form form)
         {
             try
@@ -100,14 +112,10 @@ namespace Data
 
                 form.Id = newId;
                 return form;
-
-                //await _context.Set<Form>().AddAsync(form);
-                //await _context.SaveChangesAsync();
-                //return form;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al crear el formulario: {ex.Message}");
+                _logger.LogError($"Error al crear el Form: {ex.Message}");
                 throw;
             }
         }
@@ -115,6 +123,8 @@ namespace Data
         /// <summary>
         /// Crea un nuevo Form en la base de datos LINQ
         /// </summary>
+        /// <param name="form"></param>
+        /// <returns>El Form Creado</returns>
         public async Task<Form> CreateAsync(Form form)
         {
             try
@@ -133,8 +143,10 @@ namespace Data
 
 
         /// <summary>
-        /// Actualiza un FormData existente en la base de datos SQL
+        /// Actualiza un Form existente en la base de datos SQL
         /// </summary>
+        /// <param name="form">Objeto con la información actualizada.</param>
+        /// <returns>True si la actualizacion fue exitosa, False en caso contrario.</returns>
         public async Task<bool> UpdateAsyncSQL(Form form)
         {
             try
@@ -153,14 +165,10 @@ namespace Data
                 });
 
                 return rowsAffected > 0;
-
-                //_context.Set<Form>().Update(form);
-                //await _context.SaveChangesAsync();
-                //return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al actualizar el formulario : {ex.Message}");
+                _logger.LogError($"Error al actualizar el Form : {ex.Message}");
                 return false;
             }
         }
@@ -168,6 +176,8 @@ namespace Data
         /// <summary>
         /// Actualiza un Form existente en la base de datos LINQ
         /// </summary>
+        /// <param name="form">Objeto con la información actualizada.</param>
+        /// <returns>True si la actualizacion fue exitosa, False en caso contrario.</returns>
         public async Task<bool> UpdateAsync(Form form)
         {
             try
@@ -186,8 +196,10 @@ namespace Data
 
 
         /// <summary>
-        /// Elimina un FormData de la base de datos SQL
+        /// Elimina un Form de la base de datos SQL
         /// </summary>
+        /// <param name="id">Identificador unico del Form a eliminar </param>
+        /// <returns>True si la eliminación fue exitosa, False en caso contrario.
         public async Task<bool> DeleteAsyncSQL(int id)
         {
             try
@@ -202,7 +214,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al eliminar el formulario {ex.Message}");
+                _logger.LogError($"Error al eliminar el Form {ex.Message}");
                 return false;
             }
         }
@@ -210,6 +222,8 @@ namespace Data
         /// <summary>
         /// Elimina un Form de la base de datos LINQ
         /// </summary>
+        /// <param name="id">Identificador unico del Form a eliminar </param>
+        /// <returns>True si la eliminación fue exitosa, False en caso contrario.
         public async Task<bool> DeleteAsync(int id)
         {
             try
@@ -232,8 +246,10 @@ namespace Data
 
 
         /// <summary>
-        /// Elimina un FormData de manera logica de la base  de datos SQL
+        /// Elimina un Form de manera logica un Form de la base de datos SQL
         /// </summary>
+        /// <param name="id">Identificador unico del Form a eliminar de manera logica</param>
+        /// <returns>True si la eliminación fue exitosa, False en caso contrario.</returns>
         public async Task<bool> DeleteLogicAsyncSQL(int id)
         {
             try
@@ -250,14 +266,16 @@ namespace Data
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al eliminar logicamente form: {ex.Message}");
+                Console.WriteLine($"Error al eliminar logicamente Form: {ex.Message}");
                 return false;
             }
         }
 
         /// <summary>
-        /// Elimina un FormData de manera logica de la base  de datos LINQ
+        /// Elimina un Form de manera logica un Form de la base de datos LINQ
         /// </summary>
+        /// <param name="id">Identificador unico del Form a eliminar de manera logica</param>
+        /// <returns>True si la eliminación fue exitosa, False en caso contrario.</returns>
         public async Task<bool> DeleteLogicAsync(int id)
         {
             try
@@ -280,8 +298,5 @@ namespace Data
                 return false;
             }
         }
-
-
-
     }
 }

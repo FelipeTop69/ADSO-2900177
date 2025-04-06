@@ -1,4 +1,5 @@
 ﻿using Business;
+using Data;
 using Entity.DTOs.FormModuleDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,7 +9,7 @@ using Utilities.Exceptions;
 
 namespace Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/")]
     [ApiController]
     [Produces("application/json")]
 
@@ -28,7 +29,7 @@ namespace Web.Controllers
         /// <summary>
         /// Obtener todos los formModules del sistema
         /// </summary>
-        [HttpGet]
+        [HttpGet("GetAll/")]
         [ProducesResponseType(typeof(IEnumerable<FormModuleDTO>), 200)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllFormModules()
@@ -49,7 +50,7 @@ namespace Web.Controllers
         ///<summary>
         /// Obtener un form especificio por su ID
         /// </summary>
-        [HttpGet("{id}")]
+        [HttpGet("GetByiId/{id}/")]
         [ProducesResponseType(typeof(FormModuleDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -83,7 +84,7 @@ namespace Web.Controllers
         /// <summary>
         /// Crea un nuevo formModule en el sistema
         /// </summary>
-        [HttpPost]
+        [HttpPost("Create/")]
         [ProducesResponseType(typeof(FormModuleOptionsDTO), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -120,7 +121,6 @@ namespace Web.Controllers
             try
             {
                 var updatedFormModule = await _formModuleBusiness.UpdateFormModuleAsync(formModuleDTO);
-
                 return Ok(updatedFormModule);
             }
             catch (ValidationException ex)
@@ -144,7 +144,7 @@ namespace Web.Controllers
         /// <summary>
         /// Elimina un formModule del sistema
         /// </summary>
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}/")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -152,14 +152,14 @@ namespace Web.Controllers
         {
             try
             {
-                var deleted = await _formModuleBusiness.DeleteFormModuleAsync(id);
+                await _formModuleBusiness.DeleteFormModuleAsync(id);
+                return Ok(new { message = "FormModule eliminado exitosamente" });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el formModule con ID: {FormModuleId}", id);
+                return NotFound(new { message = ex.Message });
 
-                if (!deleted)
-                {
-                    return NotFound(new { message = "FormModule no encontrado o ya eliminado" });
-                }
-
-                return Ok(new { message = "Form eliminado exitosamente" });
             }
             catch (ExternalServiceException ex)
             {
@@ -181,13 +181,7 @@ namespace Web.Controllers
         {
             try
             {
-                var deleted = await _formModuleBusiness.DeleteFormModuleLogicalAsync(id);
-
-                if (!deleted)
-                {
-                    return NotFound(new { message = "FormModule no encontrado o ya eliminado." });
-                }
-
+                await _formModuleBusiness.DeleteFormModuleLogicalAsync(id);
                 return Ok(new { message = "Eliminación lógica exitosa." });
             }
             catch (EntityNotFoundException ex)

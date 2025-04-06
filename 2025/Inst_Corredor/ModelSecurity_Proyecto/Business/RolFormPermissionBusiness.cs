@@ -75,9 +75,10 @@ namespace Business
         /// </summary>
         public async Task<RolFormPermissionOptionsDTO> CreateRolFormPermissionAsync(RolFormPermissionOptionsDTO rolFormPermissionDTO)
         {
+            ValidateRolFormPermission(rolFormPermissionDTO);
+
             try
             {
-                //ValidateRolFormPermission(rolFormPermissionDTO);
 
                 var rolFormPermission = MapToEntity(rolFormPermissionDTO);
                 var createdRolFormPermission = await _rolFormPermissionData.CreateAsync(rolFormPermission);
@@ -97,17 +98,15 @@ namespace Business
         /// </summary>
         public async Task<bool> UpdateRolFormPermissionAsync(RolFormPermissionOptionsDTO rolFormPermissionDTO)
         {
+            ValidateRolFormPermission(rolFormPermissionDTO);
+
+            var existingRolFormPermission = await _rolFormPermissionData.GetByIdAsync(rolFormPermissionDTO.Id);
+            if (existingRolFormPermission == null)
+            {
+                throw new EntityNotFoundException("RolFormPermission", rolFormPermissionDTO.Id);
+            }
             try
             {
-                //ValidateRolFormPermission(rolFormPermissionDTO);
-
-                var existingRolFormPermission = await _rolFormPermissionData.GetByIdAsync(rolFormPermissionDTO.Id);
-                if (existingRolFormPermission == null)
-                {
-                    throw new EntityNotFoundException("RolFormPermission", rolFormPermissionDTO.Id);
-                }
-
-                // Actualizar propiedades
                 existingRolFormPermission.Active = rolFormPermissionDTO.Status;
                 existingRolFormPermission.RolId = rolFormPermissionDTO.RolId;
                 existingRolFormPermission.PermissionId = rolFormPermissionDTO.PermissionId;
@@ -128,14 +127,13 @@ namespace Business
         /// </summary>
         public async Task<bool> DeleteRolFormPermissionAsync(int id)
         {
+            var existingRolFormPermission = await _rolFormPermissionData.GetByIdAsync(id);
+            if (existingRolFormPermission == null)
+            {
+                throw new EntityNotFoundException("RolFormPermission", id);
+            }
             try
             {
-                var existingRolFormPermission = await _rolFormPermissionData.GetByIdAsync(id);
-                if (existingRolFormPermission == null)
-                {
-                    throw new EntityNotFoundException("RolFormPermission", id);
-                }
-
                 return await _rolFormPermissionData.DeleteAsync(id);
             }
             catch (Exception ex)
@@ -183,7 +181,7 @@ namespace Business
         /// <summary>
         /// Valida los datos de RolFormPermission.
         /// </summary>
-        private void ValidateRolFormPermission(RolFormPermissionDTO rolFormPermissionDTO)
+        private void ValidateRolFormPermission(RolFormPermissionOptionsDTO rolFormPermissionDTO)
         {
             if (rolFormPermissionDTO == null)
             {

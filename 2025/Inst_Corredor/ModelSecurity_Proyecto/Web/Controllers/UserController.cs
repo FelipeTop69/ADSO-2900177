@@ -11,7 +11,7 @@ using Utilities.Exceptions;
 
 namespace Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/")]
     [ApiController]
     [Produces("application/json")]
 
@@ -29,7 +29,7 @@ namespace Web.Controllers
         ///<summary>
         /// Obtener todos los users del sistema
         ///</summary>
-        [HttpGet]
+        [HttpGet("GetAll/")]
         [ProducesResponseType(typeof(IEnumerable<UserDTO>), 200)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllUsers()
@@ -50,7 +50,7 @@ namespace Web.Controllers
         ///<summary>
         /// Obtener un userBusiness especificio por su ID
         /// </summary>
-        [HttpGet("{id}")]
+        [HttpGet("GetByiId/{id}/")]
         [ProducesResponseType(typeof(UserDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -84,7 +84,7 @@ namespace Web.Controllers
         /// <summary>
         /// Crea un nuevo userBusiness en el sistema
         /// </summary>
-        [HttpPost]
+        [HttpPost("Create/")]
         [ProducesResponseType(typeof(UserDTO), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -111,18 +111,16 @@ namespace Web.Controllers
         /// <summary>
         /// Actualiza un userBusiness existente en el sistema
         /// </summary>
-        [HttpPut("Update")]
+        [HttpPut("Update/")]
         [ProducesResponseType(typeof(UserDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateUser([FromBody] UserCreateDTO userCreateDTO)
         {
-          
-
-            var updatedUser = await _userBusiness.UpdateUserAsync(userCreateDTO);
             try
             {
+                var updatedUser = await _userBusiness.UpdateUserAsync(userCreateDTO);
                 return Ok(updatedUser);
             }
             catch (ValidationException ex)
@@ -146,21 +144,21 @@ namespace Web.Controllers
         /// <summary>
         /// Elimina un userBusiness del sistema
         /// </summary>
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}/")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var deleted = await _userBusiness.DeleteUserAsync(id);
-
-            if (!deleted)
-            {
-                return NotFound(new { message = "User no encontrado o ya eliminado" });
-            }
             try
             {
+                await _userBusiness.DeleteUserAsync(id);
                 return Ok(new { message = "User eliminado exitosamente" });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el user con ID: {UserId}", id);
+                return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
@@ -182,13 +180,7 @@ namespace Web.Controllers
         {
             try
             {
-                var deleted = await _userBusiness.DeleteUserLogicalAsync(id);
-
-                if (!deleted)
-                {
-                    return NotFound(new { message = "Formulario no encontrado o ya eliminado." });
-                }
-
+                await _userBusiness.DeleteUserLogicalAsync(id);
                 return Ok(new { message = "Eliminación lógica exitosa." });
             }
             catch (EntityNotFoundException ex)

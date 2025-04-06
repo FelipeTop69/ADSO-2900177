@@ -29,8 +29,7 @@ namespace Data
         {
             string query = @"SELECT * FROM Person WHERE Active = 1;";
 
-            return (IEnumerable<Person>) await _context.QueryAsync<Person>(query);
-            //return await _context.Set<Person>().ToListAsync();
+            return await _context.QueryAsync<Person>(query);
         }
 
         /// <summary>
@@ -53,10 +52,9 @@ namespace Data
                 string query = " SELECT * FROM Person WHERE Id = @Id ";
 
                 return await _context.QueryFirstOrDefaultAsync<Person>(query, new { Id = id });
-                //return await _context.Set<Person>().FindAsync(id);
             }
             catch(Exception ex) {
-                _looger.LogError(ex, $"Error al obtener la persona con id {id}");
+                _looger.LogError(ex, $"Error al obtener la Person con id {id}");
                 throw;
             }
         }
@@ -72,7 +70,7 @@ namespace Data
                 return await _context.Set<Person>().FindAsync(id);
             }
             catch(Exception ex) {
-                _looger.LogError(ex, $"Error al obtener la persona con id {id}");
+                _looger.LogError(ex, $"Error al obtener Person con id {id}");
                 throw;
             }
         }
@@ -109,14 +107,10 @@ namespace Data
 
                 person.Id = newId;
                 return person;
-
-                //await _context.Set<Person>().AddAsync(person);
-                //await _context.SaveChangesAsync();
-                //return person;
             }
             catch (Exception ex) 
             {
-                _looger.LogError($"Error al crear la persona{ex.Message}");
+                _looger.LogError($"Error al crear Person{ex.Message}");
                 throw;
             }
 
@@ -135,7 +129,7 @@ namespace Data
             }
             catch (Exception ex) 
             {
-                _looger.LogError($"Error al crear la persona{ex.Message}");
+                _looger.LogError($"Error al crear Person {ex.Message}");
                 throw;
             }
 
@@ -153,7 +147,8 @@ namespace Data
                 string query = @"
                     UPDATE Person 
                     SET Name = @Name, LastName = @LastName, Email = @Email, DocumentNumber = @DocumentNumber, 
-                        Phone = @Phone, Address = @Address, DocumentType = @DocumentType, BlodType = @BlodType
+                        Phone = @Phone, Address = @Address, DocumentType = @DocumentType, BlodType = @BlodType,
+                        Active = @Active
                     WHERE Id = @Id;
                     SELECT CAST(@@ROWCOUNT AS int);";
 
@@ -168,15 +163,13 @@ namespace Data
                     person.Address,
                     person.DocumentType,
                     person.BlodType,
+                    person.Active
                 });
 
                 return rowsAffected > 0;
-                //_context.Set<Person>().Update(person);
-                //await _context.SaveChangesAsync();
-                //return  true;
             }
             catch (Exception ex) {
-                _looger.LogError($"Error al actualizar la persona {ex.Message}");
+                _looger.LogError($"Error al actualizar Person {ex.Message}");
                 throw;
             }
             
@@ -189,13 +182,12 @@ namespace Data
         {
             try
             {
-
                 _context.Set<Person>().Update(person);
                 await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex) {
-                _looger.LogError($"Error al actualizar la persona {ex.Message}");
+                _looger.LogError($"Error al actualizar Person {ex.Message}");
                 throw;
             }
             
@@ -220,7 +212,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _looger.LogError($"Error al eliminar la persona {ex.Message}");
+                _looger.LogError($"Error al elimianar Person {ex.Message}");
                 return false;
             }
         }
@@ -241,7 +233,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _looger.LogError($"Error al eliminar la persona {ex.Message}");
+                _looger.LogError($"Error al eliminar Person {ex.Message}");
                 return false;
             }
         }
@@ -267,7 +259,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al eliminar logicamente form: {ex.Message}");
+                Console.WriteLine($"Error al eliminar logicamente Person: {ex.Message}");
                 return false;
             }
         }
@@ -293,7 +285,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _looger.LogError($"Error al eliminar de manera logica el Person: {ex.Message}");
+                _looger.LogError($"Error al eliminar de manera logica Person: {ex.Message}");
                 return false;
             }
         }

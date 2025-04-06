@@ -27,8 +27,7 @@ namespace Data
         public async Task<IEnumerable<Permission>> GetAllAsyncSQL()
         {
             string query = @"SELECT * FROM Permission WHERE Active = 1";
-            return (IEnumerable<Permission>) await _context.QueryAsync<Permission>(query);
-            //return await _context.Set<Permission>().ToListAsync();
+            return await _context.QueryAsync<Permission>(query);
         }
 
         /// <summary>
@@ -50,11 +49,10 @@ namespace Data
             {
                 string query = @"SELECT * FROM Permission WHERE Id = @Id";
                 return await _context.QueryFirstOrDefaultAsync<Permission>(query, new { Id = id  });
-                //return await _context.Set<Permission>().FindAsync(id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el permiso con ID {PermissionId}", id);
+                _logger.LogError(ex, "Error al obtener el Permission con ID {PermissionId}", id);
                 throw;
             }
 
@@ -97,10 +95,6 @@ namespace Data
 
                 permission.Id = newId;
                 return permission;
-
-                //await _context.Set<Permission>().AddAsync(permission);
-                //await _context.SaveChangesAsync();
-                //return permission;
             }
             catch (Exception ex)
             {
@@ -150,14 +144,10 @@ namespace Data
                 });
 
                 return rowsAffected > 0;
-
-                //_context.Set<Permission>().Update(permission);
-                //await _context.SaveChangesAsync();
-                //return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al actualizar el permiso : {ex.Message}");
+                _logger.LogError($"Error al actualizar el Permission : {ex.Message}");
                 return false;
             }
         }
@@ -196,17 +186,10 @@ namespace Data
                 int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
 
                 return rowsAffected > 0;
-
-                //var permission = await _context.Set<Permission>().FindAsync(id);
-                //if (permission == null)
-                //    return false;
-                //_context.Set<Permission>().Remove(permission);
-                //await _context.SaveChangesAsync();
-                //return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al eliminar el permiso {ex.Message}");
+                _logger.LogError($"Error al eliminar el Permission {ex.Message}");
                 return false;
             }
         }
@@ -253,7 +236,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al eliminar logicamente permission: {ex.Message}");
+                Console.WriteLine($"Error al eliminar logicamente Permission: {ex.Message}");
                 return false;
             }
         }
@@ -279,7 +262,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al eliminar de manera logica el Form: {ex.Message}");
+                _logger.LogError($"Error al eliminar de manera logica el Perrmission: {ex.Message}");
                 return false;
             }
         }

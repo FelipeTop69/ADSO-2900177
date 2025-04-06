@@ -39,7 +39,8 @@ namespace Data
                 INNER JOIN Form f 
                 ON fm.FormId = f.Id
                 INNER JOIN Module m 
-                ON fm.ModuleId = m.Id";
+                ON fm.ModuleId = m.Id
+                WHERE fm.Active = 1;";
 
             return await _context.QueryAsync<FormModuleDTO>(query);
         }
@@ -77,7 +78,6 @@ namespace Data
                     WHERE fm.Id = @Id";
 
                 return await _context.QueryFirstOrDefaultAsync<FormModuleDTO>(query, new { Id = id });
-                //return await _context.Set<FormModule>().FindAsync(id);
             }
             catch (Exception ex)
             {
@@ -125,10 +125,6 @@ namespace Data
 
                 formModule.Id = newId;
                 return formModule;
-
-                //await _context.Set<FormModule>().AddAsync(formModule);
-                //await _context.SaveChangesAsync();
-                //return formModule;
             }
             catch (Exception ex)
             {
@@ -179,10 +175,6 @@ namespace Data
                 });
 
                 return rowsAffected > 0;
-
-                //_context.Set<FormModule>().Update(formModule);
-                //await _context.SaveChangesAsync();
-                //return true;
             }
             catch (Exception ex)
             {
@@ -256,6 +248,7 @@ namespace Data
             }
         }
 
+
         /// <summary>
         /// Elimina un FormModule de manera logica de la base  de datos SQL
         /// </summary>
@@ -301,7 +294,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al eliminar de manera logica el User: {ex.Message}");
+                _logger.LogError($"Error al eliminar de manera logica el FormModule: {ex.Message}");
                 return false;
             }
         }

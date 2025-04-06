@@ -9,7 +9,6 @@ using Entity.Context;
 using Entity.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using static Entity.Context.ApplicationDbContext;
 
 namespace Data
 {
@@ -49,7 +48,9 @@ namespace Data
         ///<returns>Lista de Rols</returns>
         public async Task<IEnumerable<Rol>> GetAllAsync()
         {
-            return await _context.Set<Rol>().ToListAsync();
+            return await _context.Set<Rol>()
+             .Where(r => r.Active)
+             .ToListAsync();
         }
 
 
@@ -78,7 +79,10 @@ namespace Data
         {
             try
             {
-                return await _context.Set<Rol>().FindAsync(id);
+                return await _context.Set<Rol>()
+                    .AsNoTracking()
+                    .Where(r => r.Id == id && r.Active)
+                    .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {

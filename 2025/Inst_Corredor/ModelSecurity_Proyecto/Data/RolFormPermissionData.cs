@@ -43,10 +43,10 @@ namespace Data
                 INNER JOIN Permission p 
                 ON rfp.PermissionId = p.Id
                 INNER JOIN Form f 
-                ON rfp.FormId = f.Id";
+                ON rfp.FormId = f.Id
+                WHERE rfp.Active = 1";
 
             return (IEnumerable<RolFormPermissionDTO>) await _context.QueryAsync<RolFormPermissionDTO>(query);
-            //return await _context.Set<RolFormPermission>().ToListAsync();
         }
 
         /// <summary>
@@ -132,10 +132,6 @@ namespace Data
 
                 rolFormPermission.Id = newId;
                 return rolFormPermission;
-
-                //await _context.Set<RolFormPermission>().AddAsync(rolFormPermission);
-                //await _context.SaveChangesAsync();
-                //return rolFormPermission;
             }
             catch (Exception ex)
             {
@@ -187,10 +183,6 @@ namespace Data
                 });
 
                 return rowsAffected > 0;
-
-                //_context.Set<RolFormPermission>().Update(rolFormPermission);
-                //await _context.SaveChangesAsync();
-                //return true;
             }
             catch (Exception ex)
             {
@@ -233,13 +225,6 @@ namespace Data
                 int rowsAffected = await _context.QuerySingleAsync<int>(query, new { Id = id });
 
                 return rowsAffected > 0;
-
-                //var rolFormPermission = await _context.Set<RolFormPermission>().FindAsync(id);
-                //if (rolFormPermission == null)
-                //    return false;
-                //_context.Set<RolFormPermission>().Remove(rolFormPermission);
-                //await _context.SaveChangesAsync();
-                //return true;
             }
             catch (Exception ex)
             {

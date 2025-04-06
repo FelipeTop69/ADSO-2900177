@@ -75,10 +75,10 @@ namespace Business
         /// </summary>
         public async Task<UserCreateDTO> CreateUserAsync(UserCreateDTO userCreateDTO)
         {
+            ValidateUser(userCreateDTO);
+
             try
             {
-                //ValidateUser(userDTO);
-
                 var user = MapCreateToEntity(userCreateDTO);
                 var createdUser = await _userData.CreateAsync(user);
 
@@ -98,13 +98,14 @@ namespace Business
         public async Task<bool> UpdateUserAsync(UserCreateDTO userCreateDTO)
         {
 
-            //ValidateUser(userDTO);
+            ValidateUser(userCreateDTO);
 
             var existingUser = await _userData.GetByIdAsync(userCreateDTO.Id);
             if (existingUser == null)
             {
                 throw new EntityNotFoundException("User", userCreateDTO.Id);
             }
+
             try
             {
                 
@@ -130,14 +131,14 @@ namespace Business
         /// </summary>
         public async Task<bool> DeleteUserAsync(int id)
         {
+            var existingUser = await _userData.GetByIdAsyncSQL(id);
+            if (existingUser == null)
+            {
+                throw new EntityNotFoundException("User", id);
+            }
+
             try
             {
-                var existingUser = await _userData.GetByIdAsyncSQL(id);
-                if (existingUser == null)
-                {
-                    throw new EntityNotFoundException("User", id);
-                }
-
                 return await _userData.DeleteAsync(id);
             }
             catch (Exception ex)
@@ -186,7 +187,7 @@ namespace Business
         /// <summary>
         /// Valida los datos del usuario.
         /// </summary>
-        private void ValidateUser(UserDTO userDTO)
+        private void ValidateUser(UserCreateDTO userDTO)
         {
             if (userDTO == null)
             {

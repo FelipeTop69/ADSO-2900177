@@ -26,7 +26,7 @@ namespace Web.Controllers
         ///<summary>
         /// Obtener todos los person del sistema
         ///</summary>
-        [HttpGet]
+        [HttpGet("GetAll/")]
         [ProducesResponseType(typeof(IEnumerable<PersonDTO>), 200)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllPersons()
@@ -39,7 +39,7 @@ namespace Web.Controllers
             catch (Exception ex)
             {
 
-                _logger.LogError(ex, "Error al obtener los persons");
+                _logger.LogError(ex, "Error al obtener los Persons");
                 return StatusCode(500, new {message = ex.Message});
             }
         }
@@ -48,7 +48,7 @@ namespace Web.Controllers
         ///<summary>
         /// Obtener un person especificio por su ID
         /// </summary>
-        [HttpGet("{id}")]
+        [HttpGet("GetByiId/{id}/")]
         [ProducesResponseType(typeof(PersonDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -62,7 +62,7 @@ namespace Web.Controllers
             }
             catch (ValidationException ex)
             {
-                _logger.LogInformation(ex, "Validacion fallida para person con ID: {PersonId}", id);
+                _logger.LogInformation(ex, "Validacion fallida para Person con ID: {PersonId}", id);
                 return BadRequest(new {message = ex.Message});
             }
             catch (EntityNotFoundException ex)
@@ -73,7 +73,7 @@ namespace Web.Controllers
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al obtener el person con ID: {PersonId}", id);
+                _logger.LogError(ex, "Error al obtener el Person con ID: {PersonId}", id);
                 throw;
             }
         }
@@ -82,7 +82,7 @@ namespace Web.Controllers
         /// <summary>
         /// Crea un nuevo person en el sistema
         /// </summary>
-        [HttpPost]
+        [HttpPost("Create/")]
         [ProducesResponseType(typeof(RolDTO), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -95,12 +95,12 @@ namespace Web.Controllers
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validacion fallida al crear person");
+                _logger.LogWarning(ex, "Validacion fallida al crear Person");
                 return BadRequest(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al crear person");
+                _logger.LogError(ex, "Error al crear Person");
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -109,7 +109,7 @@ namespace Web.Controllers
         /// <summary>
         /// Actualiza un person existente en el sistema
         /// </summary>
-        [HttpPut("Update")]
+        [HttpPut("Update/")]
         [ProducesResponseType(typeof(RolDTO), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -124,17 +124,17 @@ namespace Web.Controllers
             }
             catch (ValidationException ex)
             {
-                _logger.LogWarning(ex, "Validación fallida al actualizar el person con ID: {PersonId}", personDto.Id);
+                _logger.LogWarning(ex, "Validación fallida al actualizar Person con ID: {PersonId}", personDto.Id);
                 return BadRequest(new { message = ex.Message });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "No se encontró el person con ID: {PersonId}", personDto.Id);
+                _logger.LogInformation(ex, "No se encontró Person con ID: {PersonId}", personDto.Id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al actualizar el rol con ID: {PersonId}", personDto.Id);
+                _logger.LogError(ex, "Error al actualizar Person con ID: {PersonId}", personDto.Id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -143,7 +143,7 @@ namespace Web.Controllers
         /// <summary>
         /// Elimina un person del sistema
         /// </summary>
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}/")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -151,18 +151,17 @@ namespace Web.Controllers
         {
             try
             {
-                var deleted = await _personBusiness.DeletePersonAsync(id);
-
-                if (!deleted)
-                {
-                    return NotFound(new { message = "Person no encontrado o ya eliminado" });
-                }
-
+                await _personBusiness.DeletePersonAsync(id);
                 return Ok(new { message = "Person eliminado exitosamente" });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "No se encontró el form con ID: {FormId}", id);
+                return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al eliminar el person con ID: {PersonId}", id);
+                _logger.LogError(ex, "Error al eliminar Person con ID: {PersonId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -171,7 +170,6 @@ namespace Web.Controllers
         /// <summary>
         /// Elimina un person  de manera logica del sistema
         /// </summary>
-
         [HttpDelete("Logical/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -180,23 +178,17 @@ namespace Web.Controllers
         {
             try
             {
-                var deleted = await _personBusiness.DeletePersonLogicalAsync(id);
-
-                if (!deleted)
-                {
-                    return NotFound(new { message = "Person no encontrado o ya eliminado." });
-                }
-
+                await _personBusiness.DeletePersonLogicalAsync(id);
                 return Ok(new { message = "Eliminación lógica exitosa." });
             }
             catch (EntityNotFoundException ex)
             {
-                _logger.LogInformation(ex, "No se encontró el person con ID: {PersonId}", id);
+                _logger.LogInformation(ex, "No se encontró Person con ID: {PersonId}", id);
                 return NotFound(new { message = ex.Message });
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error al eliminar el person de manera lógica con ID: {PersonId}", id);
+                _logger.LogError(ex, "Error al eliminar Person de manera lógica con ID: {PersonId}", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }

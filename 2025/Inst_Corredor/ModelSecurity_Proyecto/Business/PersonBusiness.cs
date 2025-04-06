@@ -34,8 +34,8 @@ namespace Business
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener todas las personas");
-                throw new ExternalServiceException("Base de datos", "Error al recuperar la lista de personas", ex);
+                _logger.LogError(ex, "Error al obtener todos los Persons");
+                throw new ExternalServiceException("Base de datos", "Error al recuperar la lista de Persons", ex);
             }
         }
 
@@ -47,14 +47,14 @@ namespace Business
         {
             if (id <= 0)
             {
-                _logger.LogWarning("Se intentó obtener una persona con ID inválido: {PersonId}", id);
-                throw new ValidationException("id", "El ID de la persona debe ser mayor que cero");
+                _logger.LogWarning("Se intentó obtener un Person con ID inválido: {PersonId}", id);
+                throw new ValidationException("id", "El ID de un Person debe ser mayor que cero");
             }
 
             var person = await _personData.GetByIdAsyncSQL(id);
             if (person == null)
             {
-                _logger.LogInformation("No se encontró ninguna persona con ID: {PersonId}", id);
+                _logger.LogInformation("No se encontró un Person con ID: {PersonId}", id);
                 throw new EntityNotFoundException("Person", id);
             }
 
@@ -75,10 +75,10 @@ namespace Business
         /// </summary>
         public async Task<PersonDTO> CreatePersonAsync(PersonDTO personDto)
         {
+             ValidatePerson(personDto);
+
             try
             {
-                ValidatePerson(personDto);
-
                 var person = MapToEntity(personDto);
 
                 var createdPerson = await _personData.CreateAsyncSQL(person);
@@ -87,8 +87,8 @@ namespace Business
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear nueva persona: {PersonNombre}", personDto?.Name ?? "null");
-                throw new ExternalServiceException("Base de datos", "Error al crear la persona", ex);
+                _logger.LogError(ex, "Error al crear un nuevo Person: {PersonNombre}", personDto?.Name ?? "null");
+                throw new ExternalServiceException("Base de datos", "Error al crear Person", ex);
             }
         }
 
@@ -100,8 +100,8 @@ namespace Business
         {
             if (personDto.Id <= 0)
             {
-                _logger.LogWarning("Se intentó actualizar una persona con ID inválido: {PersonId}", personDto.Id);
-                throw new ValidationException("id", "El ID de la persona debe ser mayor que cero");
+                _logger.LogWarning("Se intentó actualizar un Person con ID inválido: {PersonId}", personDto.Id);
+                throw new ValidationException("id", "El ID de Person debe ser mayor que cero");
             }
 
             ValidatePerson(personDto);
@@ -109,15 +109,12 @@ namespace Business
             var person = await _personData.GetByIdAsyncSQL(personDto.Id);
             if (person == null)
             {
-                _logger.LogWarning("No se encontró la persona con ID {PersonId} para actualizar", personDto.Id);
+                _logger.LogWarning("No se encontró  Person con ID {PersonId} para actualizar", personDto.Id);
                 throw new EntityNotFoundException("Person", personDto.Id);
             }
 
             try
             {
-                
-
-                // Actualizar los datos de la persona con la información del DTO
                 person.Name = personDto.Name;
                 person.LastName = personDto.LastName;
                 person.Email = personDto.Email;
@@ -126,7 +123,7 @@ namespace Business
                 person.Phone = personDto.Phone;
                 person.Address = personDto.Address;
                 person.BlodType = personDto.BlodType;
-                
+                person.Active = personDto.Status;
 
                 return await _personData.UpdateAsyncSQL(person);
             }
@@ -145,8 +142,14 @@ namespace Business
         {
             if (id <= 0)
             {
-                _logger.LogWarning("Se intentó eliminar una persona con ID inválido: {PersonId}", id);
-                throw new ValidationException("id", "El ID de la persona debe ser mayor que cero");
+                _logger.LogWarning("Se intentó eliminar un Person con ID inválido: {PersonId}", id);
+                throw new ValidationException("id", "El ID de Person debe ser mayor que cero");
+            }
+
+            var existingPerson = await _personData.GetByIdAsyncSQL(id);
+            if (existingPerson == null)
+            {
+                throw new EntityNotFoundException("Person", id);
             }
 
             try
@@ -155,8 +158,8 @@ namespace Business
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar la persona con ID: {PersonId}", id);
-                throw new ExternalServiceException("Base de datos", $"Error al eliminar la persona con ID {id}", ex);
+                _logger.LogError(ex, "Error al eliminar Person con ID: {PersonId}", id);
+                throw new ExternalServiceException("Base de datos", $"Error al eliminar Person con ID {id}", ex);
             }
         }
 
@@ -168,7 +171,7 @@ namespace Business
         {
             if (id <= 0)
             {
-                throw new ValidationException("ID", "El ID del person debe ser mayor que cero.");
+                throw new ValidationException("ID", "El ID de Person debe ser mayor que cero.");
             }
 
             var existingPerson = await _personData.GetByIdAsyncSQL(id);
@@ -184,13 +187,13 @@ namespace Business
             }
             catch (ExternalServiceException ex)
             {
-                _logger.LogError(ex, "Error en servicio externo al eliminar el person con ID: {PersonId}", id);
+                _logger.LogError(ex, "Error en servicio externo al eliminar Person con ID: {PersonId}", id);
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar el person de manera logica con ID: {PersonId}", id);
-                throw new ExternalServiceException("Base de datos", "Error al eliminar el person de manera logica.", ex);
+                _logger.LogError(ex, "Error al eliminar Person de manera logica con ID: {PersonId}", id);
+                throw new ExternalServiceException("Base de datos", "Error al eliminar Person de manera logica.", ex);
             }
         }
 
@@ -202,19 +205,19 @@ namespace Business
         {
             if (personDto == null)
             {
-                throw new ValidationException("El objeto persona no puede ser nulo");
+                throw new ValidationException("El objeto Person no puede ser nulo");
             }
 
             if (string.IsNullOrWhiteSpace(personDto.Name))
             {
-                _logger.LogWarning("Se intentó crear/actualizar una persona con Name vacío");
+                _logger.LogWarning("Se intentó crear/actualizar Person con Name vacío");
                 throw new ValidationException("Name", "El nombre de la persona es obligatorio");
             }
 
             if (string.IsNullOrWhiteSpace(personDto.Email))
             {
-                _logger.LogWarning("Se intentó crear/actualizar una persona con Email vacío");
-                throw new ValidationException("Email", "El correo electrónico de la persona es obligatorio");
+                _logger.LogWarning("Se intentó crear/actualizar Person con Email vacío");
+                throw new ValidationException("Email", "El correo electrónico de Person es obligatorio");
             }
         }
 
