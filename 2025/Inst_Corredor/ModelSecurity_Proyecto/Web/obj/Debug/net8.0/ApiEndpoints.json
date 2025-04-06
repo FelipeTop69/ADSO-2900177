@@ -1066,31 +1066,8 @@
   },
   {
     "ContainingType": "Web.Controllers.RolController",
-    "Method": "GetAllRols",
-    "RelativePath": "api/Rol",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[Entity.DTOs.RolDTO, Entity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "Web.Controllers.RolController",
     "Method": "CreateRolAsync",
-    "RelativePath": "api/Rol",
+    "RelativePath": "api/Rol/Create",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -1125,9 +1102,9 @@
   },
   {
     "ContainingType": "Web.Controllers.RolController",
-    "Method": "GetRolById",
-    "RelativePath": "api/Rol/{id}",
-    "HttpMethod": "GET",
+    "Method": "DeleteRolAsync",
+    "RelativePath": "api/Rol/Delete/{id}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -1139,10 +1116,8 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Entity.DTOs.RolDTO",
-        "MediaTypes": [
-          "application/json"
-        ],
+        "Type": "System.Void",
+        "MediaTypes": [],
         "StatusCode": 200
       },
       {
@@ -1168,8 +1143,8 @@
   },
   {
     "ContainingType": "Web.Controllers.RolController",
-    "Method": "DeleteRolAsync",
-    "RelativePath": "api/Rol/{id}",
+    "Method": "DeleteLogicalFormAsync",
+    "RelativePath": "api/Rol/DeleteLogical/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -1202,9 +1177,32 @@
   },
   {
     "ContainingType": "Web.Controllers.RolController",
-    "Method": "DeleteLogicalFormAsync",
-    "RelativePath": "api/Rol/Logical/{id}",
-    "HttpMethod": "DELETE",
+    "Method": "GetAllRols",
+    "RelativePath": "api/Rol/GetAll",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[Entity.DTOs.RolDTO, Entity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "Web.Controllers.RolController",
+    "Method": "GetRolById",
+    "RelativePath": "api/Rol/GetById{id}",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -1216,9 +1214,18 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Void",
-        "MediaTypes": [],
+        "Type": "Entity.DTOs.RolDTO",
+        "MediaTypes": [
+          "application/json"
+        ],
         "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 400
       },
       {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",

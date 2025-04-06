@@ -12,22 +12,32 @@ using Utilities.Exceptions;
 namespace Business
 {
     ///<summary>
-    ///Clase de negocio encargada de la logica relacionada con lso roles del sistema;
+    ///Clase de negocio encargada de la logica relacionada con Rol en el sistema;
     ///</summary>
     public class RolBusiness
     {
         private readonly RolData _rolData;
         private readonly ILogger<RolBusiness> _logger;
 
+        /// <summary>
+        /// Inicializa una nueva instancia de la clase <see cref="RolBusiness"/>.
+        /// </summary>
+        /// <param name="rolData">Capa de acceso a datos para Rol.</param>
+        /// <param name="logger">Logger para registro de Rol</param>
         public RolBusiness(RolData rolData, ILogger<RolBusiness> logger)
         {
             _rolData = rolData;
             _logger = logger;
         }
 
+
         /// <summary>
-        /// Metodo para obtener todos los roles como DTOs
+        /// Obtiene todos los Rols y los mapea a objetos <see cref="RolDTO"/>.
         /// </summary>
+        /// <returns>Una coleccion de objetos <see cref="RolDTO"/> que representan todos los Rols existentes.</returns>
+        /// <exception cref="ExternalServiceException">
+        /// Se lanza cuando ocurre un error al intentar recuperar los datos desde la base de datos.
+        /// </exception>
         public async Task<IEnumerable<RolDTO>> GetAllRolesAsync()
         {
             try
@@ -37,31 +47,39 @@ namespace Business
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener todos los roles");
-                throw new ExternalServiceException("Base de datos", "Error al recuperar la lista de roles", ex);
+                _logger.LogError(ex, "Error al obtener todos los Rols");
+                throw new ExternalServiceException("Base de datos", "Error al recuperar la lista de Rols", ex);
             }
         }
 
 
         /// <summary>
-        /// Metodo para obtener un rol por ID como DTO 
+        /// Obtiene un Rol especifico por su identificador y lo mapea a un objeto <see cref="RolDTO"/>.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /// <exception cref="Utilities.Exceptions.ValidationException"></exception>
-        /// <exception cref="ExternalServiceException"></exception>
+        /// <param name="id">Identificador único del rol a buscar. Debe ser mayor que cero.</param>
+        /// <returns>Un objeto <see cref="RolDTO"/> que representa el rol solicitado.</returns>
+        /// <exception cref="Utilities.Exceptions.ValidationException">
+        /// Se lanza cuando el parámetro <paramref name="id"/> es menor o igual a cero.
+        /// </exception>
+        /// <exception cref="EntityNotFoundException">
+        /// Se lanza cuando no se encuentra ningún rol con el ID especificado.
+        /// </exception>
+        /// <exception cref="ExternalServiceException">
+        /// Se lanza cuando ocurre un error inesperado al mapear o recuperar el rol desde la base de datos.
+        /// </exception>
         public async Task<RolDTO> GetRolByIdAsync(int id)
         {
             if (id <= 0)
             {
-                _logger.LogWarning("Se intentó obtener un rol con ID inválido: {RolId}", id);
-                throw new Utilities.Exceptions.ValidationException("id", "El ID del rol debe ser mayor que cero");
+                _logger.LogWarning("Se intentó obtener un Rol con ID inválido: {RolId}", id);
+                throw new Utilities.Exceptions.ValidationException("id", "El ID del Rol debe ser mayor que cero");
             }
 
             var rol = await _rolData.GetByIdAsync(id);
+
             if (rol == null)
             {
-                _logger.LogInformation("No se encontró ningún rol con ID: {RolId}", id);
+                _logger.LogInformation("No se encontró ningún Rol con ID: {RolId}", id);
                 throw new EntityNotFoundException("Rol", id);
             }
 
@@ -71,24 +89,29 @@ namespace Business
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el rol con ID: {RolId}", id);
-                throw new ExternalServiceException("Base de datos", $"Error al recuperar el rol con ID {id}", ex);
+                _logger.LogError(ex, "Error al obtener el Rol con ID: {RolId}", id);
+                throw new ExternalServiceException("Base de datos", $"Error al recuperar el Rol con ID {id}", ex);
             }
         }
 
 
         /// <summary>
-        /// Metodo para crear un rol desde un DTO 
+        /// Crea un nuevo Rol en la base de datos a partir de un objeto <see cref="RolDTO"/>.
         /// </summary>
-        /// <param name="RolDto"></param>
-        /// <returns></returns>
-        /// <exception cref="ExternalServiceException"></exception>
+        /// <param name="RolDto">Objeto <see cref="RolDTO"/> que contiene la información del rol a crear.</param>
+        /// <returns>El objeto <see cref="RolDTO"/> que representa el Rol recién creado, incluyendo su identificador asignado.</returns>
+        /// <exception cref="Utilities.Exceptions.ValidationException">
+        /// Se lanza si el DTO del rol no cumple con las reglas de validación definidas.
+        /// </exception>
+        /// <exception cref="ExternalServiceException">
+        /// Se lanza cuando ocurre un error al intentar crear el rol en la base de datos.
+        /// </exception>
         public async Task<RolDTO> CreateRolAsync(RolDTO RolDto)
         {
+            ValidateRol(RolDto);
+
             try
             {
-                ValidateRol(RolDto);
-
                 var rol = MapToEntity(RolDto);
 
                 var rolCreado = await _rolData.CreateAsync(rol);
@@ -97,17 +120,32 @@ namespace Business
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear nuevo rol: {RolNombre}", RolDto?.Name ?? "null");
-                throw new ExternalServiceException("Base de datos", "Error al crear el rol", ex);
+                _logger.LogError(ex, "Error al crear nuevo Rol: {RolNombre}", RolDto?.Name ?? "null");
+                throw new ExternalServiceException("Base de datos", "Error al crear el Rol", ex);
             }
         }
 
 
         /// <summary>
-        /// Actualiza un usuario existente.
+        /// Actualiza un Rol existente en la base de datos con los datos proporcionados en el <see cref="RolDTO"/>.
         /// </summary>
-        public async Task<bool> UpdateUserAsync(RolDTO rolDTO)
+        /// <param name="rolDTO">Objeto <see cref="RolDTO"/> con la información actualizada del Rol. Debe contener un ID válido.</param>
+        /// <returns>Un valor booleano que indica si la operación de actualización fue exitosa.</returns>
+        /// <exception cref="Utilities.Exceptions.ValidationException">
+        /// Se lanza si el DTO del rol no cumple con las reglas de validación definidas.
+        /// </exception>
+        /// <exception cref="EntityNotFoundException">
+        /// Se lanza si no se encuentra ningún rol con el ID especificado.
+        /// </exception>
+        /// <exception cref="ExternalServiceException">
+        /// Se lanza cuando ocurre un error inesperado al intentar actualizar el rol en la base de datos.
+        /// </exception>
+        public async Task<bool> UpdateRolAsync(RolDTO rolDTO)
         {
+            if (rolDTO.Id <= 0)
+            {
+                throw new ValidationException("El ID del Rol debe ser mayor a cero.");
+            }
 
             ValidateRol(rolDTO);
 
@@ -116,11 +154,9 @@ namespace Business
             {
                 throw new EntityNotFoundException("Rol", rolDTO.Id);
             }
+
             try
             {
-                
-
-                // Actualizar propiedades
                 existingRol.Id = rolDTO.Id;
                 existingRol.Name = rolDTO.Name;
                 existingRol.Description = rolDTO.Description;
@@ -130,48 +166,81 @@ namespace Business
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar el usuario con ID: {UserId}", rolDTO.Id);
-                throw new ExternalServiceException("Base de datos", "Error al actualizar el usuario.", ex);
+                _logger.LogError(ex, "Error al actualizar el Rol con ID: {UserId}", rolDTO.Id);
+                throw new ExternalServiceException("Base de datos", "Error al actualizar el Rol.", ex);
             }
         }
 
 
         /// <summary>
-        /// Elimina un rol por ID.
+        /// Elimina un Rol existente por su identificador.
         /// </summary>
+        /// <param name="id">Identificador único del Rol a eliminar.</param>
+        /// <returns>Un valor booleano que indica si la eliminación fue exitosa.</returns>
+        /// <exception cref="EntityNotFoundException">
+        /// Se lanza si no se encuentra ningún Rol con el ID especificado.
+        /// </exception>
+        /// <exception cref="ExternalServiceException">
+        /// Se lanza cuando ocurre un error inesperado al intentar eliminar el Rol desde la base de datos.
+        /// </exception>
         public async Task<bool> DeleteRolAsync(int id)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException("El ID del Rol debe ser un número mayor a cero.", nameof(id));
+            }
+
             var existingRol = await _rolData.GetByIdAsync(id);
             if (existingRol == null)
             {
                 throw new EntityNotFoundException("Rol", id);
             }
+
             try
             {
-                
-
                 return await _rolData.DeleteAsync(id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar el rol con ID: {UserId}", id);
-                throw new ExternalServiceException("Base de datos", "Error al eliminar el rol.", ex);
+                _logger.LogError(ex, "Error al eliminar el Rol con ID: {UserId}", id);
+                throw new ExternalServiceException("Base de datos", "Error al eliminar el Rol.", ex);
             }
         }
 
 
         /// <summary>
-        /// Elimina un rol de manera logica por ID.
+        /// Elimina un Rol existente de manera logica por su identificador.
         /// </summary>
+        /// <param name="id">Identificador único del Rol a eliminar de manera logica.</param>
+        /// <returns>Un valor booleano que indica si la eliminación logica fue exitosa.</returns>
+        /// <exception cref="EntityNotFoundException">
+        /// Se lanza si no se encuentra ningún Rol con el ID especificado.
+        /// </exception>
+        /// <exception cref="ExternalServiceException">
+        /// Se lanza cuando ocurre un error inesperado al intentar eliminar de manera logica el Rol desde la base de datos.
+        /// </exception>
         public async Task<bool> SoftDeleteRolAsync(int id)
         {
-            var rol = await _rolData.GetByIdAsync(id);
-            if (rol == null)
+            if (id <= 0)
+            {
+                throw new ArgumentException("El ID del Rol debe ser un número mayor a cero.", nameof(id));
+            }
+
+            var existingRol = await _rolData.GetByIdAsync(id);
+            if (existingRol == null)
             {
                 throw new EntityNotFoundException("Rol", id);
             }
 
-            return await _rolData.SoftDeleteAsync(id);
+            try
+            {
+                return await _rolData.SoftDeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar el Rol con ID: {UserId}", id);
+                throw new ExternalServiceException("Base de datos", "Error al eliminar el Rol.", ex);
+            }
         }
 
 
@@ -184,13 +253,13 @@ namespace Business
         {
             if (RolDto == null)
             {
-                throw new Utilities.Exceptions.ValidationException("El objeto rol no puede ser nulo");
+                throw new Utilities.Exceptions.ValidationException("El objeto Rol no puede ser nulo");
             }
 
             if (string.IsNullOrWhiteSpace(RolDto.Name))
             {
-                _logger.LogWarning("Se intentó crear/actualizar un rol con Name vacío");
-                throw new Utilities.Exceptions.ValidationException("Name", "El Name del rol es obligatorio");
+                _logger.LogWarning("Se intentó crear/actualizar un Rol con Name vacío");
+                throw new Utilities.Exceptions.ValidationException("Name", "El Name del Rol es obligatorio");
             }
         }
 
@@ -206,8 +275,8 @@ namespace Business
             {
                 Id = rol.Id,
                 Name = rol.Name,
-                Status = rol.Active,// Si existe en la entidad
-                Description = rol.Description 
+                Description = rol.Description,
+                Status = rol.Active
             };
         }
 
@@ -223,8 +292,8 @@ namespace Business
             {
                 Id = rolDTO.Id,
                 Name = rolDTO.Name,
-                Active = rolDTO.Status,
-                Description = rolDTO.Description // Si existe en la entidad
+                Description = rolDTO.Description,
+                Active = rolDTO.Status
             };
         }
 

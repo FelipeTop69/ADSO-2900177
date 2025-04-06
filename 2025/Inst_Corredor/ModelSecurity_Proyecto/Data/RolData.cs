@@ -21,6 +21,7 @@ namespace Data
         private readonly ApplicationDbContext _context;
         private readonly ILogger<RolData> _logger;
 
+
         ///<summary>
         ///Constructor que recibe el contexto de la base de datos
         ///</summary>
@@ -31,20 +32,21 @@ namespace Data
             _logger = logger;
         }
 
+
         ///<summary>
-        ///Obtiene todos los Rol almacenados en la base de datos SQL
+        ///Obtiene todos los Rols almacenados en la base de datos SQL
         ///</summary>
-        ///<returns>Lista de roles</returns>
+        ///<returns>Lista de Rols</returns>
         public async Task<IEnumerable<Rol>> GetAllAsyncSQL()
         {
             string query = @"SELECT * FROM Rol WHERE Active = 1";
-            return (IEnumerable<Rol>) await _context.QueryAsync<Rol>(query);
-            //return await _context.Set<Rol>().ToListAsync();
+            return await _context.QueryAsync<Rol>(query);
         }
 
         /// <summary>
-        /// Obtiene todos los Roles almacenados en la base de datos LINQ
+        /// Obtiene todos los Rols almacenados en la base de datos LINQ
         /// </summary>
+        ///<returns>Lista de Rols</returns>
         public async Task<IEnumerable<Rol>> GetAllAsync()
         {
             return await _context.Set<Rol>().ToListAsync();
@@ -59,19 +61,18 @@ namespace Data
         {
             try
             {
-                string query = @"SELECT * FROM Rol WHERE Id = @Id";
+                string query = @"SELECT * FROM Rol WHERE Id = @Id AND Active = 1";
                 return await _context.QueryFirstOrDefaultAsync<Rol>(query, new { Id = id });
-                //return await _context.Set<Rol>().FindAsync(id);
             }
             catch (Exception ex) 
             { 
-                _logger.LogError(ex, $"Error al obtener rol con ID {id}");
+                _logger.LogError(ex, "Error al obtener Rol con ID {RolId}", id);
                 throw; ///Re-lanza la exepcion para que sea manejada en capas superiores
             }
         }
 
         /// <summary>
-        /// Obtiene un Rol específico por su identificación LINQ
+        /// Obtiene un Rol específico por su identificacion LINQ
         /// </summary>
         public async Task<Rol?> GetByIdAsync(int id)
         {
@@ -81,7 +82,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener un Rol con ID {RolId}", id);
+                _logger.LogError(ex, "Error al obtener Rol con ID {RolId}", id);
                 throw;
             }
         }
@@ -91,33 +92,29 @@ namespace Data
         ///<summary>
         ///Crear un nuevo Rol en la base de datos SQL
         ///</summary>
-        ///<param name="rol">Instancia del rol al crear</param>
-        ///<returns>El rol creado</returns>
+        ///<param name="rol">Instancia del Rol al crear</param>
+        ///<returns>El Rol creado</returns>
         public async Task<Rol> CreateAsyncSQL(Rol rol)
         {
             try
             {
                 string query = @"
-                    INSERT INTO Rol (Name, Active, Description) 
-                    VALUES (@Name, @Active, @Description);
+                    INSERT INTO Rol (Name, Description, Active) 
+                    VALUES (@Name, @Description, @Active);
                     SELECT CAST(SCOPE_IDENTITY() as int);"; 
 
                 int newId = await _context.QuerySingleAsync<int>(query, new
                 {
                     rol.Name,
+                    rol.Description,
                     rol.Active,
-                    rol.Description
                 });
 
                 rol.Id = newId; 
                 return rol; 
-
-                //await _context.Set<Rol>().AddAsync(rol);
-                //await _context.SaveChangesAsync();
-                //return rol;
             }
             catch (Exception ex) {
-                _logger.LogError($"Error al crear el rol: {ex.Message}");
+                _logger.LogError($"Error al crear Rol: {ex.Message}");
                 throw;
             }
         }
@@ -125,6 +122,8 @@ namespace Data
         /// <summary>
         /// Crea un nuevo Rol en la base de datos LINQ
         /// </summary>
+        /// <param name="rol"></param>
+        /// <returns>El Rol Creado</returns>
         public async Task<Rol> CreateAsync(Rol rol)
         {
             try
@@ -135,7 +134,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al crear el Rol: {ex.Message}");
+                _logger.LogError($"Error al crear Rol: {ex.Message}");
                 throw;
             }
         }
@@ -146,7 +145,7 @@ namespace Data
         /// Actualiza un Rol existente en la base de datos SQL
         /// </summary>
         /// <param name="rol">Objeto con la información actualizada.</param>
-        /// <returns>True si la o eración fue exitosa, False en caso contrario.</returns>
+        /// <returns>True si la actualizacion fue exitosa, False en caso contrario.</returns>
         public async Task<bool> UpdateAsyncSQL(Rol rol)
         {
             try
@@ -167,14 +166,10 @@ namespace Data
                 });
 
                 return rowsAffected > 0;
-
-                //_context.Set<Rol>().Update(rol);
-                //await _context.SaveChangesAsync();
-                //return true;
             }
             catch(Exception ex) 
             {
-                _logger.LogError($"Error al actualizar el rol : {ex.Message}");
+                _logger.LogError($"Error al actualizar Rol : {ex.Message}");
                 return false;
             }
         }
@@ -182,6 +177,8 @@ namespace Data
         /// <summary>
         /// Actualiza un Rol existente en la base de datos LINQ
         /// </summary>
+        /// <param name="rol">Objeto con la información actualizada.</param>
+        /// <returns>True si la actualizacion fue exitosa, False en caso contrario.</returns>
         public async Task<bool> UpdateAsync(Rol rol)
         {
             try
@@ -192,7 +189,7 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al actualizar el Rol: {ex.Message}");
+                _logger.LogError($"Error al actualizar Rol: {ex.Message}");
                 return false;
             }
         }
@@ -202,7 +199,7 @@ namespace Data
         /// <summary>
         /// Elimina un Rol de la base de datos SQL
         /// </summary>
-        /// <param name="id">Identificador unico del rol a eliminar </param>
+        /// <param name="id">Identificador unico del Rol a eliminar </param>
         /// <returns>True si la eliminación fue exitosa, False en caso contrario.
         public async Task<bool> DeleteAsyncSQL(int id)
         {
@@ -215,17 +212,10 @@ namespace Data
                 int rowsAffected = await _context.QueryFirstOrDefaultAsync<int>(query, new { Id = id });
 
                 return rowsAffected > 0; 
-
-                //var rol = await _context.Set<Rol>().FindAsync(id);
-                //if (rol == null)
-                //    return false;
-                //_context.Set<Rol>().Remove(rol);
-                //await _context.SaveChangesAsync();
-                //return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al eliminar el rol {ex.Message}");
+                _logger.LogError($"Error al eliminar Rol {ex.Message}");
                 return false;
             }
         }
@@ -233,6 +223,8 @@ namespace Data
         /// <summary>
         /// Elimina un Rol de la base de datos LINQ
         /// </summary>
+        /// <param name="id">Identificador unico del Rol a eliminar </param>
+        /// <returns>True si la eliminación fue exitosa, False en caso contrario.
         public async Task<bool> DeleteAsync(int id)
         {
             try
@@ -247,15 +239,18 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al eliminar el Rol: {ex.Message}");
+                _logger.LogError($"Error al eliminar Rol: {ex.Message}");
                 return false;
             }
         }
 
 
+
         /// <summary>
-        /// Eliminacion logica de un Rol de la base de datos SQL
+        /// Elimina un Rol de manera logica un Rol de la base de datos SQL
         /// </summary>
+        /// <param name="id">Identificador unico del Rol a eliminar de manera logica</param>
+        /// <returns>True si la eliminación fue exitosa, False en caso contrario.</returns>
         public async Task<bool> SoftDeleteAsyncSQL(int id)
         {
             try
@@ -271,16 +266,16 @@ namespace Data
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al elimianr logicamente el rol {ex.Message}");
+                _logger.LogError($"Error al elimianar de manera logica Rol {ex.Message}");
                 return false;
             }
         }
 
         /// <summary>
-        /// Eliminacion Logica de un Rol de la base de datos LINQ
+        /// Elimina un Rol de manera logica un Rol de la base de datos LINQ
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">Identificador unico del Rol a eliminar de manera logica</param>
+        /// <returns>True si la eliminación fue exitosa, False en caso contrario.</returns>
         public async Task<bool> SoftDeleteAsync(int id)
         {
             var rol = await _context.Set<Rol>().FindAsync(id);

@@ -22,7 +22,7 @@ namespace Data
         }
 
         /// <summary>
-        /// Obtiene todos los FormData almacenados en la base de datos SQL
+        /// Obtiene todos los Form almacenados en la base de datos SQL
         /// </summary>
         public async Task<IEnumerable<Form>> GetAllAsyncSQL()
         {
