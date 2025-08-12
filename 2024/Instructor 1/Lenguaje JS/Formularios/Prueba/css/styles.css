@@ -1,0 +1,44 @@
+.container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.forma{
+    margin-top: 20px ;
+    /* width: 1050px; */
+    /* border: 1px solid black; */
+}
+
+.formulario{
+    border: 1px solid blue;
+}
+
+.respuesta{
+    margin-top: 10px;
+    border: 1px solid red;
+    height: min-content !important;
+
+}
+
+.formulario, .respuesta{
+    margin-left: 10px;
+    padding: 30px;
+    border-radius: 6px;
+    /* color: yellow; */
+
+}
+
+.calculadora{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.celda{
+    width: auto;
+    /* border: 1px solid black; */
+    margin: 5px;
+    text-align: center;
+}

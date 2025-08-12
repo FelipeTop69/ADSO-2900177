@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sueldo Persona</title>
+    <script src="js/sueldo.js"></script>
+</head>
+<body>
+
+    <script>
+
+        //Como Parametro
+        let valorD = 180000;
+        let diasT = 22
+        console.log("Como Parametro")
+        console.log("Al valor del siguiente sueldo " + calcularSueldo(valorD, diasT) + " se le descuenta:")
+        console.log("Pensión: " + calcularPension(valorD, diasT))
+        console.log("Salud: " + calcularSalud(valorD, diasT))
+        console.log("ARL: " + calcularARL(valorD, diasT))
+        console.log("El sueldo total del trabajador es: " + calcularSueldoTotal(valorD, diasT))
+        console.log("\n")
+
+        //Como Expresion
+        let expresionValorD = 130000;
+        let expresionDiasT = 22
+        console.log("Como Expresión")
+        console.log("Al valor del siguiente sueldo " + calcularSueldoExpresion(expresionValorD, expresionDiasT) + " se le descuenta:")
+        console.log("Pensión: " + calcularPensionExpresion(expresionValorD, expresionDiasT))
+        console.log("Salud: " + calcularSaludExpresion(expresionValorD, expresionDiasT))
+        console.log("ARL: " + calcularARLExpresion(expresionValorD, expresionDiasT))
+        console.log("El sueldo total del trabajador es: " + calcularSueldoTotalExpresion(expresionValorD, expresionDiasT))
+
+    </script>
+
+</body>
+</html>

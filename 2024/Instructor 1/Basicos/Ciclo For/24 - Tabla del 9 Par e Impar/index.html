@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla del 9 Par o Impar</title>
+</head>
+<body>
+
+    <script>
+
+        let cont
+        let num
+        let resul
+
+        num = 9
+        resul = 0
+
+        console.log("TABLA DE " + num)
+        for(cont = 1; cont <= 5; cont++){
+            resul = num * cont
+            if(resul % 2 == 0){
+                console.log(num + " x " + cont + " = " + resul + " Es Par \n");
+            }else{
+                console.log(num + " x " + cont + " = " + resul + " Es Impar \n");
+                
+            }
+        }
+        
+
+    </script>
+
+</body>
+</html>

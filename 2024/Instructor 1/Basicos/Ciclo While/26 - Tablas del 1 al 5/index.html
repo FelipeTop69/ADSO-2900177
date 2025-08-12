@@ -1,0 +1,35 @@
+    <script>
+
+    let contar, par, impar, resul, mul;
+    let tabla;
+
+    impar = 0
+    par = 0
+    tabla = 5;
+    contar = 0;
+
+    while (contar < tabla) {
+        contar = contar + 1;
+        console.log("Tabla del " + contar)
+        mul = 0; 
+        while (mul < 5) {
+            mul = mul + 1;
+            resul = contar * mul;
+            if(resul % 2 == 0){
+                console.log(contar + " x " + mul + " = " + resul + " Buzz");
+                par = par + 1
+            }else{
+                console.log(contar + " x " + mul + " = " + resul + " Bass");
+                impar = impar + 1
+            }
+            
+        }
+        console.log("\n")
+    }
+
+    console.log("La cantidad de pares es: " + par)
+    console.log("La cantidad de impares es: " + impar)
+    </script>
+
+</body>
+</html>

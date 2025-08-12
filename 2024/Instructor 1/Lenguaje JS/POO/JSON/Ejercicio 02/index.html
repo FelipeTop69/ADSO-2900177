@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figuras</title>
+    <link rel="stylesheet" href="css/styless.css">
+</head>
+<body>
+    <div class="container">
+        <h1>FIGURAS</h1>
+        <form class="formulario" id="operacionFormulario">
+            <div class="caja-figura">
+                <label for="txtLadoCuadrado">Lado Cuadrado</label>
+                <input id="txtLadoCuadrado" type="number" name="ladoCuadrado" >
+            </div>
+
+            <div class="caja-figura">
+                <label for="txtBaseRectangulo">Base Rectangulo</label>
+                <input id="txtBaseRectangulo" type="number" name="baseRectangulo" required>
+
+                <label for="txtAlturaRectangulo">Altura Rectangulo</label>
+                <input id="txtAlturaRectangulo" type="number" name="alturaRectangulo" required>
+            </div>
+
+            <div class="caja-figura">
+                <label for="txtBaseTriangulo">Base Triangulo</label>
+                <input id="txtBaseTriangulo" type="number" name="baseTriangulo" required>
+
+                <label for="txtAlturaTriangulo">Altura Triangulo</label>
+                <input id="txtAlturaTriangulo" type="number" name="alturaTriangulo" required>
+            </div>
+
+            <button type="submit">Enviar</button>
+        </form>
+
+        <div class="resultados">
+            <div class="operacion">
+                Area Cuadrado: <h4 id="areaCuadrado" class="resultado"></h4>
+            </div>
+
+            <div class="operacion">
+                Area Rectangulo: <h4 id="areaRectangulo" class="resultado"></h4>
+            </div>
+
+            <div class="operacion">
+                Area Triangulo: <h4 id="areaTriangulo" class="resultado"></h4>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/areaFigurass.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+.container{
+    display: flex;
+    justify-content: center;
+}
+
+#principal{
+    border: 1px solid black;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding: 20px;
+}
+
+.periodo{
+    display: flexbox;
+    flex-wrap: nowrap;
+    height: 60px;
+    border: 1px solid black;
+    /* margin-bottom: 5px; */
+}
+
+.periodo-dividio {
+    display: flexbox;
+    flex-wrap: nowrap;
+
+}
+
+.celda{
+    border: 1px solid rgb(241, 6, 6);
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+
+.elemento{
+    width: 50px;
+    height: 55px;
+    border: 1px solid black;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.recuadro{
+    width: 50px;
+    height: 18px;
+    border: 1px solid black;
+    font-size: 10px;
+}
+
+.espacio-abajo{
+    margin-top: 40px; 
+}

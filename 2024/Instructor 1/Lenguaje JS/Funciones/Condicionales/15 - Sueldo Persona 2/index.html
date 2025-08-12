@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sueldo Persona</title>
+    <script src="js/sueldo.js"></script>
+</head>
+<body>
+
+    <script>
+        //Como Parametro
+        let valorD = 43333;
+        let diasT = 30;
+        let salarioM = 1300000
+
+        console.log("Como Parametro")
+        console.log("El sueldo de la persona antes de procesos era de: $" + calcularSueldo(valorD, diasT) )
+        console.log("Al subsidio de Transporte se le dio un valor de: $" + calcularSubsidioTransporte(valorD, diasT, salarioM))
+        console.log("Pensión: $" + calcularPension(valorD, diasT))
+        console.log("Salud: $" + calcularSalud(valorD, diasT))
+        console.log("ARL: $" + calcularARL(valorD, diasT))
+        console.log("Se le hizo una retencion de: $" + calcularRetencion(valorD, diasT, salarioM))
+        console.log("El sueldo total de la persona es: $" + calcularSueldoTotal(valorD, diasT, salarioM))
+        console.log("\n")
+
+        //Como Expresion
+        let ExpresionValorD = 180000;
+        let ExpresionDiasT = 30;
+        let ExpresionsalarioM = 1300000
+
+
+        console.log("Como Expresión")
+        console.log("El sueldo de la persona antes de procesos era de: $" + calcularSueldoExpresion(ExpresionValorD, ExpresionDiasT))
+        console.log("Al subsidio de Transporte se le dio un valor de: $" + calcularSubsidioTransporteExpresion(ExpresionValorD, ExpresionDiasT, ExpresionsalarioM))
+        console.log("Pensión: $" + calcularPensionExpresion(ExpresionValorD, ExpresionDiasT))
+        console.log("Salud: $" + calcularSaludExpresion(ExpresionValorD, ExpresionDiasT))
+        console.log("ARL: $" + calcularARLExpresion(ExpresionValorD, ExpresionDiasT))
+        console.log("Se le hizo una retencion de: $" + calcularRetencionExpresion(ExpresionValorD, ExpresionDiasT, ExpresionsalarioM))
+        console.log("El sueldo total de la persona es: $" + calcularSueldoTotalExpresion(ExpresionValorD, ExpresionDiasT, ExpresionsalarioM))
+        console.log("\n")
+
+    </script>
+
+</body>
+</html>

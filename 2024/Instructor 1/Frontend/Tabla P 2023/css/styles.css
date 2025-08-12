@@ -1,0 +1,336 @@
+/* Responsive Laptop*/
+@media(max-width:1920px){
+    body{
+        font-size: 14px;
+        font-family: Arial, Helvetica, sans-serif;
+        background-image: url(img/fondo-laptop.jpg);
+        background-size: 120%; /* Opciones: contain, cover o porcentaje */
+        background-repeat: no-repeat;
+        justify-content: center;
+    }
+
+
+    /* titulo */
+    h1{
+        text-align: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: rgb(2, 118, 253);
+        -webkit-text-stroke: 1px #000000; /* Contorno con un grosor de 2px y color negro */
+            text-shadow: 1px 1px 0px #000000, -1px -1px 0px #000000, 
+                         1px -1px 0px #000000, -1px 1px 0px #000000; /* Contorno adicional con sombra de texto */
+    }
+
+
+    /* Clasifiacion de los elementos */
+    #principal{
+        /* border: 1px solid black; */
+        width: 100%;
+        height: 1px;
+        justify-content: center;
+        display: block;
+        float: left;
+        font-size: 20px ;
+        margin-top: 40px;
+    }
+
+    .clasificacion{
+        width: 100%;
+        height: 40px;
+        /*border: 1px solid black;*/
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .color{
+        width: 25px;
+        height: 25px;
+        border: 1px solid black;
+        border-radius: 50%;
+        margin: 10px;
+    }
+
+    .color-alcalinos{
+        background-color: rgb(245, 102, 0);
+    }
+    .color-metaloides{
+        background-color: rgb(0, 226, 91);
+    }
+    .color-alcalinoterreos{
+        background-color: rgb(253, 202, 20);
+    }
+    .color-no-metales{
+        background-color: rgb(94, 125, 255);
+    }
+    .color-otros-metales{
+        background-color: rgb(255, 255, 1);
+    }
+    .color-alogenos{
+        background-color: rgb(231, 45, 190);
+    }
+    .color-metales-transicion{
+        background-color: rgb(189, 254, 0);
+    }
+    .color-gases-nobles{
+        background-color: rgb(1, 212, 255);
+    }
+    .color-lantanidos{
+        background-color: rgb(0, 219, 181);
+    }
+    .color-actinidos{
+        background-color: rgb(78, 179, 107);
+    }
+
+
+/* estructura principal de la tabla periodica */
+    #secundario{
+        display: block;
+        float: left;
+        /*border: 1px solid black;+*/
+        width: 98%;
+        height: 500px;
+        margin: 2%;
+    }
+
+    .periodo{
+        display: block;
+        float: left;
+        width: 98%;
+    }
+    .periodo-left{
+        margin: 1;
+    }
+
+    .periodo-alineado{
+        width: 97.5%;
+    }
+
+    .elemento{
+        display: block;
+        float: left;
+        width: 4.9%;
+        height: 65px;
+        border-radius: 5px;
+        border: 2px solid black;
+        margin: 2px;
+    }
+
+    .elemento-derecha{
+        float: right;
+    }
+
+    .numero{
+        text-align: right;
+        height: 20%;
+        width: 90%;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    }
+
+    .simbolo{
+        text-align: center;
+        height: 55%;
+        font-weight: bold;
+        font-size: 25px;
+        font-family: cursive;
+    }
+
+    .nombre{
+        text-align: left;
+        font-size: 13px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .name-small{
+        font-size: 12px;
+    }
+
+    .name{
+        color: white;
+        width: 210px;
+    }
+
+
+/* estructura secundaria de la tabla periodica */
+#terceario{
+        display: block;
+        float: left;
+        /* border: 1px solid black;  */
+        width: 98%;
+        height: 150px;
+        margin: 2%;
+        margin-left: 238px;
+}
+
+.lantanidos{
+        display: block;
+        float: left;
+        width: 98%;
+}
+
+.actinidos{
+        display: block;
+        float: left;
+        width: 98%;
+}
+
+
+    /*Colores de los elementos*/
+    .metales-alcalinos{
+        background-color: rgb(245, 102, 0);
+    }
+    .alcalinoterreos{
+        background-color: rgb(253, 202, 20);
+    }
+    .otros-metales{
+        background-color: rgb(255, 255, 1);
+    }
+    .metales-transicion{
+        background-color: rgb(189, 254, 0);
+    }
+    .metaloides{
+        background-color: rgb(0, 226, 91);
+    }
+    .no-metales{
+        background-color: rgb(94, 125, 255);
+    }
+    .halogenos{
+        background-color: rgb(231, 45, 190);
+    }
+    .gases-nobles{
+        background-color: rgb(1, 212, 255);
+    }
+    .lantanidos-color{
+        background-color: rgb(0, 219, 181);
+    }
+    .actinidos-color{
+        background-color: rgb(78, 179, 107);
+    }
+}
+
+
+
+/* Responsive Smartphone*/
+@media(max-width:450px){
+    body{
+        font-family: Arial, Helvetica, sans-serif;
+        background-image: url(/Tabla_Peridodica/css/img/fondo-pone.jpg);
+        background-size: 130%;
+        background-repeat: no-repeat;
+        justify-content: center;
+        font-size: 4.5px;
+    }
+
+    h1{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: rgb(2, 118, 253);
+        margin-top: 10px;
+    }
+
+
+    /* Clasifiacion de los elementos */
+    #principal{
+        /*border: 1px solid black;*/
+        width: 100%;
+        height: 1px;
+        justify-content: center !important;
+        display: block !important;
+        float: left;
+        font-size: 6px ;
+        margin-top: 10px;
+    }
+
+    .clasificacion{
+        width: 100%;
+        height: 10px;
+        /*border: 1px solid black;*/
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .color{
+        width: 5px;
+        height: 5px;
+        border: 1px solid black;
+        border-radius: 50%;
+        margin: 5px;
+    }
+
+    .name{
+        color: white;
+        width: 60px;
+    }
+
+
+    /* estructura principal de la tabla periodica */
+    #secundario{
+        display: block;
+        float: left;
+        width: 98%;
+        height: 180px;
+        margin: 2%;
+    }
+
+    .periodo{
+        display: block;
+        float: left;
+        width: 100%;
+    }
+
+    .periodo-alineado{
+        width: 94.8%;
+    }
+
+    .elemento{
+        display: block;
+        float: left;
+        width: 3.7%;
+        height: 20px ;
+        border-radius: 2px;
+        border: 1px solid black;
+        margin: 2px;
+    }
+
+    .elemento-derecha{
+        float: right;
+    }
+
+    .numero{
+        text-align: right;
+        height: 33%;
+    }
+    .simbolo{
+        text-align: center;
+        height: 33%;
+        font-weight: bold;
+        font-size: 6px;
+    }
+    .nombre{
+        text-align: left;
+        height: 33%;
+        font-size: 3.4px;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    }
+    /* estructura secundaria de la tabla periodica */
+#terceario{
+    display: block;
+    float: left;
+    /* border: 1px solid black; */
+    width: 98%;
+    height: 52px;
+    margin: 2%;
+    margin-left: 70px;
+}
+
+.lantanidos{
+    display: block;
+    float: left;
+    width: 98%;
+}
+
+.actinidos{
+    display: block;
+    float: left;
+    width: 98%;
+}
+}
